@@ -21,7 +21,7 @@ class CategoryFactory extends Factory
             'name' => $this->faker->word(),
             'slug' => $this->faker->unique()->slug(),
             'description' => $this->faker->sentence(),
-            'image' => 'assets/category/top.jpg',
+            'image' => 'assets/categories/top.jpg',
             'parent_id' => null, // or use $this->faker->numberBetween(1, 10) for random parent
             'is_active' => $this->faker->boolean(80), // 80% chance of being true
             'position' => $this->faker->numberBetween(1, 100),

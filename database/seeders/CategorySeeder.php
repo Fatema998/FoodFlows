@@ -14,9 +14,15 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
-      DB::table('categories')->delete(); // clear table before seeding
-      Category::factory()->count(10)->create();
+    
+     DB::table('categories')->delete(); // clear table before seeding
+     $parents =  Category::factory()->count(5)->create();
 
+      // Create 5 subcategories for each parent
+      $parents->each(function ($parent) {
+          Category::factory()->count(10)->create([
+              'parent_id' => $parent->id,
+          ]);
+      });
     }
 }

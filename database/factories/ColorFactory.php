@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Color>
  */
-class BrandFactory extends Factory
+class ColorFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,11 +18,10 @@ class BrandFactory extends Factory
     {
         return [
             //
-            'name' => $this->faker->company(),
-            'slug' => $this->faker->unique()->slug(),
-            'image' => 'assets/brands/bear.png',
-            'is_active' => $this->faker->boolean(80), // 80% chance of being true
+            'name' => $this->faker->colorName(),
+            'code' => $this->faker->unique()->hexColor(),
             'position' => $this->faker->numberBetween(1, 100),
+            'is_active' => $this->faker->boolean(80), // 80% chance of being true
             'created_at' => now(),
             'updated_at' => now(),
         ];
