@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SingleProductResource;
+use App\Http\Resources\ProductListResource;
 
 class ProductController extends Controller
 {
@@ -14,6 +16,11 @@ class ProductController extends Controller
     public function index()
     {
         //
+        $products = Product::with(['sizes', 'variants'])
+                    ->where('is_active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+        return response()->json(ProductListResource::collection($products));
     }
 
     /**
@@ -35,14 +42,16 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
+
+    
     public function show(string $slug)
     {
         // Find product by slug with related data
-        $product = Product::with(['brand:id,name,slug','category:id,name,slug', 'subcategory:id,name,slug', 'sizes:id,name', 'variants' ])
+        $product = Product::with(['brand','category', 'subcategory', 'sizes', 'variants' ])
                     ->where('slug', $slug)
                     ->where('is_active', true)
                     ->first();
-        return response()->json($product);
+        return response()->json(new SingleProductResource($product));
     }
 
     /**

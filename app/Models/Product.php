@@ -65,8 +65,7 @@ class Product extends Model
 
     public function variants()
     {
-        return $this->hasMany(ProductVariant::class)
-                ->select('id', 'product_id', 'color_id', 'image')
-                ->with('color:id,name,code');    }
+        return $this->hasMany(ProductVariant::class)->with('color');    
+    }
     
 }
