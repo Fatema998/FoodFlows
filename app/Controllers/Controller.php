@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-/**
- * @OA\Info(title="My API", version="1.0")
- */
-
 abstract class Controller
 {
     //MESSAGES
@@ -27,4 +23,7 @@ abstract class Controller
     public const CREATED = 201;
     public const ERROR = 500;
     public const VALIDATION_ERROR = 422;
+
+
+
 }

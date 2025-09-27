@@ -11,22 +11,28 @@ return new class extends Migration
      */
         public function up(): void
         {
-            Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id'); // scalable PK
-            $table->string('name', 191)->index(); // indexed, but watch size
-            $table->string('email', 191)->unique(); // unique index
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('phone', 20)->unique(); // unique index
-            $table->enum('role', ['admin', 'user'])->default('user')->index();
-            $table->string('avatar')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
+          Schema::create('users', function (Blueprint $table) {
+                $table->bigIncrements('id'); // scalable primary key
+                $table->string('name', 191)->index(); // indexed for searches
+                $table->string('email', 191)->unique(); // unique index
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->string('phone', 20)->nullable()->index(); // unique index
+                $table->enum('role', ['admin', 'user'])->default('user')->index(); // indexed for filtering
+                $table->string('avatar')->nullable();
 
-            // optional composite index if needed
-            $table->index(['email', 'phone']);
-        });
+                $table->boolean('is_active')->default(true)->index(); // indexed for filtering
+                $table->boolean('is_ban')->default(false)->index(); // indexed for filtering
 
+                $table->dateTime('last_login_at')->nullable()->index(); // indexed for recent activity
+                $table->ipAddress('last_login_ip')->nullable();
+
+                $table->rememberToken();
+                $table->timestamps();
+
+                // Optional composite index for combined lookups
+                $table->index(['email', 'phone']); 
+            });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
