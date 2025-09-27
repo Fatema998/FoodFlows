@@ -82,7 +82,8 @@ class AuthController extends Controller
                 return ApiResponse::success(
                     status: self::SUCCESS_STATUS,
                     message: self::SUCCESS_MESSAGE,
-                    data: $response
+                    data: $response,
+                     statusCode: 201
                 );
             }
 
