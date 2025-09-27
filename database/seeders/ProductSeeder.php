@@ -19,7 +19,7 @@ class ProductSeeder extends Seeder
         // Clear existing products
      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-    DB::table('product_colors')->truncate();
+    DB::table('product_variants')->truncate();
     DB::table('product_sizes')->truncate();
     DB::table('products')->truncate();
 
@@ -37,7 +37,7 @@ class ProductSeeder extends Seeder
             // Assign 1-3 random colors
             $productColors = array_rand(array_flip($colors), rand(1, 3));
             foreach ((array)$productColors as $colorId) {
-                DB::table('product_colors')->insert([
+                DB::table('product_variants')->insert([
                     'product_id' => $product->id,
                     'color_id' => $colorId,
                     'image' => 'assets/products/images/women-yellow-1.jpg',

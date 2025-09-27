@@ -11,4 +11,6 @@ class Size extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'is_active'];
+
+    protected $hidden = ['pivot']; // hide pivot field
 }

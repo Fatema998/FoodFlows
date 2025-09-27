@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -18,5 +19,12 @@ Route::controller(AuthController::class)->group(function(){
             Route::get('profile','userProfile');
             Route::get('logout','userLogout');
         });
+    });
+});
+
+
+Route::controller(ProductController::class)->group(function(){
+    Route::prefix('products')->group(function(){
+        Route::get('/{slug}','show');
     });
 });

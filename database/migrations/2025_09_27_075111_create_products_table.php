@@ -56,21 +56,6 @@ return new class extends Migration
             $table->index(['is_flash_deal', 'flash_deal_start']);
         });
 
-
-        // Pivot tables for colors 
-        Schema::create('product_colors', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('product_id')->index();
-            $table->unsignedBigInteger('color_id')->index();
-            $table->string('image')->nullable();
-            $table->timestamps();
-
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
-
-            $table->unique(['product_id', 'color_id']);
-        });
-
         // Pivot table for sizes
         Schema::create('product_sizes', function (Blueprint $table) {
             $table->id();
@@ -90,7 +75,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('product_colors');  // drop pivot first
          Schema::dropIfExists('product_sizes');   // drop pivot second
          Schema::dropIfExists('products');   
     }
