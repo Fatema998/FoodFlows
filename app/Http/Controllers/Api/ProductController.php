@@ -237,6 +237,7 @@ class ProductController extends Controller
             $product = $this->productService->getProductBySlug($slug);
 
             if ($product) {
+
                  return ApiResponse::success(
                             status: self::SUCCESS_STATUS,
                             message: self::SUCCESS_MESSAGE,
@@ -266,6 +267,13 @@ class ProductController extends Controller
      *     path="/api/products/best-sellers",
      *     summary="Best Seller  products",
      *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="Limit number of products returned (default 10)",
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Best Seller  products",
@@ -282,10 +290,10 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function bestSellingProducts(){
+    public function bestSellingProducts(Request $request){
         try {
-
-            $responseProducts = $this->productService->bestSellingProducts();
+            $limit = (int) $request->query('limit', 10);
+            $responseProducts = $this->productService->bestSellingProducts($limit);
 
             if ($responseProducts) {
                 return ApiResponse::success(
@@ -407,6 +415,64 @@ class ProductController extends Controller
             );
         }
     }
+    
+    /**
+     * @OA\Get(
+     *     path="/api/products/recently-views",
+     *     summary="Recently view products",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="Limit number of products returned (default 10)",
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Recently view products",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Success"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ProductListResource")
+     *             )
+     *         )
+     *     )
+     * )
+     */
 
+    // Recently viewed products
+    public function recentlyViewedProducts(Request $request){
+        try {
+            $limit = (int) $request->query('limit', 10);
+            $responseProducts = $this->productService->getRecentlyViewedProducts($limit);
+
+            if ($responseProducts) {
+                return ApiResponse::success(
+                            status: self::SUCCESS_STATUS,
+                            message: self::SUCCESS_MESSAGE,
+                            data: $responseProducts,
+                        );
+                }
+
+                return ApiResponse::error(
+                        status:self::ERROR_STATUS,
+                        message: "Product ". self::FAILED_MESSAGE,
+                        statusCode: 400
+                    );
+
+        } catch (Exception $e) {
+            Log::error('Unable to fetch product: ' . $e->getMessage());
+            return ApiResponse::error(
+                status: "error",
+                message: "Exception occured: " . $e->getMessage(),
+                statusCode: 500
+            );
+        }
+    }    
 
 }

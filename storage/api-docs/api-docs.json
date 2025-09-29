@@ -630,6 +630,18 @@
                 ],
                 "summary": "Best Seller  products",
                 "operationId": "ab4c755e40ecf077b912ebb226b3741e",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit number of products returned (default 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Best Seller  products",
@@ -759,6 +771,55 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Exception occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/recently-views": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Recently view products",
+                "operationId": "96ed21ed08c32e6b56e25e31898b9fc4",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit number of products returned (default 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recently view products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ProductListResource"
+                                            }
                                         }
                                     },
                                     "type": "object"

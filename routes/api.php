@@ -29,6 +29,7 @@ Route::controller(ProductController::class)->group(function(){
     Route::prefix('products')->group(function(){
         Route::get('/','getAllProducts');
         Route::get('/best-sellers','bestSellingProducts');
+        Route::get('/recently-views','recentlyViewedProducts');
         Route::get('/wise', 'wiseProducts');
         Route::get('/{slug}','getProductBySlug');
     });

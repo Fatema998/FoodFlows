@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repository\ProductRepository;
+use App\Repository\ProductViewRepository;
 use App\Http\Resources\Product\ProductListResource;
 use App\Http\Resources\Product\SingleProductResource;
 
@@ -12,9 +13,12 @@ class ProductService
      * Create a new class instance.
      */
     protected $productRepository;
-    public function __construct(ProductRepository $productRepository)
+    protected $productViewRepository;
+
+    public function __construct(ProductRepository $productRepository,ProductViewRepository $productViewRepository)
     {
         $this->productRepository= $productRepository;
+        $this->productViewRepository= $productViewRepository;
     }
 
     // Get all products
@@ -26,6 +30,11 @@ class ProductService
     public function getProductById($id){
         $product = $this->productRepository->getProductById($id);
         if($product){
+
+            // Log recent view
+            $this->productViewRepository->createOrUpdateProductView($product->id);
+
+            //  return product details
             return new SingleProductResource($product);
         }
         return null;
@@ -35,14 +44,17 @@ class ProductService
     public function getProductBySlug($slug){
         $product = $this->productRepository->getProductBySlug($slug);
         if($product){
+            // Log recent view
+            $this->productViewRepository->createOrUpdateProductView($product->id);
+            //  return product details
             return new SingleProductResource($product);
         }
         return null;
     }
 
     // best selling products
-    public function bestSellingProducts(){
-        return ProductListResource::collection($this->productRepository->bestSellingProducts());
+    public function bestSellingProducts($limit){
+        return ProductListResource::collection($this->productRepository->bestSellingProducts($limit));
     }
 
     // All types in one call
@@ -85,5 +97,11 @@ class ProductService
 
         return ProductListResource::collection($products);
     }
+
+
+    // Recently viewed products
+    public function getRecentlyViewedProducts($limit){
+        return ProductListResource::collection($this->productViewRepository->getRecentlyViewedProducts($limit));
+    } 
 
 }

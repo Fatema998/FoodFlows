@@ -45,11 +45,11 @@ class ProductRepository
     }
 
     // best selling products
-    public function bestSellingProducts(){
+    public function bestSellingProducts($limit){
           return  Product::with(['sizes', 'variants'])
                     ->where('is_active', true)
                     ->orderBy('sold_count', 'desc')
-                    ->take(10)  // Limit to top 10 best sellers
+                     ->take($limit) // Limit to top 10 best sellers
                     ->get();
     }                
 
