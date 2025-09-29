@@ -327,9 +327,451 @@
                     }
                 ]
             }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all products",
+                "operationId": "d97d1c3727cbac49708b85f7d11f7d58",
+                "responses": {
+                    "200": {
+                        "description": "List of products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ProductListResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{slug}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get a product by slug",
+                "operationId": "5bbb6d725346d38781b256ed5c715d62",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "The slug of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "samsung-galaxy-s23"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/SingleProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
+        "schemas": {
+            "ProductListResource": {
+                "title": "Product List Resource",
+                "description": "Product resource response",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "T-shirt"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "t-shirt"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200.5
+                    },
+                    "discount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 100
+                    },
+                    "sold_price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1100.5
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 20
+                    },
+                    "is_trending": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_limited": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_featured": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_flash_deal": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "flash_deal_start": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "flash_deal_end": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sizes": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "M"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "color": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Red"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "#FF0000"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "image": {
+                                    "type": "string",
+                                    "example": "http://example.com/image.jpg"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    }
+                },
+                "type": "object"
+            },
+            "SingleProductResource": {
+                "title": "Single Product Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Premium Cotton T-Shirt"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "premium-cotton-t-shirt"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200
+                    },
+                    "discount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 200
+                    },
+                    "sold_price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1000
+                    },
+                    "product_code": {
+                        "type": "string",
+                        "example": "TSHIRT-2025"
+                    },
+                    "sell_count": {
+                        "type": "integer",
+                        "example": 500
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "main_thumbnail": {
+                        "type": "string",
+                        "example": "https://example.com/images/tshirt.png"
+                    },
+                    "long_descriptions": {
+                        "type": "string",
+                        "example": "This is a long description."
+                    },
+                    "short_description": {
+                        "type": "string",
+                        "example": "Short description."
+                    },
+                    "materials": {
+                        "type": "string",
+                        "example": "100% Cotton"
+                    },
+                    "is_trending": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_limited": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_featured": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_flash_deal": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "flash_deal_start": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01 00:00:00"
+                    },
+                    "flash_deal_end": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-10 23:59:59"
+                    },
+                    "brand": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Nike"
+                            },
+                            "slug": {
+                                "type": "string",
+                                "example": "nike"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "category": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 2
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Clothing"
+                            },
+                            "slug": {
+                                "type": "string",
+                                "example": "clothing"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "subcategory": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 3
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "T-Shirts"
+                            },
+                            "slug": {
+                                "type": "string",
+                                "example": "t-shirts"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "sizes": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "XL"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 10
+                                },
+                                "color": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Red"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "#FF0000"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "image": {
+                                    "type": "string",
+                                    "example": "https://example.com/variant-red.png"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "meta_title": {
+                        "type": "string",
+                        "example": "Buy Premium Cotton T-Shirt"
+                    },
+                    "meta_description": {
+                        "type": "string",
+                        "example": "This is the best premium cotton t-shirt."
+                    },
+                    "meta_keywords": {
+                        "type": "string",
+                        "example": "tshirt, cotton, fashion"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -342,6 +784,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
         }
     ]
 }
