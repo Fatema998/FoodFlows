@@ -44,5 +44,24 @@ class ProductRepository
         //     ->first();
     }
 
+    // best selling products
+    public function bestSellingProducts(){
+          return  Product::with(['sizes', 'variants'])
+                    ->where('is_active', true)
+                    ->orderBy('sold_count', 'desc')
+                    ->take(10)  // Limit to top 10 best sellers
+                    ->get();
+    }                
+
+
+    public function getTypeWiseProducts($column, $limit = 10)
+    {
+        return Product::where($column, true)
+            ->where('is_active', true)
+            ->orderBy('updated_at', 'desc')
+            ->take($limit)
+            ->get();
+    }
+
 
 }

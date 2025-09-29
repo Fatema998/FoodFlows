@@ -12,8 +12,18 @@ class SliderListResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'subtitle' => $this->subtitle,
+            'image' => $this->image,
+            'button_text' => $this->button_text,
+            'link' => $this->link,
+             'created_at' => $this->created_at->format('d/m/Y'),
+            'updated_at' => $this->updated_at->format('d/m/Y'),
+        ];
     }
 }

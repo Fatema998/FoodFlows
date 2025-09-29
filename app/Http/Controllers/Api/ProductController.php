@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use App\Helper\ApiResponse;
+use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -140,7 +141,7 @@ use App\Http\Controllers\Controller;
 class ProductController extends Controller
 {
     protected $productService;
-
+    
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
@@ -167,16 +168,26 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function getAllProducts()
     {
         try {
+
             $products = $this->productService->getProducts();
 
-            return ApiResponse::success(
-                status: "success",
-                message: "Success",
-                data: $products
-            );
+            if ($products) {
+                return ApiResponse::success(
+                            status: self::SUCCESS_STATUS,
+                            message: self::SUCCESS_MESSAGE,
+                            data: $products,
+                        );
+                }
+
+                return ApiResponse::error(
+                        status:self::ERROR_STATUS,
+                        message: "Product ". self::FAILED_MESSAGE,
+                        statusCode: 400
+                    );
+
         } catch (Exception $e) {
             Log::error('Unable to fetch product: ' . $e->getMessage());
             return ApiResponse::error(
@@ -186,6 +197,7 @@ class ProductController extends Controller
             );
         }
     }
+
 
     /**
      * @OA\Get(
@@ -219,24 +231,26 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function show(string $slug)
+    public function getProductBySlug(string $slug)
     {
         try {
             $product = $this->productService->getProductBySlug($slug);
 
             if ($product) {
-                return ApiResponse::success(
-                    status: "success",
-                    message: "Success",
-                    data: $product
-                );
+                 return ApiResponse::success(
+                            status: self::SUCCESS_STATUS,
+                            message: self::SUCCESS_MESSAGE,
+                            data: $product,
+                            statusCode: self::SUCCESS, 
+                        );
             }
 
             return ApiResponse::error(
-                status: "error",
-                message: "Product not found",
-                statusCode: 404
-            );
+                        status:self::ERROR_STATUS,
+                        message: "Product ". self::FAILED_MESSAGE,
+                        statusCode: 400
+                    );
+
         } catch (Exception $e) {
             Log::error('Unable to fetch product: ' . $e->getMessage());
             return ApiResponse::error(
@@ -246,4 +260,153 @@ class ProductController extends Controller
             );
         }
     }
+   
+    /**
+     * @OA\Get(
+     *     path="/api/products/best-sellers",
+     *     summary="Best Seller  products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Best Seller  products",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Success"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ProductListResource")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function bestSellingProducts(){
+        try {
+
+            $responseProducts = $this->productService->bestSellingProducts();
+
+            if ($responseProducts) {
+                return ApiResponse::success(
+                            status: self::SUCCESS_STATUS,
+                            message: self::SUCCESS_MESSAGE,
+                            data: $responseProducts,
+                        );
+                }
+
+                return ApiResponse::error(
+                        status:self::ERROR_STATUS,
+                        message: "Product ". self::FAILED_MESSAGE,
+                        statusCode: 400
+                    );
+
+        } catch (Exception $e) {
+            Log::error('Unable to fetch product: ' . $e->getMessage());
+            return ApiResponse::error(
+                status: "error",
+                message: "Exception occured: " . $e->getMessage(),
+                statusCode: 500
+            );
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/products/wise",
+     *     summary="Get products by type or all types",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by product type (trending, todays_pick, new_arrival, featured, flash_deal)",
+     *         @OA\Schema(type="string", example="trending")
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="Limit number of products returned (default 10)",
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Products fetched successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="Products grouped by type if 'type' not provided",
+     *                 @OA\Property(
+     *                     property="trending",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/ProductListResource")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="todays_pick",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/ProductListResource")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="new_arrival",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/ProductListResource")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="featured",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/ProductListResource")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="flash_deal",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/ProductListResource")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Exception occurred")
+     *         )
+     *     )
+     * )
+     */
+    public function wiseProducts(Request $request)
+    {
+        try {
+            $limit = (int) $request->query('limit', 10);
+            $type  = $request->query('type');
+
+            if ($type) {
+                $products = $this->productService->getProductsByType($type, $limit);
+            } else {
+                $products = $this->productService->getWiseProducts($limit);
+            }
+
+            return ApiResponse::success(
+                status: self::SUCCESS_STATUS,
+                message: self::SUCCESS_MESSAGE,
+                data: $products
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Unable to fetch products: ' . $e->getMessage() . ' - Line: ' . $e->getLine());
+            return ApiResponse::error(
+                status: "error",
+                message: "Exception occurred: " . $e->getMessage(),
+                statusCode: 500
+            );
+        }
+    }
+
+
 }

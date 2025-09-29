@@ -13,6 +13,7 @@ class SingleProductResource extends JsonResource
      * @return array<string, mixed>
      */
 
+    
 
     public function toArray(Request $request): array
     {
@@ -35,6 +36,8 @@ class SingleProductResource extends JsonResource
             'is_trending' => $this->is_trending,
             'is_limited' => $this->is_limited,
             'is_active' => $this->is_active,
+            'is_todays_pick' => $this->is_todays_pick,
+            'is_new_arrival' => $this->is_new_arrival,
             'is_featured' => $this->is_featured,
             'is_flash_deal' => $this->is_flash_deal,
             'flash_deal_start' => $this->flash_deal_start,

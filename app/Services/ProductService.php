@@ -40,4 +40,50 @@ class ProductService
         return null;
     }
 
+    // best selling products
+    public function bestSellingProducts(){
+        return ProductListResource::collection($this->productRepository->bestSellingProducts());
+    }
+
+    // All types in one call
+    public function getWiseProducts($limit = 10)
+    {
+        $types = [
+            'trending'     => 'is_trending',
+            'todays_pick'  => 'is_todays_pick',
+            'new_arrival'  => 'is_new_arrival',
+            'featured'     => 'is_featured',
+            'flash_deal'   => 'is_flash_deal',
+        ];
+
+        $result = [];
+        foreach ($types as $key => $column) {
+            $products = $this->productRepository->getTypeWiseProducts($column, $limit);
+
+            $result[$key] = ProductListResource::collection($products);
+        }
+
+        return $result;
+    }
+
+    // Single type filter
+    public function getProductsByType($type, $limit = 10)
+    {
+        $columns = [
+            'trending'     => 'is_trending',
+            'todays_pick'  => 'is_todays_pick',
+            'new_arrival'  => 'is_new_arrival',
+            'featured'     => 'is_featured',
+            'flash_deal'   => 'is_flash_deal',
+        ];
+
+        if (!isset($columns[$type])) {
+            throw new \Exception("Invalid product type: $type");
+        }
+
+        $products = $this->productRepository->getTypeWiseProducts($columns[$type], $limit);
+
+        return ProductListResource::collection($products);
+    }
+
 }

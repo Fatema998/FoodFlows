@@ -328,13 +328,128 @@
                 ]
             }
         },
+        "/api/brands": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get all brands",
+                "operationId": "18e253117cb18743cafbc619bdca9228",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of brands to return (optional, default is 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Nike"
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "nike"
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/images/nike.png"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "29/09/2025"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": "29/09/2025"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to fetch brands",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred: ..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get all products",
-                "operationId": "d97d1c3727cbac49708b85f7d11f7d58",
+                "operationId": "b9d77a36a5f7bafc86dc6b2f2c60dd96",
                 "responses": {
                     "200": {
                         "description": "List of products",
@@ -371,7 +486,7 @@
                     "Products"
                 ],
                 "summary": "Get a product by slug",
-                "operationId": "5bbb6d725346d38781b256ed5c715d62",
+                "operationId": "7e722f454baa886d09674492bcafbed9",
                 "parameters": [
                     {
                         "name": "slug",
@@ -421,6 +536,275 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/best-sellers": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Best Seller  products",
+                "operationId": "ab4c755e40ecf077b912ebb226b3741e",
+                "responses": {
+                    "200": {
+                        "description": "Best Seller  products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ProductListResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/wise": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products by type or all types",
+                "operationId": "b82da367001c802e19f56a88e7ab6699",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by product type (trending, todays_pick, new_arrival, featured, flash_deal)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "trending"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit number of products returned (default 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Products fetched successfully"
+                                        },
+                                        "data": {
+                                            "description": "Products grouped by type if 'type' not provided",
+                                            "properties": {
+                                                "trending": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductListResource"
+                                                    }
+                                                },
+                                                "todays_pick": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductListResource"
+                                                    }
+                                                },
+                                                "new_arrival": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductListResource"
+                                                    }
+                                                },
+                                                "featured": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductListResource"
+                                                    }
+                                                },
+                                                "flash_deal": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductListResource"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sliders": {
+            "get": {
+                "tags": [
+                    "Sliders"
+                ],
+                "summary": "Get all sliders",
+                "operationId": "a393489a3884e7c86fb98fd7c4752c74",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of sliders to return (optional, default is 3)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 3
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Big Sale"
+                                                    },
+                                                    "subtitle": {
+                                                        "type": "string",
+                                                        "example": "Up to 50% off"
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/slider1.jpg"
+                                                    },
+                                                    "button_text": {
+                                                        "type": "string",
+                                                        "example": "Shop Now"
+                                                    },
+                                                    "link": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/products"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "29/09/2025"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": "29/09/2025"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to fetch sliders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Slider fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred: ..."
                                         }
                                     },
                                     "type": "object"
@@ -786,8 +1170,16 @@
             "description": "Auth"
         },
         {
+            "name": "Brands",
+            "description": "Brands"
+        },
+        {
             "name": "Products",
             "description": "Products"
+        },
+        {
+            "name": "Sliders",
+            "description": "Sliders"
         }
     ]
 }

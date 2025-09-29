@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('sold_price', 10, 2)->nullable();
 
             $table->string('product_code')->unique();
-            $table->unsignedBigInteger('sell_count')->default(0);
+            $table->unsignedBigInteger('sold_count')->default(0);
             $table->unsignedInteger('quantity')->default(1);
             
             $table->string('main_thumbnail')->nullable();
@@ -32,9 +32,11 @@ return new class extends Migration
             $table->longText('long_descriptions')->nullable();
             $table->longText('materials')->nullable();
 
+            $table->boolean('is_active')->default(true)->index();
             $table->boolean('is_trending')->default(false)->index();
             $table->boolean('is_limited')->default(false)->index();
-            $table->boolean('is_active')->default(true)->index();
+            $table->boolean('is_todays_pick')->default(false)->index();
+            $table->boolean('is_new_arrival')->default(false)->index();
             $table->boolean('is_featured')->default(false)->index();
             $table->boolean('is_flash_deal')->default(false)->index();
 

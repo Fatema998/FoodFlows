@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\ProductController;
 
 Route::get('/user', function (Request $request) {
@@ -22,10 +24,25 @@ Route::controller(AuthController::class)->group(function(){
     });
 });
 
-
 Route::controller(ProductController::class)->group(function(){
     Route::prefix('products')->group(function(){
-         Route::get('/','index');
-        Route::get('/{slug}','show');
+        Route::get('/','getAllProducts');
+        Route::get('/best-sellers','bestSellingProducts');
+        Route::get('/wise', 'wiseProducts');
+        Route::get('/{slug}','getProductBySlug');
+    });
+});
+
+
+
+Route::controller(SliderController::class)->group(function(){
+    Route::prefix('sliders')->group(function(){
+        Route::get('/','getAllSlider');
+    });
+});
+
+Route::controller(BrandController::class)->group(function(){
+    Route::prefix('brands')->group(function(){
+        Route::get('/','getAllBrand');
     });
 });
