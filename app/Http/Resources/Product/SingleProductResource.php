@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Product;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductListResource extends JsonResource
+class SingleProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,15 +14,22 @@ class ProductListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-            return [
+        return [
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
             'price' => $this->price,
             'discount' => $this->discount,
             'sold_price' => $this->sold_price,
-            
+            'product_code' => $this->product_code,
+            'sell_count' => $this->sell_count,
             'quantity' => $this->quantity,
+            'main_thumbnail' => $this->main_thumbnail,
+
+            'long_descriptions' => $this->long_descriptions,
+            'short_description' => $this->short_description,
+            'materials' => $this->materials,
+
             'is_trending' => $this->is_trending,
             'is_limited' => $this->is_limited,
             'is_active' => $this->is_active,
@@ -30,7 +37,21 @@ class ProductListResource extends JsonResource
             'is_flash_deal' => $this->is_flash_deal,
             'flash_deal_start' => $this->flash_deal_start,
             'flash_deal_end' => $this->flash_deal_end,
-           
+            'brand'=>$this->brand ? [
+                'id' => $this->brand->id,
+                'name' => $this->brand->name,
+                'slug' => $this->brand->slug,
+            ] : null,
+            'category'=>$this->category ? [
+                'id' => $this->category->id,
+                'name' => $this->category->name,
+                'slug' => $this->category->slug,
+            ] : null,
+            'subcategory'=>$this->subcategory ? [
+                'id' => $this->subcategory->id,
+                'name' => $this->subcategory->name,
+                'slug' => $this->subcategory->slug,
+            ] : null,
             'sizes' => $this->sizes->map(function ($size) {
                 return [
                     'id' => $size->id,
@@ -49,7 +70,10 @@ class ProductListResource extends JsonResource
                 ];
             }),
 
-          
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
+            'meta_keywords' => $this->meta_keywords,
+
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

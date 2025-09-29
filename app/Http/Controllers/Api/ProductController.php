@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\SingleProductResource;
-use App\Http\Resources\ProductListResource;
+use App\Http\Resources\Product\ProductListResource;
+use App\Http\Resources\Product\SingleProductResource;
 
 class ProductController extends Controller
 {

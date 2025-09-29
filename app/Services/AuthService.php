@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Repository\AuthRepository;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Laminas\Diactoros\ServerRequestFactory;
+use App\Http\Resources\User\SingleUserResource;
 use Laminas\Diactoros\Response as Psr7Response;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
@@ -45,7 +45,7 @@ class AuthService
          $token = $user->createToken('My API Token')->plainTextToken;
 
         $userData =[
-            'user'=> new UserResource($user),
+            'user'=> new SingleUserResource($user),
             'token'=>$token
         ];
 
@@ -60,7 +60,7 @@ class AuthService
             return false;
         }
 
-        return new UserResource($authUser);
+        return new SingleUserResource($authUser);
     }
 
     public function userLogout(){
