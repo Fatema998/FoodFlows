@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
 
       // Create 5 subcategories for each parent
       $parents->each(function ($parent) {
-          Category::factory()->count(10)->create([
+          Category::factory()->count(3)->create([
               'parent_id' => $parent->id,
           ]);
       });

@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
 
 
         // Create 10 products
-        $products = Product::factory()->count(10)->create();
+        $products = Product::factory()->count(50)->create();
 
         // Attach random colors and sizes
         $colors = Color::pluck('id')->toArray();

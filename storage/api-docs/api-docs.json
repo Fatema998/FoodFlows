@@ -443,6 +443,83 @@
                 }
             }
         },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all categories with optional limit",
+                "operationId": "8fd7cf774d9bb887cd9c2d86960cd7cd",
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CategoryListResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No categories found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occured: Internal Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -818,6 +895,46 @@
     },
     "components": {
         "schemas": {
+            "CategoryListResource": {
+                "title": "Category Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Clothing"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "clothing"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "https://example.com/images/clothing.png"
+                    },
+                    "products_count": {
+                        "type": "integer",
+                        "example": 25
+                    },
+                    "children": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryListResource"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    }
+                },
+                "type": "object"
+            },
             "ProductListResource": {
                 "title": "Product List Resource",
                 "description": "Product resource response",
@@ -1172,6 +1289,10 @@
         {
             "name": "Brands",
             "description": "Brands"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
         },
         {
             "name": "Products",

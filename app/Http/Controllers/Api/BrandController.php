@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use App\Helper\ApiResponse;
 use Illuminate\Http\Request;
 use App\Services\BrandService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class BrandController extends Controller

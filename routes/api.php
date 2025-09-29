@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CategoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -34,7 +35,6 @@ Route::controller(ProductController::class)->group(function(){
 });
 
 
-
 Route::controller(SliderController::class)->group(function(){
     Route::prefix('sliders')->group(function(){
         Route::get('/','getAllSlider');
@@ -44,5 +44,11 @@ Route::controller(SliderController::class)->group(function(){
 Route::controller(BrandController::class)->group(function(){
     Route::prefix('brands')->group(function(){
         Route::get('/','getAllBrand');
+    });
+});
+
+Route::controller(CategoryController::class)->group(function(){
+    Route::prefix('categories')->group(function(){
+        Route::get('/','getAllCategories');
     });
 });
