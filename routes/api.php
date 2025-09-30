@@ -31,7 +31,7 @@ Route::controller(ProductController::class)->group(function(){
         Route::get('/best-sellers','bestSellingProducts');
         Route::get('/recently-views','recentlyViewedProducts');
         Route::get('/wise', 'wiseProducts');
-        Route::get('/{slug}','getProductBySlug');
+        Route::get('/{identifier}','getProductByIdentifier');
     });
 });
 
@@ -49,7 +49,11 @@ Route::controller(BrandController::class)->group(function(){
 });
 
 Route::controller(CategoryController::class)->group(function(){
-    Route::prefix('categories')->group(function(){
-        Route::get('/','getAllCategories');
+    Route::prefix('categories')->group(function () {
+    Route::get('/', 'getAllCategories');
+    // Route::get('/slug/{slug}', 'getCategoryProductsBySlug');
+    // Route::get('/id/{id}', 'getCategoryProductsById');
+    Route::get('/{identifier}/products', 'getCategoryProducts');
     });
+
 });

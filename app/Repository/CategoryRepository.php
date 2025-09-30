@@ -26,4 +26,16 @@ class CategoryRepository
             ->get();
     }
 
+    public function getCategoryById($id)
+    {
+        return Category::where('id', $id)
+              ->where('is_active', true)
+              ->first();
+    }
+
+    public function getCategoryBySlug($slug)
+    {
+        return Category::where('slug', $slug)->where('is_active', true)->first();
+    }
+
 }

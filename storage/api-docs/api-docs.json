@@ -520,6 +520,131 @@
                 }
             }
         },
+        "/api/categories/{identifier}/products": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get products of a category by ID or slug",
+                "description": "Fetches all products under a category using either category ID (numeric) or slug (string).",
+                "operationId": "0a76ac12d16417b516733ad6145128e2",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Category ID (numeric) or slug (string)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category products fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data fetched successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Electronics"
+                                                },
+                                                "slug": {
+                                                    "type": "string",
+                                                    "example": "electronics"
+                                                },
+                                                "products": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "iPhone 15"
+                                                            },
+                                                            "price": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 999.99
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "active"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Category not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred: Something went wrong"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -557,22 +682,22 @@
                 }
             }
         },
-        "/api/products/{slug}": {
+        "/api/products/{identifier}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
-                "summary": "Get a product by slug",
-                "operationId": "7e722f454baa886d09674492bcafbed9",
+                "summary": "Get product by ID or slug",
+                "description": "Fetch a single product using either its numeric ID or slug.",
+                "operationId": "afdab46ef956e2de0edcd9af5455063f",
                 "parameters": [
                     {
-                        "name": "slug",
+                        "name": "identifier",
                         "in": "path",
-                        "description": "The slug of the product",
+                        "description": "Product ID (numeric) or slug (string)",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "example": "samsung-galaxy-s23"
+                            "type": "string"
                         }
                     }
                 ],
@@ -600,6 +725,26 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Bad request - product fetch failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Product not found",
                         "content": {
@@ -613,6 +758,26 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred: Something went wrong"
                                         }
                                     },
                                     "type": "object"

@@ -201,15 +201,16 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/products/{slug}",
-     *     summary="Get a product by slug",
+     *     path="/api/products/{identifier}",
      *     tags={"Products"},
+     *     summary="Get product by ID or slug",
+     *     description="Fetch a single product using either its numeric ID or slug.",
      *     @OA\Parameter(
-     *         name="slug",
+     *         name="identifier",
      *         in="path",
      *         required=true,
-     *         description="The slug of the product",
-     *         @OA\Schema(type="string", example="samsung-galaxy-s23")
+     *         description="Product ID (numeric) or slug (string)",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -219,22 +220,46 @@ class ProductController extends Controller
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Success"),
      *             @OA\Property(property="data", ref="#/components/schemas/SingleProductResource")
+     *         )s
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request - product fetch failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Product fetch failed")
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Product not found",
-     *         @OA\JsonContent(type="object",
+     *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="status", type="string", example="error"),
      *             @OA\Property(property="message", type="string", example="Product not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Exception occurred: Something went wrong")
      *         )
      *     )
      * )
      */
-    public function getProductBySlug(string $slug)
+    public function getProductByIdentifier($identifier)
     {
         try {
-            $product = $this->productService->getProductBySlug($slug);
+             if (is_numeric($identifier)) {
+                // call service directly instead of controller method
+                $product = $this->productService->getProductById($identifier);           
+              } else {
+                $product = $this->productService->getProductBySlug($identifier);           
+               }
 
             if ($product) {
 
@@ -261,7 +286,6 @@ class ProductController extends Controller
             );
         }
     }
-   
     /**
      * @OA\Get(
      *     path="/api/products/best-sellers",

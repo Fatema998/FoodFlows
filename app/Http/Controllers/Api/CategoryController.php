@@ -110,4 +110,101 @@ class CategoryController extends Controller
     }
 
 
+    //category wise products  with details by slug or id 
+
+    /**
+ * @OA\Get(
+ *     path="/api/categories/{identifier}/products",
+ *     tags={"Categories"},
+ *     summary="Get products of a category by ID or slug",
+ *     description="Fetches all products under a category using either category ID (numeric) or slug (string).",
+ *     @OA\Parameter(
+ *         name="identifier",
+ *         in="path",
+ *         required=true,
+ *         description="Category ID (numeric) or slug (string)",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category products fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="success"),
+ *             @OA\Property(property="message", type="string", example="Data fetched successfully"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="name", type="string", example="Electronics"),
+ *                 @OA\Property(property="slug", type="string", example="electronics"),
+ *                 @OA\Property(
+ *                     property="products",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=101),
+ *                         @OA\Property(property="name", type="string", example="iPhone 15"),
+ *                         @OA\Property(property="price", type="number", format="float", example=999.99),
+ *                         @OA\Property(property="status", type="string", example="active")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Category not found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Category fetch failed")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Exception occurred: Something went wrong")
+ *         )
+ *     )
+ * )
+ */
+
+    public function getCategoryProducts($identifier)
+    {
+        try {
+            if (is_numeric($identifier)) {
+                // call service directly instead of controller method
+                $category = $this->categoryService->getCategoryProductsById($identifier);
+            } else {
+                $category = $this->categoryService->getCategoryProductsBySlug($identifier);
+            }
+
+            if ($category) {
+                return ApiResponse::success(
+                    status: self::SUCCESS_STATUS,
+                    message: self::SUCCESS_MESSAGE,
+                    data: $category
+                );
+            }
+
+            return ApiResponse::error(
+                status: self::ERROR_STATUS,
+                message: "Category " . self::FAILED_MESSAGE,
+                statusCode: 400
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Unable to fetch category: ' . $e->getMessage());
+            return ApiResponse::error(
+                status: "error",
+                message: "Exception occurred: " . $e->getMessage(),
+                statusCode: 500
+            );
+        }
+    }
+
 }

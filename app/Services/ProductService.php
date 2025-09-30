@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use App\Repository\ProductRepository;
 use App\Repository\ProductViewRepository;
 use App\Http\Resources\Product\ProductListResource;
@@ -90,14 +91,13 @@ class ProductService
         ];
 
         if (!isset($columns[$type])) {
-            throw new \Exception("Invalid product type: $type");
+            throw new Exception("Invalid product type: $type");
         }
 
         $products = $this->productRepository->getTypeWiseProducts($columns[$type], $limit);
 
         return ProductListResource::collection($products);
     }
-
 
     // Recently viewed products
     public function getRecentlyViewedProducts($limit){
