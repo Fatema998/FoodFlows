@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
@@ -45,6 +46,12 @@ Route::controller(SliderController::class)->group(function(){
 Route::controller(BrandController::class)->group(function(){
     Route::prefix('brands')->group(function(){
         Route::get('/','getAllBrand');
+    });
+});
+
+Route::controller(ColorController::class)->group(function(){
+    Route::prefix('colors')->group(function(){
+        Route::get('/','getAllColor');
     });
 });
 

@@ -20,7 +20,7 @@ use App\Http\Controllers\Controller;
  *     @OA\Property(property="name", type="string", example="Clothing"),
  *     @OA\Property(property="slug", type="string", example="clothing"),
  *     @OA\Property(property="image", type="string", example="https://example.com/images/clothing.png"),
- *     @OA\Property(property="products_count", type="integer", example=25),
+ *     @OA\Property(property="items", type="integer", example=25),
  *     @OA\Property(
  *         property="children",
  *         type="array",

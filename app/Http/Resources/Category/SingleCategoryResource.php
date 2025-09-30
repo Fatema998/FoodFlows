@@ -24,14 +24,13 @@ class SingleCategoryResource extends JsonResource
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
             'meta_keywords' => $this->meta_keywords,
-            'products_count' => $this->whenCounted('products'),
+            'items' => $this->whenCounted('products'),
             $this->mergeWhen(
                 $this->whenLoaded('products')->isNotEmpty(),
                 [
                     'products' => ProductListResource::collection($this->products),
                 ]
             ),
-
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

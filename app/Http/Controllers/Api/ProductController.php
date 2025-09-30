@@ -198,59 +198,59 @@ class ProductController extends Controller
         }
     }
 
+/**
+ * @OA\Get(
+ *     path="/api/products/{identifier}",
+ *     tags={"Products"},
+ *     summary="Get product by ID or slug",
+ *     description="Fetch a single product using either its numeric ID or slug.",
+ *     @OA\Parameter(
+ *         name="identifier",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID (numeric) or slug (string)",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product details",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="success"),
+ *             @OA\Property(property="message", type="string", example="Success"),
+ *             @OA\Property(property="data", ref="#/components/schemas/SingleProductResource")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad request - product fetch failed",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Product fetch failed")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Product not found")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Exception occurred: Something went wrong")
+ *         )
+ *     )
+ * )
+ */
 
-    /**
-     * @OA\Get(
-     *     path="/api/products/{identifier}",
-     *     tags={"Products"},
-     *     summary="Get product by ID or slug",
-     *     description="Fetch a single product using either its numeric ID or slug.",
-     *     @OA\Parameter(
-     *         name="identifier",
-     *         in="path",
-     *         required=true,
-     *         description="Product ID (numeric) or slug (string)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product details",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Success"),
-     *             @OA\Property(property="data", ref="#/components/schemas/SingleProductResource")
-     *         )s
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request - product fetch failed",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="string", example="error"),
-     *             @OA\Property(property="message", type="string", example="Product fetch failed")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Product not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="string", example="error"),
-     *             @OA\Property(property="message", type="string", example="Product not found")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="string", example="error"),
-     *             @OA\Property(property="message", type="string", example="Exception occurred: Something went wrong")
-     *         )
-     *     )
-     * )
-     */
     public function getProductByIdentifier($identifier)
     {
         try {

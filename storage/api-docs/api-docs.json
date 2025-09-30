@@ -645,6 +645,66 @@
                 }
             }
         },
+        "/api/colors": {
+            "get": {
+                "tags": [
+                    "Colors"
+                ],
+                "summary": "Get all available colors",
+                "operationId": "7d79f7e5b4066c6bedb6195278388dd2",
+                "responses": {
+                    "200": {
+                        "description": "List of colors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ColorResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No colors found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Colors fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -1140,7 +1200,7 @@
                         "type": "string",
                         "example": "https://example.com/images/clothing.png"
                     },
-                    "products_count": {
+                    "items": {
                         "type": "integer",
                         "example": 25
                     },
@@ -1149,6 +1209,37 @@
                         "items": {
                             "$ref": "#/components/schemas/CategoryListResource"
                         }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "29/09/2025"
+                    }
+                },
+                "type": "object"
+            },
+            "ColorResource": {
+                "title": "Color Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Red"
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "#FF0000"
+                    },
+                    "items": {
+                        "description": "Number of products with this color",
+                        "type": "integer",
+                        "example": 25
                     },
                     "created_at": {
                         "type": "string",
@@ -1519,6 +1610,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Colors",
+            "description": "Colors"
         },
         {
             "name": "Products",
