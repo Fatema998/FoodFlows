@@ -439,7 +439,6 @@ class ProductController extends Controller
             );
         }
     }
-    
     /**
      * @OA\Get(
      *     path="/api/products/recently-views",

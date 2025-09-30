@@ -3,26 +3,28 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Size;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Size>
- */
 class SizeFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Size::class;
+
     public function definition(): array
     {
         return [
-            //
-            'name' => $this->faker->unique()->randomElement(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']),
-            'position' => $this->faker->numberBetween(1, 100),
-            'is_active' => $this->faker->boolean(80), // 80% chance of being true
-            'created_at' => now(),
-            'updated_at' => now(),
+            'type' => $this->faker->randomElement(['men','women','kids','other','unisex']),
+            'name' => $this->faker->word,
+            'numeric' => $this->faker->numberBetween(1,50),
+            'chest_min' => $this->faker->numberBetween(20,50),
+            'chest_max' => $this->faker->numberBetween(20,50),
+            'waist_min' => $this->faker->numberBetween(20,50),
+            'waist_max' => $this->faker->numberBetween(20,50),
+            'hip_min' => $this->faker->numberBetween(20,50),
+            'hip_max' => $this->faker->numberBetween(20,50),
+            'bust_min' => $this->faker->numberBetween(20,50),
+            'bust_max' => $this->faker->numberBetween(20,50),
+            'is_active' => true,
+            'position' => 1,
         ];
     }
 }

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->index();
             $table->unsignedBigInteger('subcategory_id')->nullable()->index();
             
+            $table->enum('type', ['men', 'women', 'kids', 'other', 'unisex'])->default('other')->index();
+
             $table->decimal('price', 10, 2);
             $table->decimal('discount', 5, 2)->default(0);
             $table->decimal('sold_price', 10, 2)->nullable();

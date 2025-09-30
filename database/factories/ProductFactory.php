@@ -33,6 +33,7 @@ class ProductFactory extends Factory
             'brand_id' => $this->faker->randomElement($brandIds),
             'category_id' => $this->faker->randomElement($categoryIds),
             'subcategory_id' => $subcategoryId,
+            'type' => $this->faker->randomElement(['men','women','kids','other','unisex']),
             'price' => $price,
             'discount' => $discount,
             'sold_price' => $soldPrice,
