@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\ProductType;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,13 +28,15 @@ class ProductFactory extends Factory
         $categoryIds = Category::pluck('id')->toArray();
         $subcategoryId = $this->faker->optional()->randomElement($categoryIds);
 
+        $productTypeIds = ProductType::pluck('id')->toArray();
+
         return [
             'title' => $title = $this->faker->words(3, true),
             'slug' => Str::slug($title) . '-' . Str::random(5),
             'brand_id' => $this->faker->randomElement($brandIds),
             'category_id' => $this->faker->randomElement($categoryIds),
             'subcategory_id' => $subcategoryId,
-            'type' => $this->faker->randomElement(['men','women','kids','other','unisex']),
+            'product_type_id' => $this->faker->randomElement($productTypeIds),
             'price' => $price,
             'discount' => $discount,
             'sold_price' => $soldPrice,
