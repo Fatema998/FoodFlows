@@ -13,8 +13,27 @@ class CategoryRepository
     {
         //
     }
+    public function getAllCategories($limit)
+    {
+        return Category::withCount('products')
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->withCount('products')
+                    ->orderBy('position', 'asc');
+            }])
+            ->orderBy('position', 'asc')
+            ->paginate($limit); 
+    }
 
-   public function getCategoriesWithChildren()
+
+    public function getAllSubCategories(){
+        return Category::withCount('products') 
+            ->whereNotNull('parent_id')                  
+            ->orderBy('position', 'asc')                 
+            ->get();
+    }
+
+   public function getActiveCategoriesWithChildren()
     {
         return Category::where('is_active', true)
             ->withCount('products')

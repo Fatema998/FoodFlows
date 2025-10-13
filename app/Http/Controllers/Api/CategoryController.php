@@ -83,7 +83,7 @@ class CategoryController extends Controller
        
       try {
         
-          $categories = $this->categoryService->getCategories();
+          $categories = $this->categoryService->getActiveCategories();
 
             if ($categories) {
                 return ApiResponse::success(

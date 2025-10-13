@@ -172,7 +172,7 @@ class ProductController extends Controller
     {
         try {
 
-            $products = $this->productService->getProducts();
+            $products = $this->productService->getActiveProducts();
 
             if ($products) {
                 return ApiResponse::success(

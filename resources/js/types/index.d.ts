@@ -41,3 +41,36 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+
+export interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+  image?: string | null;
+  is_active: boolean;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
+
+// Define TypeScript types
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  parent_id: number | null;
+  image?: string;
+  description?: string;
+  position?: number;
+  is_active: boolean;
+  items:number;
+  products_count: number;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  created_at?: string;
+  updated_at?: string;
+  children?: Category[]; // Recursive type for subcategories
+}

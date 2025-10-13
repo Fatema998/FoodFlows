@@ -14,8 +14,17 @@ class BrandRepository
         //
     }
 
-    // Get all brands
-    public function getBrands($limit){
+    // Get  all brands 
+    public function getAllBrands($limit)
+    {
+        return Brand::orderBy('position')
+                    ->limit($limit)
+                    ->get();
+    }
+
+    
+    // Get active brands
+    public function getActiveBrands($limit){
         
        return Brand::where('is_active', true)
                     ->orderBy('position')

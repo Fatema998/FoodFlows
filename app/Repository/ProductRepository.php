@@ -14,8 +14,14 @@ class ProductRepository
         //
     }
 
-    // Get all products
-    public function getProducts(){
+    public function getAllProducts($limit){
+       return Product::with(['brand', 'category', 'subcategory'])
+                  ->orderBy('created_at', 'desc')
+                  ->paginate($limit);
+    }
+
+    // Get all active products
+    public function getActiveProducts(){
        return  Product::with(['sizes', 'variants'])
                     ->where('is_active', true)
                     ->orderBy('created_at', 'desc')
@@ -28,7 +34,6 @@ class ProductRepository
                     ->where('id', $id)
                     ->where('is_active', true)
                     ->first();          
-
     }
     
     // Get product by slug
@@ -37,11 +42,6 @@ class ProductRepository
                     ->where('slug', $slug)
                     ->where('is_active', true)
                     ->first();
-
-        // return Product::with(['brand','category', 'subcategory', 'sizes', 'variants'])
-        //     ->where('is_active', true)
-        //     ->whereRaw("MATCH(slug) AGAINST(? IN NATURAL LANGUAGE MODE)", [$slug])
-        //     ->first();
     }
 
     // best selling products
@@ -52,7 +52,6 @@ class ProductRepository
                      ->take($limit) // Limit to top 10 best sellers
                     ->get();
     }                
-
 
     public function getTypeWiseProducts($column, $limit = 10)
     {

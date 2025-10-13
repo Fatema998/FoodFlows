@@ -82,9 +82,10 @@ class BrandController extends Controller
 
    public function getAllBrand(Request $request){
         try {
-             $limit = (int) $request->query('limit', 10); // Default limit is 10 if not provided
 
-            $brands = $this->brandService->getBrands($limit);
+            $limit = (int) $request->query('limit', 10); // Default limit is 10 if not provided
+
+            $brands = $this->brandService->getActiveBrands($limit);
 
             if ($brands) {
                 return ApiResponse::success(

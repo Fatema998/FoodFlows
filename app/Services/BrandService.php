@@ -15,10 +15,14 @@ class BrandService
     {
         $this->brandRepository= $brandRepository;
     }
+
+    public function getAllBrands($limit){
+         return  BrandListResource::collection($this->brandRepository->getAllBrands($limit));
+    }
     
-    // Get all brands
-    public function getBrands($limit){
-       return  BrandListResource::collection($this->brandRepository->getBrands($limit));
+    // Get active brands
+    public function getActiveBrands($limit){
+       return  BrandListResource::collection($this->brandRepository->getActiveBrands($limit));
     }
 
 }

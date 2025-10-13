@@ -22,9 +22,6 @@ Route::get('/signin', function () {
 })->name('signin');
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard/Home');
-})->name('dashboard');
 
 
 Route::get('/profile', function () {
@@ -88,3 +85,5 @@ Route::get('/videos', function () {
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
+

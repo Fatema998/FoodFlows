@@ -19,6 +19,8 @@ class BrandListResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'image' => $this->image,
+            'is_active'=> $this->is_active,
+            'position'=> $this->position,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

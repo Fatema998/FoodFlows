@@ -16,15 +16,20 @@ class ProductService
     protected $productRepository;
     protected $productViewRepository;
 
-    public function __construct(ProductRepository $productRepository,ProductViewRepository $productViewRepository)
+    public function __construct(ProductRepository $productRepository, ProductViewRepository $productViewRepository)
     {
         $this->productRepository= $productRepository;
         $this->productViewRepository= $productViewRepository;
     }
 
-    // Get all products
-    public function getProducts(){
-       return   ProductListResource::collection($this->productRepository->getProducts());
+    // get all products
+    public function getAllProducts($limit){
+       return   ProductListResource::collection($this->productRepository->getAllProducts($limit));
+    }
+
+    // Get all active products
+    public function getActiveProducts(){
+       return   ProductListResource::collection($this->productRepository->getActiveProducts());
     }
 
     // Get product by ID

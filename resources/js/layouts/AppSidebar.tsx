@@ -31,6 +31,16 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Ecommerce", path: "/dashboard", pro: false }],
   },
   {
+    icon: <GridIcon />,
+    name: "Brand",
+    subItems: [{ name: "All Brand", path: "/dashboard/brands", pro: false },{ name: "Add Brand", path: "/dashboard/brands", pro: false }],
+  },
+  {
+    icon: <GridIcon />,
+    name: "Category",
+    subItems: [{ name: "All Category", path: "/dashboard/categories", pro: false },{ name: "Add Category", path: "/dashboard/categories", pro: false },{ name: "Add Sub Category", path: "/dashboard/categories", pro: false }],
+  },
+  {
     icon: <CalendarHeartIcon />,
     name: "Calendar",
     path: "/calendar",

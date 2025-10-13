@@ -20,6 +20,8 @@ class CategoryListResource extends JsonResource
             'slug' => $this->slug,
             'image' => $this->image,
             'items' => $this->products_count,
+            'position'=>$this->position,
+            'is_active'=>$this->is_active,
             'children' => CategoryListResource::collection($this->whenLoaded('children')),
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),

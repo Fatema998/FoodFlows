@@ -11,19 +11,29 @@ class CategoryService
     /**
      * Create a new class instance.
      */
-    protected $categoryRepository;
+   protected $categoryRepository;
 
-    public function __construct(CategoryRepository $categoryRepository)
+   public function __construct(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository= $categoryRepository;
     }
-    
-    // Get all brands
-    public function getCategories(){
-       return CategoryListResource::collection($this->categoryRepository->getCategoriesWithChildren());
+
+   // get all categories
+   public function getAllCategories($limit){
+       return CategoryListResource::collection($this->categoryRepository->getAllCategories($limit));
     }
 
-    // Get category by ID 
+   // get all subcategories
+   public function getAllSubCategories(){
+       return $this->categoryRepository->getAllSubCategories();
+    }
+    
+   // Get all active categories use api
+   public function getActiveCategories(){
+       return CategoryListResource::collection($this->categoryRepository->getActiveCategoriesWithChildren());
+    }
+
+    // Get category by ID  use api
     public function getCategoryProductsById($id){
         $category = $this->categoryRepository->getCategoryById($id);
         if($category){

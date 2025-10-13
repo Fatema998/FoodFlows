@@ -35,7 +35,21 @@ class ProductListResource extends JsonResource
             'is_flash_deal' => $this->is_flash_deal,
             'flash_deal_start' => $this->flash_deal_start,
             'flash_deal_end' => $this->flash_deal_end,
-           
+            'brand'=>$this->brand ? [
+                'id' => $this->brand->id,
+                'name' => $this->brand->name,
+                'slug' => $this->brand->slug,
+            ] : null,
+            'category'=>$this->category ? [
+                'id' => $this->category->id,
+                'name' => $this->category->name,
+                'slug' => $this->category->slug,
+            ] : null,
+            'subcategory'=>$this->subcategory ? [
+                'id' => $this->subcategory->id,
+                'name' => $this->subcategory->name,
+                'slug' => $this->subcategory->slug,
+            ] : null,
             'sizes' => $this->sizes->map(function ($size) {
                 return [
                     'id' => $size->id,
