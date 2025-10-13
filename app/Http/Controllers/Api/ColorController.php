@@ -68,7 +68,7 @@ class ColorController extends Controller
     public function getAllColor()
     {
         try {
-            $colors = $this->colorService->getAllColors();
+            $colors = $this->colorService->getActiveColors();
 
             if ($colors) {
                 return ApiResponse::success(

@@ -16,7 +16,7 @@ class BrandService
         $this->brandRepository= $brandRepository;
     }
 
-    public function getAllBrands($limit){
+    public function getAllBrands($limit=null){
          return  BrandListResource::collection($this->brandRepository->getAllBrands($limit));
     }
     

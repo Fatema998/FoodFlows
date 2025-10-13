@@ -15,11 +15,17 @@ class BrandRepository
     }
 
     // Get  all brands 
-    public function getAllBrands($limit)
+    public function getAllBrands($limit = null)
     {
-        return Brand::orderBy('position')
-                    ->limit($limit)
-                    ->get();
+        $query = Brand::orderBy('position', 'asc');
+
+        // ✅ If limit exists and is numeric → paginate
+        if (!empty($limit) && is_numeric($limit)) {
+            return $query->paginate($limit);
+        }
+
+        // ✅ Otherwise → return all results
+        return $query->get();
     }
 
     

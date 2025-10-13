@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Exception;
 use App\Repository\ProductRepository;
+use Illuminate\Http\Request;
 use App\Repository\ProductViewRepository;
 use App\Http\Resources\Product\ProductListResource;
 use App\Http\Resources\Product\SingleProductResource;
@@ -23,8 +24,9 @@ class ProductService
     }
 
     // get all products
-    public function getAllProducts($limit){
-       return   ProductListResource::collection($this->productRepository->getAllProducts($limit));
+    public function getAllProducts(Request $request,$limit){
+         $products = $this->productRepository->getAllProducts($request, $limit);
+        return ProductListResource::collection($products);
     }
 
     // Get all active products

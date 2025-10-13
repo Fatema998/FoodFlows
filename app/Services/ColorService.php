@@ -22,6 +22,13 @@ class ColorService
     {
         // Logic to retrieve all colors
         return ColorListResource::collection($this->colorRepository->getAllColors());
+        
+    }
+
+    public function getActiveColors()
+    {
+        // Logic to retrieve all colors
+        return ColorListResource::collection($this->colorRepository->getActiveColors());
 
     }
 

@@ -19,7 +19,7 @@ class CategoryService
     }
 
    // get all categories
-   public function getAllCategories($limit){
+   public function getAllCategories($limit=null){
        return CategoryListResource::collection($this->categoryRepository->getAllCategories($limit));
     }
 

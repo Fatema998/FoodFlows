@@ -17,6 +17,15 @@ class ColorRepository
     public function getAllColors()
     {
         // Logic to retrieve all colors from the database
+        return Color::withCount('products')
+            ->orderBy('position', 'asc')
+            ->get();    
+    }
+
+    
+    public function getActiveColors()
+    {
+        // Logic to retrieve all colors from the database
         return Color::where('is_active', true)
             ->withCount('products')
             ->having('products_count', '>', 0)

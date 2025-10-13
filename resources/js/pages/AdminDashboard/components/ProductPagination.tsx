@@ -1,4 +1,6 @@
 
+
+
 import React from "react";
 import { router } from "@inertiajs/react";
 
@@ -19,34 +21,49 @@ interface Props {
   links: PaginationLinks;
   meta: PaginationMeta;
   pageTitle: string;
+  filters?: Record<string, any>; // pass current active filters
 }
 
-const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
+const ProductPagination: React.FC<Props> = ({ links, meta, pageTitle, filters }) => {
   const handlePageChange = (page: number) => {
-    if (page !== meta.current_page) router.visit(`?page=${page}`);
+    const query = { ...filters, page };
+    router.get("/dashboard/products", query, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+    });
   };
 
   const handleDirectLink = (url: string | null) => {
-    if (url) router.visit(url);
+    if (!url) return;
+    const queryParams = new URLSearchParams(url.split("?")[1]);
+    const query: Record<string, any> = {};
+
+    queryParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    router.get("/dashboard/products", query, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+    });
   };
 
-  // Generate compact pagination with ellipsis (for large sets)
   const getPageNumbers = (): (number | string)[] => {
     const total = meta.last_page;
     const current = meta.current_page;
-    const delta = 2; // number of pages to show around the current page
+    const delta = 2;
     const range: (number | string)[] = [];
     const rangeWithDots: (number | string)[] = [];
     let l: number;
 
-    // Generate base range (1 through total)
     for (let i = 1; i <= total; i++) {
       if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
         range.push(i);
       }
     }
 
-    // Insert ellipsis between gaps
     for (let i of range) {
       if (l) {
         if (i - l === 2) {
@@ -63,17 +80,14 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
   };
 
   return (
-    <div className="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
-      {/* Info */}
+    <div className="p-3 flex flex-col items-center justify-between gap-4 sm:flex-row border-t border-gray-200">
       <div className="text-sm text-gray-600 dark:text-gray-400">
         Page <span className="font-semibold">{meta.current_page}</span> of{" "}
         <span className="font-semibold">{meta.last_page}</span> — Total:{" "}
         <span className="font-semibold">{meta.total}</span> {pageTitle}
       </div>
 
-      {/* Pagination Controls */}
       <div className="flex items-center gap-1 flex-wrap justify-center">
-        {/* Prev Button */}
         <button
           onClick={() => handleDirectLink(links.prev)}
           disabled={!links.prev}
@@ -86,7 +100,6 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
           ← Prev
         </button>
 
-        {/* Page Numbers */}
         {getPageNumbers().map((page, index) =>
           page === "..." ? (
             <span key={index} className="px-2 text-gray-500 dark:text-gray-400">
@@ -107,7 +120,6 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
           )
         )}
 
-        {/* Next Button */}
         <button
           onClick={() => handleDirectLink(links.next)}
           disabled={!links.next}
@@ -124,4 +136,5 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
   );
 };
 
-export default Pagination;
+export default ProductPagination;
+

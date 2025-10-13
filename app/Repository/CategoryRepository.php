@@ -13,17 +13,26 @@ class CategoryRepository
     {
         //
     }
-    public function getAllCategories($limit)
+    
+    public function getAllCategories($limit = null)
     {
-        return Category::withCount('products')
+        $query = Category::withCount('products')
             ->whereNull('parent_id')
             ->with(['children' => function ($query) {
                 $query->withCount('products')
                     ->orderBy('position', 'asc');
             }])
-            ->orderBy('position', 'asc')
-            ->paginate($limit); 
+            ->orderBy('position', 'asc');
+
+        // ✅ If limit exists and is numeric, use pagination
+        if (!empty($limit) && is_numeric($limit)) {
+            return $query->paginate($limit);
+        }
+
+        // ✅ Otherwise, return all results without pagination
+        return $query->get();
     }
+
 
 
     public function getAllSubCategories(){
