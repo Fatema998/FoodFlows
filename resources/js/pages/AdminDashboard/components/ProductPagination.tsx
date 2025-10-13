@@ -1,9 +1,7 @@
 
-
-
 import React from "react";
 import { router } from "@inertiajs/react";
-
+import { index } from "@/routes/admin/product";
 interface PaginationLinks {
   first: string | null;
   last: string | null;
@@ -27,7 +25,7 @@ interface Props {
 const ProductPagination: React.FC<Props> = ({ links, meta, pageTitle, filters }) => {
   const handlePageChange = (page: number) => {
     const query = { ...filters, page };
-    router.get("/dashboard/products", query, {
+    router.get(index().url, query, {
       preserveScroll: true,
       preserveState: true,
       replace: true,
@@ -43,7 +41,7 @@ const ProductPagination: React.FC<Props> = ({ links, meta, pageTitle, filters })
       query[key] = value;
     });
 
-    router.get("/dashboard/products", query, {
+    router.get(index().url, query, {
       preserveScroll: true,
       preserveState: true,
       replace: true,

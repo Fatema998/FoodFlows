@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 
@@ -23,12 +24,18 @@ Route::prefix('dashboard')->group(function(){
         });
     });
 
-
-    // category routes 
+    // color routes 
     Route::controller(CategoryController::class)->group(function(){
         Route::prefix('categories')->group(function(){
             Route::get('/','index')->name('admin.category.index');
             Route::get('/create','create')->name('admin.category.create');
+        });
+    });
+
+    Route::controller(ColorController::class)->group(function(){
+        Route::prefix('colors')->group(function(){
+            Route::get('/','index')->name('admin.color.index');
+            Route::get('/create','create')->name('admin.color.create');
         });
     });
 

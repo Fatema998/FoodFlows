@@ -22,7 +22,6 @@ class ColorRepository
             ->get();    
     }
 
-    
     public function getActiveColors()
     {
         // Logic to retrieve all colors from the database

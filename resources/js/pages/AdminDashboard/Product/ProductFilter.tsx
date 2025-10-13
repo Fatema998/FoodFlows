@@ -1,3 +1,4 @@
+import { index } from '@/routes/admin/product';
 import { Brand, Category } from '@/types';
 import { router } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
@@ -65,7 +66,7 @@ const ProductFilter: React.FC<FilterProps> = ({
             }
         });
 
-        router.get('/dashboard/products', query, {
+        router.get(index().url, query, {
             preserveScroll: true,
             preserveState: true,
             replace: true,
@@ -92,7 +93,7 @@ const ProductFilter: React.FC<FilterProps> = ({
         };
         setLocalFilters(reset);
         router.get(
-            '/dashboard/products',
+            index().url,
             {},
             { preserveScroll: true, preserveState: true },
         );
@@ -110,7 +111,7 @@ const ProductFilter: React.FC<FilterProps> = ({
                         onChange={(e) =>
                             handleChange('limit', Number(e.target.value))
                         }
-                        className="rounded-md w-12 border border-gray-300 bg-gray-50 p-2 text-gray-800 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                        className="w-14 rounded-md border border-gray-300 bg-gray-50 p-2 text-gray-800 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                     >
                         {[5, 10, 20, 30, 40, 50, 100].map((num) => (
                             <option key={num} value={num}>

@@ -2,17 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Exception;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Services\ColorService;
+use App\Http\Controllers\Controller;
 
 class ColorController extends Controller
 {
+    protected $colorService;
+
+    public function __construct(ColorService $colorService)
+    {
+        $this->colorService = $colorService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         //
+        try {
+            $colors = $this->colorService->getAllColors();
+
+            return Inertia::render('AdminDashboard/Color/Index', [
+                'colors' => $colors,
+            ]);
+            
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to load colors: ' . $e->getMessage());
+        }
     }
 
     /**
