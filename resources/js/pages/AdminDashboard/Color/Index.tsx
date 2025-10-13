@@ -5,13 +5,8 @@ import { Head } from '@inertiajs/react';
 import React from 'react';
 import ColorTable from './color-table';
 
-interface PaginatedBrands {
-    data: Color[];
- 
-}
-
 interface Props {
-    colors: PaginatedBrands;
+    colors: Color[];
 }
 
 const Index: React.FC<Props> = ({ colors }) => {
@@ -20,7 +15,7 @@ const Index: React.FC<Props> = ({ colors }) => {
             <Head title="Colors" />
             <div className="p-6">
                 <PageBreadcrumb pageTitle="All Colors" />
-                <ColorTable colors={colors.data} />
+                <ColorTable colors={colors} />
             </div>
         </AppLayout>
     );

@@ -104,7 +104,7 @@ const ColorTable: React.FC<ColorTableProps> = ({ colors }) => {
                                     </TableCell>
 
                                     <TableCell className="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
-                                        {color.items}
+                                        {color.products_count}
                                     </TableCell>
                                     <TableCell className="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
                                         {color.position}
@@ -125,7 +125,9 @@ const ColorTable: React.FC<ColorTableProps> = ({ colors }) => {
                                     </TableCell>
 
                                     <TableCell className="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
-                                        {color.created_at}
+                                        {new Date(
+                                            color.created_at,
+                                        ).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell className="space-x-2 px-4 py-2 text-center">
                                         <Link className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200">

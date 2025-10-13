@@ -21,7 +21,7 @@ class ColorService
     public function getAllColors()
     {
         // Logic to retrieve all colors
-        return ColorListResource::collection($this->colorRepository->getAllColors());
+        return $this->colorRepository->getAllColors();
 
     }
 
