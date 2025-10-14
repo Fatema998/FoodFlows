@@ -17,8 +17,13 @@ class SliderService
         $this->sliderRepository=$sliderRepository;
     }
 
-    // Get all sliders
-    public function getSliders($limit){
-       return  SliderListResource::collection($this->sliderRepository->getSliders($limit));
+    // get all sliders
+       public function getAllSliders(){
+       return  $this->sliderRepository->getAllSliders();
+    }  
+
+    // Get active sliders
+    public function getActiveSliders($limit){
+       return  SliderListResource::collection($this->sliderRepository->getActiveSliders($limit));
     }  
 }

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 
@@ -44,6 +45,13 @@ Route::prefix('dashboard')->group(function(){
         Route::prefix('products')->group(function(){
             Route::get('/','index')->name('admin.product.index');
             Route::get('/create','create')->name('admin.product.create');
+        });
+    });
+
+    Route::controller(SliderController::class)->group(function(){
+        Route::prefix('sliders')->group(function(){
+            Route::get('/','index')->name('admin.slider.index');
+            Route::get('/create','create')->name('admin.slider.create');
         });
     });
 

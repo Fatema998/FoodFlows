@@ -80,7 +80,7 @@ class SliderController extends Controller
         try {
              $limit = (int) $request->query('limit', 3); // Default limit is 10 if not provided
 
-            $sliders = $this->sliderService->getSliders($limit);
+            $sliders = $this->sliderService->getActiveSliders($limit);
 
             if ($sliders) {
                 return ApiResponse::success(

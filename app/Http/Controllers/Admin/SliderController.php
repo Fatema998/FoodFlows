@@ -2,17 +2,34 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Services\SliderService;
+use App\Http\Controllers\Controller;
 
 class SliderController extends Controller
 {
+
+    protected $sliderService;
+
+    public function __construct(SliderService $sliderService)
+    {
+        $this->sliderService = $sliderService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $sliders = $this->sliderService->getAllSliders();
+
+            return Inertia::render('AdminDashboard/Slider/Index', [
+                'sliders' => $sliders,
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to load sliders: ' . $e->getMessage());
+        }
     }
 
     /**

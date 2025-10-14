@@ -15,7 +15,13 @@ class SliderRepository
     }
 
     // Get all active sliders with optional limit
-    public function getSliders($limit)
+    public function getAllSliders()
+    {
+       return Slider::orderBy('position')->get();
+
+    }
+
+    public function getActiveSliders($limit)
     {
         return Slider::where('is_active', true)
                     ->orderBy('position')
