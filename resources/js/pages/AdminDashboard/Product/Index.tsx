@@ -6,8 +6,8 @@ import { Head } from '@inertiajs/react';
 import React from 'react';
 import ProductPagination from '../components/ProductPagination';
 import ProductTable from './product-table';
-import ProductTableHeader from './product-table-header';
 import ProductFilter from './ProductFilter';
+import TableHeader from '../components/table-header';
 
 interface BrandsData {
     data: Brand[];
@@ -37,8 +37,14 @@ const GetAllProducts: React.FC<Props> = ({
 
                 <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-white/[0.05] dark:bg-gray-900">
                     <div className="w-full overflow-x-auto">
+
                         {/* Product table header */}
-                        <ProductTableHeader />
+                        <TableHeader
+                            title="Product"
+                            subTitle=""
+                            url={'#'}
+                            exportLink="#"
+                        />
 
                         {/* Product Filter */}
                         <ProductFilter
@@ -46,9 +52,9 @@ const GetAllProducts: React.FC<Props> = ({
                             brands={brands}
                             categories={categories}
                         />
-
                         {/* Product Table */}
                         <ProductTable products={products.data} />
+
                         {/* Pagination */}
                         <ProductPagination
                             filters={filters}
@@ -56,6 +62,7 @@ const GetAllProducts: React.FC<Props> = ({
                             meta={products.meta}
                             pageTitle="All Products"
                         />
+
                     </div>
                 </div>
             </div>

@@ -31,4 +31,35 @@ class ColorRepository
             ->orderBy('position', 'asc')
             ->get();    
     }
+    
+
+    //  get color By id
+    public function getColorById($id)
+    {
+       return Color::findOrFail($id);
+    }
+
+    // create color
+    public function createColor($data){
+        return Color::create($data);
+    }
+
+    // ✅ Update color
+    public function updateColor($data, $id)
+    {
+
+        $color = $this->getColorById($id);
+        $color->update($data);
+        return $color;
+    }
+
+    // ✅ Delete color
+    public function deleteColor($id)
+    {
+        $color = $this->getColorById($id);
+        $color->delete(); 
+        return $color;
+    }
+
+
 }

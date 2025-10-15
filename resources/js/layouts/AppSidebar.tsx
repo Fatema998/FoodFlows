@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
         name: 'Brand',
         subItems: [
             { name: 'All Brand', path: brandIndex().url, pro: false },
-            { name: 'Add Brand', path: '/dashboard/brands', pro: false },
+            { name: 'Add Brand', path: brandIndex().url, pro: false },
         ],
     },
     {

@@ -37,6 +37,10 @@ Route::prefix('dashboard')->group(function(){
         Route::prefix('colors')->group(function(){
             Route::get('/','index')->name('admin.color.index');
             Route::get('/create','create')->name('admin.color.create');
+            Route::post('/store','store')->name('admin.color.store');
+            Route::get('/edit/{id}','edit')->name('admin.color.edit');
+            Route::post('/update/{id}','update')->name('admin.color.update');
+            Route::get('/delete/{id}','destroy')->name('admin.color.destroy');
         });
     });
 

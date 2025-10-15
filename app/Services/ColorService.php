@@ -25,6 +25,7 @@ class ColorService
 
     }
 
+    // use  api
     public function getActiveColors()
     {
         // Logic to retrieve active colors
@@ -32,14 +33,25 @@ class ColorService
 
     }
 
+    public function getColorById($id){
+        return $this->colorRepository->getColorById($id);
+    }
+
     public function createColor($data)
     {
         // Logic to create a new color
+        return $this->colorRepository->createColor($data);
     }
 
-    public function updateColor($id, $data)
+    public function updateColor($data, $id)
     {
         // Logic to update a color by ID
+
+         return $this->colorRepository->updateColor($data,$id);
     }
 
+    public function deleteColor($id){
+        return $this->colorRepository->deleteColor($id);
+
+    }
 }

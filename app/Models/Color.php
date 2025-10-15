@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Color extends Model
 {
     use HasFactory;
-     protected $fillable = ['name', 'code', 'is_active'];
+     protected $fillable = ['name', 'code', 'is_active','position'];
 
      public function products()
         {
