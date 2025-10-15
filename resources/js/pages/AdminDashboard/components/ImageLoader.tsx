@@ -54,7 +54,7 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
         </div>
       )}
       <img
-        src={`/${imgSrc}`}
+        src={imgSrc}
         alt={alt}
         className={`rounded object-cover w-full h-full ${loading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
         onLoad={handleLoad}

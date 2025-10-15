@@ -21,10 +21,10 @@ class ProductListResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'main_thumbnail'=> $this->main_thumbnail,
             'price' => $this->price,
             'discount' => $this->discount,
             'sold_price' => $this->sold_price,
-            
             'quantity' => $this->quantity,
             'is_trending' => $this->is_trending,
             'is_limited' => $this->is_limited,

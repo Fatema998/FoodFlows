@@ -25,6 +25,7 @@ export interface Product {
   id: number;
   title: string;
   slug: string;
+  main_thumbnail:string;
   price: number;
   discount: number;
   sold_price: number;

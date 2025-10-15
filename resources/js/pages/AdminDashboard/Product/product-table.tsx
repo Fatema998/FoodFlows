@@ -16,6 +16,7 @@ interface ProductTableProps {
 }
 
 const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
+    console.log(products)
     return (
         <Table className="min-w-full text-sm">
             <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-white/[0.05] dark:bg-gray-800">
@@ -119,9 +120,8 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             <TableCell className="px-3 py-2 text-center">
                                 <ImageLoader
                                     src={
-                                        product.variants &&
-                                        product.variants[0]?.image
-                                            ? product.variants[0].image
+                                        product.main_thumbnail
+                                            ? product.main_thumbnail
                                             : '/images/no-image.png'
                                     }
                                     alt={product.title}

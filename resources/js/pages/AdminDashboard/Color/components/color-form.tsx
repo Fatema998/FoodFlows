@@ -8,16 +8,7 @@ import { useToastMessage } from '@/hooks/useToastMessage';
 import { Form } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
-
-interface ColorFormProps {
-  color?: {
-    id: number;
-    name: string;
-    code: string;
-    position?: number;
-    is_active: boolean;
-  };
-}
+import { ColorFormProps } from '../color-type';
 
 const ColorForm: React.FC<ColorFormProps> = ({ color }) => {
   useToastMessage();

@@ -19,7 +19,7 @@ class SliderFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'subtitle' => $this->faker->sentence,
-            'image' => 'assets/sliders/slider-01.jpg',
+            'image' => '/assets/sliders/slider-01.jpg',
             'button_text' => $this->faker->word,
             'link' => $this->faker->url,
             'position' => $this->faker->numberBetween(0, 10),

@@ -43,7 +43,7 @@ class ProductFactory extends Factory
             'product_code' => strtoupper(Str::random(8)),
             'sold_count' => $this->faker->numberBetween(0, 100),
             'quantity' => $this->faker->numberBetween(1, 50),
-            'main_thumbnail' => 'assets/products/thumbnail/product-4.jpg',
+            'main_thumbnail' => '/assets/products/thumbnail/product-4.jpg',
             'short_description' => $this->faker->sentence(),
             'long_descriptions' => $this->faker->paragraphs(3, true),
             'materials' => $this->faker->paragraph(),

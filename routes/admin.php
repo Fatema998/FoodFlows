@@ -22,6 +22,10 @@ Route::prefix('dashboard')->group(function(){
         Route::prefix('brands')->group(function(){
             Route::get('/','index')->name('admin.brand.index');
             Route::get('/create','create')->name('admin.brand.create');
+            Route::post('/store','store')->name('admin.brand.store');
+            Route::get('/edit/{id}','edit')->name('admin.brand.edit');
+            Route::post('/update/{id}','update')->name('admin.brand.update');
+            Route::get('/delete/{id}','destroy')->name('admin.brand.destroy');
         });
     });
 
@@ -30,6 +34,8 @@ Route::prefix('dashboard')->group(function(){
         Route::prefix('categories')->group(function(){
             Route::get('/','index')->name('admin.category.index');
             Route::get('/create','create')->name('admin.category.create');
+            Route::get('/edit/{id}','edit')->name('admin.category.edit');
+
         });
     });
 

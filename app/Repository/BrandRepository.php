@@ -6,35 +6,38 @@ use App\Models\Brand;
 
 class BrandRepository
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    // Get  all brands 
     public function getAllBrands($limit = null)
     {
         $query = Brand::orderBy('position', 'asc');
 
-        // ✅ If limit exists and is numeric → paginate
-        if (!empty($limit) && is_numeric($limit)) {
-            return $query->paginate($limit);
-        }
+        return $limit ? $query->paginate($limit) : $query->get();
+    }
+    // Get active brands
+     public function getActiveBrands($limit){ 
+        return Brand::where('is_active', true) ->orderBy('position') ->limit($limit) ->get();
+     }
 
-        // ✅ Otherwise → return all results
-        return $query->get();
+    public function getBrandById($id)
+    {
+        return Brand::findOrFail($id);
     }
 
-    
-    // Get active brands
-    public function getActiveBrands($limit){
-        
-       return Brand::where('is_active', true)
-                    ->orderBy('position')
-                    ->limit($limit)
-                    ->get();
+    public function createBrand($data)
+    {
+        return Brand::create($data);
+    }
+
+    public function updateBrand($data, $id)
+    {
+        $brand = $this->getBrandById($id);
+        $brand->update($data);
+        return $brand;
+    }
+
+    public function deleteBrand($id)
+    {
+        $brand = $this->getBrandById($id);
+        $brand->delete();
+        return $brand;
     }
 }

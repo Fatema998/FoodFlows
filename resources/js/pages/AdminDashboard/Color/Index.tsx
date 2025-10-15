@@ -12,7 +12,7 @@ interface Props {
     colors: Color[];
 }
 
-const Index: React.FC<Props> = ({ colors }) => {
+const ColorPage: React.FC<Props> = ({ colors }) => {
     useToastMessage()
     return (
         <AppLayout>
@@ -34,4 +34,4 @@ const Index: React.FC<Props> = ({ colors }) => {
     );
 };
 
-export default Index;
+export default ColorPage;

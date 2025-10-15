@@ -40,7 +40,7 @@ class ProductSeeder extends Seeder
                 DB::table('product_variants')->insert([
                     'product_id' => $product->id,
                     'color_id' => $colorId,
-                    'image' => 'assets/products/images/women-yellow-1.jpg',
+                    'image' => '/assets/products/images/women-yellow-1.jpg',
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);

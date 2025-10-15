@@ -6,9 +6,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { destroy, edit } from '@/routes/admin/brand';
 import { Brand } from '@/types';
 import { Link } from '@inertiajs/react';
 import React from 'react';
+import DeleteButton from '../../components/DeleteButton';
 import ImageLoader from '../../components/ImageLoader';
 
 interface BrandTableProps {
@@ -104,12 +106,17 @@ const BrandTable: React.FC<BrandTableProps> = ({ brands }) => {
                                 {brand.created_at}
                             </TableCell>
                             <TableCell className="space-x-2 px-4 py-2 text-center">
-                                <Link className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200">
+                                <Link
+                                    href={edit(brand.id).url}
+                                    className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
+                                >
                                     Edit
                                 </Link>
-                                <button className="inline-block rounded bg-red-100 px-3 py-1 text-xs font-medium text-red-600 transition hover:bg-red-200">
-                                    Delete
-                                </button>
+                                <DeleteButton
+                                    id={brand.id}
+                                    name={brand.name}
+                                    destroyRoute={destroy}
+                                />
                             </TableCell>
                         </TableRow>
                     ))

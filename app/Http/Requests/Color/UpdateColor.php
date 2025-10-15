@@ -14,7 +14,7 @@ class UpdateColor extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('id'); // ✅ Get the ID from route parameter
+        $id = $this->route('id');
 
         return [
             'name' => [

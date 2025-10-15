@@ -6,11 +6,13 @@ use Exception;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Services\BrandService;
+use App\Services\FileUploadService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Brand\CreateBrand;
+use App\Http\Requests\Brand\UpdateBrand;
 
 class BrandController extends Controller
 {
-
     protected $brandService;
 
     public function __construct(BrandService $brandService)
@@ -18,9 +20,7 @@ class BrandController extends Controller
         $this->brandService = $brandService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    /** Display all brands */
     public function index(Request $request)
     {
         try {
@@ -35,52 +35,64 @@ class BrandController extends Controller
         }
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    /** Show create brand form */
     public function create()
     {
-        //
+        return Inertia::render('AdminDashboard/Brand/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    /** Store new brand */
+    public function store(CreateBrand $request)
     {
-        //
+        $data = $request->validated();
+
+        // Upload image if exists
+        if ($request->hasFile('image')) {
+            $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+        }
+
+        $this->brandService->createBrand($data);
+
+        return redirect()->route('admin.brand.index')->with('success', 'Brand created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    /** Show edit form */
+    public function edit($id)
     {
-        //
+        $brand = $this->brandService->getBrandById($id);
+
+        return Inertia::render('AdminDashboard/Brand/Edit', [
+            'brand' => $brand
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    /** Update brand */
+    public function update(UpdateBrand $request, $id)
     {
-        //
+        $data = $request->validated();
+        $brand = $this->brandService->getBrandById($id);
+
+        // Replace image if uploaded
+        if ($request->hasFile('image')) {
+            FileUploadService::delete($brand->image); // delete old image
+            $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+        }
+
+        $this->brandService->updateBrand($data, $id);
+
+        return redirect()->route('admin.brand.index')->with('success', 'Brand updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    /** Delete brand */
+    public function destroy($id)
     {
-        //
-    }
+        $brand = $this->brandService->getBrandById($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Delete image from storage
+        FileUploadService::delete($brand->image);
+
+        $this->brandService->deleteBrand($id);
+
+        return redirect()->route('admin.brand.index')->with('success', 'Brand deleted successfully.');
     }
 }

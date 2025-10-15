@@ -20,7 +20,7 @@ class BrandFactory extends Factory
             //
             'name' => $this->faker->company(),
             'slug' => $this->faker->unique()->slug(),
-            'image' => 'assets/brands/bear.png',
+            'image' => '/assets/brands/bear.png',
             'is_active' => $this->faker->boolean(80), // 80% chance of being true
             'position' => $this->faker->numberBetween(1, 100),
             'created_at' => now(),
