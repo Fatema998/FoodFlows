@@ -105,18 +105,20 @@ const BrandTable: React.FC<BrandTableProps> = ({ brands }) => {
                             <TableCell className="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
                                 {brand.created_at}
                             </TableCell>
-                            <TableCell className="space-x-2 px-4 py-2 text-center">
-                                <Link
-                                    href={edit(brand.id).url}
-                                    className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
-                                >
-                                    Edit
-                                </Link>
-                                <DeleteButton
-                                    id={brand.id}
-                                    name={brand.name}
-                                    destroyRoute={destroy}
-                                />
+                            <TableCell className="px-4 py-2 align-middle text-center">
+                                <div className="inline-flex flex-wrap  items-center justify-center gap-2">
+                                    <Link
+                                        href={edit(brand.id).url}
+                                        className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <DeleteButton
+                                        id={brand.id}
+                                        name={brand.name}
+                                        destroyRoute={destroy}
+                                    />
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))

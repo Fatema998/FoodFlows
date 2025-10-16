@@ -20,79 +20,122 @@ class BrandController extends Controller
         $this->brandService = $brandService;
     }
 
-    /** Display all brands */
+    /**
+     * Display a listing of all brands.
+     */
     public function index(Request $request)
     {
         try {
+            // Get paginated brand list
             $limit = (int) $request->query('limit', 10);
             $brands = $this->brandService->getAllBrands($limit);
 
+            // Render brand index page
             return Inertia::render('AdminDashboard/Brand/Index', [
                 'brands' => $brands,
             ]);
         } catch (Exception $e) {
+            // Handle any exception gracefully
             return redirect()->back()->with('error', 'Failed to load brands: ' . $e->getMessage());
         }
     }
 
-    /** Show create brand form */
+    /**
+     * Show the form for creating a new brand.
+     */
     public function create()
     {
-        return Inertia::render('AdminDashboard/Brand/Create');
+        try {
+            return Inertia::render('AdminDashboard/Brand/Create');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to load create form: ' . $e->getMessage());
+        }
     }
 
-    /** Store new brand */
+    /**
+     * Store a newly created brand in storage.
+     */
     public function store(CreateBrand $request)
     {
-        $data = $request->validated();
+        try {
+            // Validate request data
+            $data = $request->validated();
 
-        // Upload image if exists
-        if ($request->hasFile('image')) {
-            $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+            // Upload image if available
+            if ($request->hasFile('image')) {
+                $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+            }
+
+            // Create brand via service
+            $this->brandService->createBrand($data);
+
+            return redirect()->route('admin.brand.index')->with('success', 'Brand created successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create brand: ' . $e->getMessage());
         }
-
-        $this->brandService->createBrand($data);
-
-        return redirect()->route('admin.brand.index')->with('success', 'Brand created successfully.');
     }
 
-    /** Show edit form */
+    /**
+     * Show the form for editing a brand.
+     */
     public function edit($id)
     {
-        $brand = $this->brandService->getBrandById($id);
+        try {
+            // Retrieve the brand record
+            $brand = $this->brandService->getBrandById($id);
 
-        return Inertia::render('AdminDashboard/Brand/Edit', [
-            'brand' => $brand
-        ]);
+            // Render edit view
+            return Inertia::render('AdminDashboard/Brand/Edit', [
+                'brand' => $brand,
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to load brand: ' . $e->getMessage());
+        }
     }
 
-    /** Update brand */
+    /**
+     * Update the specified brand in storage.
+     */
     public function update(UpdateBrand $request, $id)
     {
-        $data = $request->validated();
-        $brand = $this->brandService->getBrandById($id);
+        try {
+            // Validate input data
+            $data = $request->validated();
+            $brand = $this->brandService->getBrandById($id);
 
-        // Replace image if uploaded
-        if ($request->hasFile('image')) {
-            FileUploadService::delete($brand->image); // delete old image
-            $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+            // Replace old image if a new one is uploaded
+            if ($request->hasFile('image')) {
+                FileUploadService::delete($brand->image); // Delete old image
+                $data['image'] = FileUploadService::upload($request->file('image'), 'brands');
+            }
+
+            // Update brand record
+            $this->brandService->updateBrand($data, $id);
+
+            return redirect()->route('admin.brand.index')->with('success', 'Brand updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update brand: ' . $e->getMessage());
         }
-
-        $this->brandService->updateBrand($data, $id);
-
-        return redirect()->route('admin.brand.index')->with('success', 'Brand updated successfully.');
     }
 
-    /** Delete brand */
+    /**
+     * Remove the specified brand from storage.
+     */
     public function destroy($id)
     {
-        $brand = $this->brandService->getBrandById($id);
+        try {
+            // Retrieve the brand to delete
+            $brand = $this->brandService->getBrandById($id);
 
-        // Delete image from storage
-        FileUploadService::delete($brand->image);
+            // Delete associated image if it exists
+            FileUploadService::delete($brand->image);
 
-        $this->brandService->deleteBrand($id);
+            // Delete brand record from database
+            $this->brandService->deleteBrand($id);
 
-        return redirect()->route('admin.brand.index')->with('success', 'Brand deleted successfully.');
+            return redirect()->route('admin.brand.index')->with('success', 'Brand deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete brand: ' . $e->getMessage());
+        }
     }
 }

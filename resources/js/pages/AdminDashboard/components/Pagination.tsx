@@ -63,7 +63,7 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
   };
 
   return (
-    <div className="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <div className="p-3 border-t border-gray-200 flex flex-col items-center justify-between gap-4 sm:flex-row">
       {/* Info */}
       <div className="text-sm text-gray-600 dark:text-gray-400">
         Page <span className="font-semibold">{meta.current_page}</span> of{" "}

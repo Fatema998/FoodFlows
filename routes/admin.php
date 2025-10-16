@@ -9,8 +9,6 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 
-
-
 Route::prefix('dashboard')->group(function(){
 
     Route::get('/', function () {
@@ -34,8 +32,12 @@ Route::prefix('dashboard')->group(function(){
         Route::prefix('categories')->group(function(){
             Route::get('/','index')->name('admin.category.index');
             Route::get('/create','create')->name('admin.category.create');
+            Route::get('/create/sub','createsub')->name('admin.categorysub.create');
             Route::get('/edit/{id}','edit')->name('admin.category.edit');
-
+            Route::post('/store','store')->name('admin.category.store');
+            Route::get('/edit/{id}','edit')->name('admin.category.edit');
+            Route::post('/update/{id}','update')->name('admin.category.update');
+            Route::get('/delete/{id}','destroy')->name('admin.category.destroy');
         });
     });
 

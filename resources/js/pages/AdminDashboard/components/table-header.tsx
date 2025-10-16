@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 
 interface HeaderProps {
     title: string;
-    subTitle: string;
+    subTitle?: string;
     url: string;
     exportLink?: string;
 }

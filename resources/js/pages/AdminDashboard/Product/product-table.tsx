@@ -16,7 +16,7 @@ interface ProductTableProps {
 }
 
 const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
-    console.log(products)
+    console.log(products);
     return (
         <Table className="min-w-full text-sm">
             <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-white/[0.05] dark:bg-gray-800">
@@ -190,16 +190,18 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                                 {product.created_at}
                             </TableCell>
 
-                            <TableCell className="px-3 py-2 text-center whitespace-nowrap">
-                                <Link
-                                    href={`/products/${product.id}/edit`}
-                                    className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
-                                >
-                                    Edit
-                                </Link>
-                                <button className="ml-2 inline-block rounded bg-red-100 px-3 py-1 text-xs font-medium text-red-600 transition hover:bg-red-200">
-                                    Delete
-                                </button>
+                            <TableCell className="px-4 py-2 text-center align-middle">
+                                <div className="inline-flex flex-wrap items-center justify-center gap-2">
+                                    <Link
+                                        href={`/products/${product.id}/edit`}
+                                        className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <button className="ml-2 inline-block rounded bg-red-100 px-3 py-1 text-xs font-medium text-red-600 transition hover:bg-red-200">
+                                        Delete
+                                    </button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))

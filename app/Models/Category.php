@@ -10,9 +10,9 @@ class Category extends Model
 {
     //
         use HasFactory;
-        protected $fillable = ['name', 'slug', 'description', 'image'];
 
-            
+        protected $fillable = ['name', 'slug', 'description', 'image','is_active','position','parent_id','meta_title','meta_description','meta_keywords'];
+
         // One-to-many: Category has many products
         public function products()
         {

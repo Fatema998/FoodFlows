@@ -36,7 +36,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
     };
 
     return (
-        <>
+        <div>
             {/* Trigger Button */}
             <button
                 onClick={() => setShowConfirm(true)}
@@ -47,8 +47,14 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 
             {/* Confirmation Modal */}
             {showConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+                    onClick={() => setShowConfirm(false)} // overlay click closes modal
+                >
+                    <div
+                        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+                        onClick={(e) => e.stopPropagation()} // stop click from bubbling to overlay
+                    >
                         <h2 className="mb-3 text-xl font-semibold text-gray-800">
                             Confirm Deletion
                         </h2>
@@ -93,7 +99,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

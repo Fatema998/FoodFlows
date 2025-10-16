@@ -33,8 +33,6 @@ class CategoryRepository
         return $query->get();
     }
 
-
-
     public function getAllSubCategories(){
         return Category::withCount('products') 
             ->whereNotNull('parent_id')                  
@@ -56,14 +54,33 @@ class CategoryRepository
 
     public function getCategoryById($id)
     {
-        return Category::where('id', $id)
-              ->where('is_active', true)
-              ->first();
+        return Category::findOrFail($id);
     }
 
     public function getCategoryBySlug($slug)
     {
-        return Category::where('slug', $slug)->where('is_active', true)->first();
+        return Category::where('slug', $slug)->first();
+    }
+
+    // create category
+    public function createCategory($data){
+        return Category::create($data);
+    }
+
+    // ✅ Update category
+    public function updateCategory($data, $id)
+    {
+        $category = $this->getCategoryById($id);
+        $category->update($data);
+        return $category;
+    }
+
+    // ✅ Delete category
+    public function deleteCategory($id)
+    {
+        $category = $this->getCategoryById($id);
+        $category->delete(); 
+        return $category;
     }
 
 }

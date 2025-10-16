@@ -58,4 +58,26 @@ class CategoryService
        return null;
     }
 
+    // get category by id
+    public function getCategoryById($id){
+      return $this->categoryRepository->getCategoryById($id);
+    }
+    
+   public function createCategory($data)
+    {
+        // Logic to create a new category
+        return $this->categoryRepository->createCategory($data);
+    }
+
+    public function updateCategory($data, $id)
+    {
+        // Logic to update a category by ID
+         return $this->categoryRepository->updateCategory($data,$id);
+    }
+
+    // delete category
+    public function deleteCategory($id){
+        return $this->categoryRepository->deleteCategory($id);
+    }
+
 }

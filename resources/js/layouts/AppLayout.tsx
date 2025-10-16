@@ -25,7 +25,7 @@ const LayoutContent: React.FC<LayoutContentProps> = ({ children }) => {
                 } ${isMobileOpen ? 'ml-0' : ''}`}
             >
                 <AppHeader />
-                <div className="mx-auto max-w-(--breakpoint-2xl) p-1 md:p-6">
+                <div className="mx-auto max-w-(--breakpoint-2xl) p-1 md:p-6 z-1">
                     {children}
                 </div>
             </div>
