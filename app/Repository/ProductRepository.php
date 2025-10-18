@@ -101,7 +101,6 @@ class ProductRepository
     public function getProductById($id){
         return Product::with(['brand','category', 'subcategory', 'sizes', 'variants' ])
                     ->where('id', $id)
-                    ->where('is_active', true)
                     ->first();          
     }
     
@@ -109,7 +108,6 @@ class ProductRepository
     public function getProductBySlug($slug){
         return Product::with(['brand','category', 'subcategory', 'sizes', 'variants' ])
                     ->where('slug', $slug)
-                    ->where('is_active', true)
                     ->first();
     }
 
@@ -131,5 +129,25 @@ class ProductRepository
             ->get();
     }
 
+    // create product
+    public function createProduct($data){
+        return Product::create($data);
+    }
 
+    // ✅ Update product
+    public function updateProduct($data, $id)
+    {
+        $product = $this->getProductById($id);
+        $product->update($data);
+        return $product;
+    }
+
+    // ✅ Delete product
+    public function deleteProduct($id)
+    {
+        $product = $this->getProductById($id);
+        $product->delete(); 
+        return $product;
+    }
+    
 }

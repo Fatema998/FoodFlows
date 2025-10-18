@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_type_id')->index();
             
             $table->decimal('price', 10, 2);
-            $table->decimal('discount', 5, 2)->default(0);
+            $table->integer('discount')->default(0);
             $table->decimal('sold_price', 10, 2)->nullable();
 
             $table->string('product_code')->unique();
@@ -48,15 +48,23 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
 
-            $table->timestamps();
-
+        
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('set null');
+            // $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('set null');
 
+
+            $table->boolean('has_size')->default(false); // true for apparel/shoes, false for electronics/accessories
+            $table->foreignId('size_guide_id')->nullable()->constrained()->nullOnDelete();
+            
             // Composite indexes for faster common queries
             $table->index(['is_active', 'quantity']);
             $table->index(['is_flash_deal', 'flash_deal_start']);
+
+
+            $table->timestamps();
+
         });
 
         // Pivot table for sizes

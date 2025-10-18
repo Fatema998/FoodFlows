@@ -21,7 +21,7 @@ import { index as brandIndex ,create as brandCreate } from '@/routes/admin/brand
 import { index as categoryIndex,create as categoryCreate } from '@/routes/admin/category';
 import { create  as createSubCategory} from '@/routes/admin/categorysub';
 import { index as colorIndex ,create as colorCreate } from '@/routes/admin/color';
-import { index as productIndex } from '@/routes/admin/product';
+import { index as productIndex ,create as productCreate} from '@/routes/admin/product';
 
 type NavItem = {
     name: string;
@@ -66,7 +66,7 @@ const navItems: NavItem[] = [
         name: 'Product',
         subItems: [
             { name: 'All Product', path: productIndex().url, pro: false },
-            { name: 'Add Product', path: productIndex().url, pro: false },
+            { name: 'Add Product', path: productCreate().url, pro: false },
         ],
     },
     {

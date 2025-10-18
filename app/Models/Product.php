@@ -19,26 +19,34 @@ class Product extends Model
         'brand_id',
         'category_id',
         'subcategory_id',
+        'product_type_id',
         'price',
         'discount',
         'sold_price',
         'product_code',
-        'sell_count',
+        'sold_price',
         'quantity',
         'main_thumbnail',
         'short_description',
         'long_descriptions',
         'materials',
+        'is_active',
         'is_trending',
         'is_limited',
-        'is_active',
+        'is_todays_pick',
+        'is_new_arrival',
         'is_featured',
         'is_flash_deal',
         'flash_deal_start',
         'flash_deal_end',
         'meta_title',
         'meta_description',
-        'meta_keywords'
+        'meta_keywords',
+
+        'has_size',
+        'size_guide_id'
+
+
     ];
     
    // Relationships

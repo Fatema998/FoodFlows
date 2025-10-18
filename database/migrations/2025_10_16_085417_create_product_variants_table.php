@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-
+            
             // Foreign keys
             $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('color_id')->index();
             $table->string('image')->nullable();
-
-            $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
@@ -27,6 +25,8 @@ return new class extends Migration
 
             // Ensure unique combinations of product and color
             $table->unique(['product_id', 'color_id']);
+
+            $table->timestamps();
         });
     }
 

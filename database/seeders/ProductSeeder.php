@@ -19,11 +19,11 @@ class ProductSeeder extends Seeder
         // Clear existing products
      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-    DB::table('product_variants')->truncate();
-    DB::table('product_sizes')->truncate();
-    DB::table('products')->truncate();
+     DB::table('product_variants')->truncate();
+     DB::table('product_sizes')->truncate();
+     DB::table('products')->truncate();
 
-    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
 
         // Create 10 products

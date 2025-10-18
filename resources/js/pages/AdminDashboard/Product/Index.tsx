@@ -8,6 +8,7 @@ import ProductPagination from '../components/ProductPagination';
 import ProductTable from './product-table';
 import ProductFilter from './ProductFilter';
 import TableHeader from '../components/table-header';
+import { useToastMessage } from '@/hooks/useToastMessage';
 
 interface BrandsData {
     data: Brand[];
@@ -29,6 +30,9 @@ const GetAllProducts: React.FC<Props> = ({
     categories,
     filters,
 }) => {
+
+    useToastMessage();
+    
     return (
         <AppLayout>
             <Head title="Products" />

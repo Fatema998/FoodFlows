@@ -3,24 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
+use App\Models\Size;
 use Inertia\Inertia;
+use App\Models\ProductType;
 use Illuminate\Http\Request;
 use App\Services\BrandService;
+use App\Services\ColorService;
 use App\Services\ProductService;
 use App\Services\CategoryService;
+use App\Services\FileUploadService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\UpdateProduct;
 
 class ProductController extends Controller
 {
     protected $productService;
     protected $brandService;
     protected $categoryService;
+    protected $colorService;
+
     
-    public function __construct(ProductService $productService,BrandService $brandService,CategoryService $categoryService)
+    public function __construct(ProductService $productService,BrandService $brandService,CategoryService $categoryService,ColorService $colorService)
     {
         $this->productService = $productService;
         $this->brandService = $brandService;
         $this->categoryService = $categoryService;
+        $this->colorService = $colorService;
+
     }
 
     /**
@@ -69,6 +78,17 @@ class ProductController extends Controller
     public function create()
     {
         //
+        $brands = $this->brandService->getAllBrands();
+        $categories = $this->categoryService->getAllCategories();
+        $colors = $this->colorService->getAllColors();
+
+         return Inertia::render('AdminDashboard/Product/Create',[
+            'brands'=>$brands,
+            'categories'=>$categories,
+            'colors'=>$colors,
+            'productTypes'=>ProductType::all(),
+            'sizes'=>Size::all()
+         ]);
     }
 
     /**
@@ -93,14 +113,45 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //
+        $product = $this->productService->getProductByIdAdmin($id);
+        $brands = $this->brandService->getAllBrands();
+        $categories = $this->categoryService->getAllCategories();
+        $colors = $this->colorService->getAllColors();
+
+         return Inertia::render('AdminDashboard/Product/Edit',[
+            'product'=>$product,
+            'brands'=>$brands,
+            'categories'=>$categories,
+            'colors'=>$colors,
+            'productTypes'=>ProductType::all(),
+            'sizes'=>Size::all()
+         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProduct $request, string $id)
     {
-        //
+        try {
+            $data = $request->validated();
+            $product = $this->productService->getProductByIdAdmin($id);
+
+            // Replace image if uploaded
+            if ($request->hasFile('main_thumbnail')) {
+                FileUploadService::delete($product->main_thumbnail); // Delete old image
+                $data['main_thumbnail'] = FileUploadService::upload($request->file('main_thumbnail'), 'products/thumbnail');
+            }
+
+            // Update category
+            $this->productService->updateProduct($data, $id);
+
+            return redirect()->route('admin.product.index')->with('success', 'Product updated successfully.');
+
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update category: ' . $e->getMessage());
+        }
+
     }
 
     /**

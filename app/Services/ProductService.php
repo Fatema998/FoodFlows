@@ -111,4 +111,27 @@ class ProductService
         return ProductListResource::collection($this->productViewRepository->getRecentlyViewedProducts($limit));
     } 
 
+    // admin works
+    // Get product by ID
+    public function getProductByIdAdmin($id){
+        $product = $this->productRepository->getProductById($id);
+        return $product;
+    }
+
+    public function createProduct($data)
+    {
+        // Logic to create a new Product
+        return $this->productRepository->createProduct($data);
+    }
+
+    public function updateProduct($data, $id)
+    {
+        // Logic to update a Product by ID
+         return $this->productRepository->updateProduct($data,$id);
+    }
+
+    // delete product
+    public function deleteCategory($id){
+        return $this->productRepository->deleteCategory($id);
+    }
 }

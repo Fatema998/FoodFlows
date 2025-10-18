@@ -12,7 +12,9 @@ use Database\Seeders\SliderSeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\SizeGuideSeeder;
 use Database\Seeders\ProductTypeSeeder;
+use Database\Seeders\SizeGuideMeasurementSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,7 +50,10 @@ class DatabaseSeeder extends Seeder
             ColorSeeder::class,
             ProductTypeSeeder::class,
             SizeSeeder::class,
-            ProductSeeder::class
+            SizeGuideSeeder::class,
+            SizeGuideMeasurementSeeder::class,
+            ProductSeeder::class,
+            
         ]);
     }
 }

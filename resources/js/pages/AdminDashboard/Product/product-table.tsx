@@ -193,7 +193,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             <TableCell className="px-4 py-2 text-center align-middle">
                                 <div className="inline-flex flex-wrap items-center justify-center gap-2">
                                     <Link
-                                        href={`/products/${product.id}/edit`}
+                                        href={`/dashboard/products/edit/${product.id}`}
                                         className="inline-block rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 transition hover:bg-blue-200"
                                     >
                                         Edit

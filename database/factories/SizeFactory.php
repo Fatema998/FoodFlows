@@ -9,22 +9,14 @@ class SizeFactory extends Factory
 {
     protected $model = Size::class;
 
-    public function definition(): array
+    public function definition()
     {
+        $sizes = ['XS','S','M','L','XL','6','7','8','9','10'];
+        $types = ['apparel','shoes'];
+
         return [
-            'type' => $this->faker->randomElement(['men','women','kids','other','unisex']),
-            'name' => $this->faker->word,
-            'numeric' => $this->faker->numberBetween(1,50),
-            'chest_min' => $this->faker->numberBetween(20,50),
-            'chest_max' => $this->faker->numberBetween(20,50),
-            'waist_min' => $this->faker->numberBetween(20,50),
-            'waist_max' => $this->faker->numberBetween(20,50),
-            'hip_min' => $this->faker->numberBetween(20,50),
-            'hip_max' => $this->faker->numberBetween(20,50),
-            'bust_min' => $this->faker->numberBetween(20,50),
-            'bust_max' => $this->faker->numberBetween(20,50),
-            'is_active' => true,
-            'position' => 1,
+            'name' => $this->faker->randomElement($sizes),
+            'type' => $this->faker->randomElement($types),
         ];
     }
 }

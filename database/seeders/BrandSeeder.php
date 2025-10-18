@@ -15,7 +15,10 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-      DB::table('brands')->delete(); // clear table before seeding
+      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+      Brand::truncate(); // safer than delete() as it resets auto-increment
+      DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
       Brand::factory()->count(10)->create();
     }
 }
