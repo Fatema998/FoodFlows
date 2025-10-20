@@ -148,7 +148,7 @@ const ProductFilter: React.FC<FilterProps> = ({
                                 handleChange('search', e.target.value)
                             }
                             type="text"
-                            placeholder="Search products..."
+                            placeholder="Search product title or code..."
                             className="h-10 w-full rounded-md border border-gray-300 bg-gray-50 pr-3 pl-10 text-sm text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-400 dark:focus:border-blue-500"
                         />
                     </div>

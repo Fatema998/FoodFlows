@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Option {
     value: string;
@@ -55,6 +55,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             options.find((option) => option.value == value)?.label || '',
     );
 
+    // 🔹 Ensure parent form receives latest data
+    useEffect(() => {
+        onChange?.(selectedOptions);
+    }, [selectedOptions]);
 
     return (
         <div className="w-full">
@@ -112,8 +116,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                                         className="h-full w-full appearance-none border-0 bg-transparent p-1 pr-2 text-sm outline-hidden placeholder:text-gray-800 focus:border-0 focus:ring-0 focus:outline-hidden dark:placeholder:text-white/90"
                                         readOnly
                                         value="Select option"
-                                        name={name}
-                                        id={id}
                                     />
                                 )}
                             </div>
@@ -177,6 +179,16 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                         </div>
                     )}
                 </div>
+
+                {/* 🔹 Hidden inputs for submitting data */}
+                {selectedOptions.map((value, index) => (
+                    <input
+                        key={index}
+                        type="hidden"
+                        name={name}
+                        value={value}
+                    />
+                ))}
             </div>
         </div>
     );

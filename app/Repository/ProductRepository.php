@@ -32,12 +32,13 @@ class ProductRepository
         ];
 
         // 🔍 Search by title or code
-        if ($search = $request->query('search')) {
+       if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                 ->orWhere('product_code', 'like', "%{$search}%");
             });
         }
+
 
         // 📅 Date range filters
         if ($startDate = $request->query('start_date')) {

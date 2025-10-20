@@ -9,6 +9,7 @@ const CreateProductPage = ({
     productTypes,
     sizes,
     colors,
+    sizeGuides
 }) => {
     console.log(brands, categories, productTypes, sizes, colors);
 
@@ -46,6 +47,7 @@ const CreateProductPage = ({
             label: item.name,
         })) ?? [];
 
+    console.log(sizeGuides,'sizeGuides')
 
     return (
         <AppLayout>

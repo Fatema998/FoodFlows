@@ -9,6 +9,7 @@ import ProductTable from './product-table';
 import ProductFilter from './ProductFilter';
 import TableHeader from '../components/table-header';
 import { useToastMessage } from '@/hooks/useToastMessage';
+import { create } from '@/routes/admin/product';
 
 interface BrandsData {
     data: Brand[];
@@ -46,7 +47,7 @@ const GetAllProducts: React.FC<Props> = ({
                         <TableHeader
                             title="Product"
                             subTitle=""
-                            url={'#'}
+                            url={create().url}
                             exportLink="#"
                         />
 

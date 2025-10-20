@@ -22,6 +22,7 @@ class ProductListResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'main_thumbnail'=> $this->main_thumbnail,
+            'product_code'=>$this->product_code,
             'price' => $this->price,
             'discount' => $this->discount,
             'sold_price' => $this->sold_price,

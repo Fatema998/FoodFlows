@@ -66,6 +66,7 @@ class UpdateProduct extends FormRequest
             'size_guide_id' => ['nullable', Rule::exists('size_guides', 'id')],
             'sizes' => ['nullable', 'array'],
             'sizes.*' => [Rule::exists('sizes', 'id')],
+
         ];
     }
 
@@ -99,6 +100,9 @@ class UpdateProduct extends FormRequest
             'sizes.*.exists' => 'One or more selected sizes are invalid.',
 
             'meta_title.max' => 'Meta title must not exceed 255 characters.',
+
+
+
         ];
     }
 }
