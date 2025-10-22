@@ -30,6 +30,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     productTypeOptions,
     sizeOptions,
     colorOptions,
+    sizeGuidesOptions,
 }) => {
     // ====== STATE SETUP ======
     const [isActive, setIsActive] = useState<boolean>(
@@ -69,7 +70,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     );
     const [subcategories, setSubcategories] = useState<Category[]>([]);
 
-    const [variants, setVariants] = useState<any[]>(product?.variants ?? []);
+    const [variants, setVariants] = useState<any[]>(product?.variants ?? [{ color_id: '', image: null}]);
 
     console.log(variants, 'variants');
     // ====== FORM SETUP ======
@@ -91,6 +92,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
     const addVariant = () =>
         setVariants([...variants, { color_id: '', image: null }]);
+
     const removeVariant = (index: number) =>
         setVariants(variants.filter((_, i) => i !== index));
 
@@ -439,15 +441,28 @@ const ProductForm: React.FC<ProductFormProps> = ({
                             </div>
                             {/* Sizes */}
                             {hasSize == true && (
-                                <MultiSelect
-                                    label="Sizes"
-                                    options={sizeOptions}
-                                    name="sizes[]"
-                                    defaultSelected={selectedSizes}
-                                    onChange={(value) =>
-                                        setSelectedSizes(value)
-                                    }
-                                />
+                                <>
+                                    <MultiSelect
+                                        label="Sizes"
+                                        options={sizeOptions}
+                                        name="sizes[]"
+                                        defaultSelected={selectedSizes}
+                                        onChange={(value) =>
+                                            setSelectedSizes(value)
+                                        }
+                                    />
+                                    <Label>Size Gidedes</Label>{' '}
+                                    <Select
+                                        options={sizeGuidesOptions}
+                                        name="size_guide_id"
+                                        defaultValue={String(
+                                            product?.size_guide_id ?? '',
+                                        )}
+                                    />{' '}
+                                    <InputError
+                                        message={errors?.size_guide_id}
+                                    />{' '}
+                                </>
                             )}
 
                             {/* Variants */}

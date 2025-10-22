@@ -85,7 +85,6 @@ class ProductController extends Controller
         $brands = $this->brandService->getAllBrands();
         $categories = $this->categoryService->getAllCategories();
         $colors = $this->colorService->getAllColors();
-        $sizeGuides = SizeGuide::with('measurements')->get();
 
          return Inertia::render('AdminDashboard/Product/Create',[
             'brands'=>$brands,
@@ -93,7 +92,7 @@ class ProductController extends Controller
             'colors'=>$colors,
             'productTypes'=>ProductType::all(),
             'sizes'=>Size::all(),
-            'sizeGuides'=>$sizeGuides,
+            'sizeGuides'=>SizeGuide::with('measurements')->get()
          ]);
     }
 
@@ -163,8 +162,6 @@ class ProductController extends Controller
         $brands = $this->brandService->getAllBrands();
         $categories = $this->categoryService->getAllCategories();
         $colors = $this->colorService->getAllColors();
-        $sizeGuides = SizeGuide::with('measurements')->get();
-
 
          return Inertia::render('AdminDashboard/Product/Edit',[
             'product'=>$product,
@@ -172,7 +169,8 @@ class ProductController extends Controller
             'categories'=>$categories,
             'colors'=>$colors,
             'productTypes'=>ProductType::all(),
-            'sizes'=>Size::all()
+            'sizes'=>Size::all(),
+            'sizeGuides'=>SizeGuide::with('measurements')->get()
          ]);
     }
 
@@ -182,6 +180,8 @@ class ProductController extends Controller
    public function update(UpdateProduct $request, string $id)
     {
         try {
+
+            // dd($request->all());
 
             $data = $request->validated();
             // dd($request->variants);

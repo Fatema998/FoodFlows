@@ -11,7 +11,7 @@ const CreateProductPage = ({
     colors,
     sizeGuides
 }) => {
-    console.log(brands, categories, productTypes, sizes, colors);
+    console.log(brands, categories, productTypes, sizes, colors,sizeGuides);
 
     const brandOptions =
         brands?.data?.map((item) => ({
@@ -47,7 +47,11 @@ const CreateProductPage = ({
             label: item.name,
         })) ?? [];
 
-    console.log(sizeGuides,'sizeGuides')
+
+   const sizeGuidesOptions = sizeGuides.map((item)=>({
+        value:String(item.id),
+        label:`Product Type:${item.product_type}, Title:${item.title}. Gender:${item.gender}`
+    }))
 
     return (
         <AppLayout>
@@ -61,6 +65,7 @@ const CreateProductPage = ({
                         productTypeOptions={productTypeOptions}
                         sizeOptions={sizeOptions}
                         colorOptions={colorOptions}
+                        sizeGuidesOptions={sizeGuidesOptions}
                     />
                 </div>
             </div>

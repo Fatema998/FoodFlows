@@ -10,9 +10,10 @@ const EditProductPage = ({
     productTypes,
     sizes,
     colors,
+    sizeGuides,
 }) => {
     console.log(product,brands, categories, productTypes, sizes, colors);
-
+console.log(sizeGuides,'sizeGuides')
 
 
     const brandOptions =
@@ -48,7 +49,13 @@ const EditProductPage = ({
             value: String(item.id),
             label: item.name,
         })) ?? [];
+    
+    const sizeGuidesOptions = sizeGuides.map((item)=>({
+        value:String(item.id),
+        label:`Product Type:${item.product_type}, Title:${item.title}. Gender:${item.gender}`
+    }))
 
+    console.log(sizeGuidesOptions,'sizeGuidesOptions')
 
     return (
         <AppLayout>
@@ -63,6 +70,7 @@ const EditProductPage = ({
                         productTypeOptions={productTypeOptions}
                         sizeOptions={sizeOptions}
                         colorOptions={colorOptions}
+                        sizeGuidesOptions={sizeGuidesOptions}
                     />
                 </div>
             </div>
