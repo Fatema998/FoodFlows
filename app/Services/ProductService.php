@@ -120,6 +120,16 @@ class ProductService
 
     public function createProduct($data)
     {
+         // Price and discount from the request
+        $price = (float) $data['price'];
+        $discount = (float) ($data['discount'] ?? 0);
+
+        // Calculate sold price
+        $soldPrice = $price - ($price * $discount / 100);
+
+        // Add sold_price to $data
+        $data['sold_price'] = number_format($soldPrice, 2, '.', '');
+
         // Logic to create a new Product
         return $this->productRepository->createProduct($data);
     }
@@ -127,7 +137,21 @@ class ProductService
     public function updateProduct($data, $id)
     {
         // Logic to update a Product by ID
-         return $this->productRepository->updateProduct($data,$id);
+         // Price and discount from the request
+        $price = (float) $data['price'];
+        $discount = (float) ($data['discount'] ?? 0);
+
+        // Calculate sold price
+        $soldPrice = $price - ($price * $discount / 100);
+
+        // Add sold_price to $data
+        $data['sold_price'] = number_format($soldPrice, 2, '.', '');
+
+        // Optional: check the output
+        // dd($data);
+
+        // Update product via repository
+        return $this->productRepository->updateProduct($data, $id);
     }
 
     // delete product

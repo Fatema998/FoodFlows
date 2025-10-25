@@ -53,7 +53,9 @@ class DatabaseSeeder extends Seeder
             SizeGuideSeeder::class,
             SizeGuideMeasurementSeeder::class,
             ProductSeeder::class,
-            
+            OrderStatusSeeder::class,
+            PaymentGatewaySeeder::class,
+            ShippingChargeSeeder::class
         ]);
     }
 }
