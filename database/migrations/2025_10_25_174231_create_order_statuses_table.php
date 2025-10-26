@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_statuses', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name', 155);
             $table->string('slug', 155)->unique();
             $table->boolean('status')->default(false)->index(); // Indexed for faster filtering
