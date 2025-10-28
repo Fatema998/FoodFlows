@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // BIGINT UNSIGNED primary key
 
             $table->string('invoice_id', 55)->unique();
-            $table->integer('amount')->default(0);              // Total amount before discount
+            $table->integer('total_amount')->default(0);              // Total amount before discount
             $table->integer('discount')->default(0);            // Discount amount
             $table->integer('shipping_charge')->default(0);     // Shipping cost
 

@@ -11,6 +11,18 @@ class OrderDetails extends Model
     /** @use HasFactory<\Database\Factories\OrderDetailsFactory> */
     use HasFactory;
 
+        protected $fillable = [
+            'order_id',
+            'product_id',
+            'product_name',
+            'product_code',
+            'purchase_price',
+            'sale_price',
+            'qty',
+            'color_id',
+            'size_id',
+        ];
+
     public function shipping(){
         return $this->belongsTo(Shipping::class, 'order_id','order_id')->select('id','order_id','name','phone','address');
     }

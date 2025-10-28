@@ -115,7 +115,7 @@
                                 </tr>
                                 <tr style="background:#4DBC60;color:#fff">
                                     <td><strong>Final Total</strong></td>
-                                    <td><strong>৳{{$order->amount}}</strong></td>
+                                    <td><strong>৳{{$order->total_amount}}</strong></td>
                                 </tr>
                             </tbody>
                         </table>

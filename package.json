@@ -52,6 +52,7 @@
         "@types/react-dom": "^19.0.2",
         "@vitejs/plugin-react": "^4.6.0",
         "apexcharts": "^5.3.5",
+        "axios": "^1.13.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",

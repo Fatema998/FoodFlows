@@ -11,6 +11,16 @@ class Shipping extends Model
     /** @use HasFactory<\Database\Factories\ShippingFactory> */
     use HasFactory;
 
+     protected $fillable = [
+        'order_id',
+        'customer_id',
+        'name',
+        'email',
+        'phone',
+        'address',
+        'shipping_charge_id',
+    ];
+
     public function shippingCharge()
     {
         return $this->belongsTo(ShippingCharge::class,'shipping_charge_id');

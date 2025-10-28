@@ -5,7 +5,7 @@ import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import { X, Search } from "lucide-react";
 import { index } from "@/routes/admin/order";
-
+import axios from "axios";
 // 🧾 Type Definitions
 interface VariantColor {
   id: number;
@@ -38,7 +38,7 @@ interface ShippingCharge {
 }
 
 interface OrderItem {
-  id: number;
+  product_id: number;
   product_name: string;
   product_code: string;
   purchase_price: number;
@@ -62,8 +62,9 @@ interface OrderFormData {
   shipping: ShippingData;
   items: OrderItem[];
   discount: number;
-
+  total_amount?: number;
   shipping_charge: number;
+  payment_method: string;
 }
 
 interface OrderFormProps {
@@ -83,6 +84,10 @@ export default function OrderForm({
   shippingCharge,
   order,
 }: OrderFormProps) {
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
   const { data, setData, post, processing } = useForm<OrderFormData>({
     shipping: {
       name: order?.shipping?.name || "",
@@ -93,7 +98,9 @@ export default function OrderForm({
     },
     items:
       order?.orderdetails?.map((orderDetail) => ({
-        id: orderDetail.product_id,
+        id: orderDetail.id,
+        order_id: orderDetail.order_id,
+        product_id: orderDetail.product_id,
         product_name: orderDetail.product_name,
         product_code: orderDetail.product_code,
         purchase_price: orderDetail.purchase_price,
@@ -114,6 +121,7 @@ export default function OrderForm({
       })) || [],
     discount: order?.discount || 0,
     shipping_charge: order?.shipping_charge || 0,
+    payment_method: 'cash_on_delivery'
   });
 
   const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
@@ -134,19 +142,19 @@ export default function OrderForm({
     const product = products.find((p) => p.id === Number(selectedProduct));
     if (!product) return;
 
-    const exists = data.items.find((item) => item.id === product.id);
+    const exists = data.items.find((item) => item.product_id === product.id);
     if (exists) {
       setData(
         "items",
         data.items.map((item) =>
-          item.id === product.id
+          item.product_id === product.id
             ? { ...item, qty: item.qty + quantity }
             : item
         )
       );
     } else {
       const newItem: OrderItem = {
-        id: product.id,
+        product_id: product.id,
         product_name: product.title,
         product_code: product.product_code,
         purchase_price: product.price,
@@ -170,14 +178,14 @@ export default function OrderForm({
   };
 
   const handleRemoveItem = (id: number): void => {
-    setData("items", data.items.filter((item) => item.id !== id));
+    setData("items", data.items.filter((item) => item.product_id !== id));
   };
 
   const handleChangeQty = (id: number, qty: string): void => {
     setData(
       "items",
       data.items.map((item) =>
-        item.id === id ? { ...item, qty: Number(qty) } : item
+        item.product_id === id ? { ...item, qty: Number(qty) } : item
       )
     );
   };
@@ -186,7 +194,7 @@ export default function OrderForm({
     setData(
       "items",
       data.items.map((item) =>
-        item.id === id ? { ...item, color_id: colorId } : item
+        item.product_id === id ? { ...item, color_id: colorId } : item
       )
     );
   };
@@ -195,7 +203,7 @@ export default function OrderForm({
     setData(
       "items",
       data.items.map((item) =>
-        item.id === id ? { ...item, size_id: sizeId } : item
+        item.product_id === id ? { ...item, size_id: sizeId } : item
       )
     );
   };
@@ -224,7 +232,6 @@ export default function OrderForm({
     const errors: Record<string, string> = {};
     if (!data.shipping.name.trim()) errors.name = "Name is required.";
     if (!data.shipping.phone.trim()) errors.phone = "Phone is required.";
-    if (!data.shipping.address.trim()) errors.address = "Address is required.";
     if (!data.shipping.shipping_charge_id)
       errors.shipping_charge_id = "Please select a delivery area.";
     if (data.items.length === 0) errors.items = "Please add at least one product.";
@@ -232,20 +239,81 @@ export default function OrderForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   const subtotal: number = data.items.reduce(
+  //     (sum, item) => sum + item.sale_price * item.qty,
+  //     0
+  //   );
+  //   const total: number =
+  //     subtotal + Number(data.shipping_charge || 0) - Number(data.discount || 0);
+
+  //   data['total_amount'] = total;
+
+
+  //   try {
+  //     if (order?.id) {
+  //       console.log("✏️ Editing Order:", data);
+
+
+  //       // PUT request to update an existing order
+  //       const response = await axios.post(`/dashboard/orders/update/${order.id}`, data);
+  //       console.log("Order updated:", response.data);
+
+  //     } else {
+  //       console.log("➕ Adding Order:", data);
+
+  //       // POST request to create a new order
+  //       const response = await axios.post(`/dashboard/orders/store`, data);
+  //       console.log("Order created:", response.data);
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error submitting order:", error.response?.data || error.message);
+  //   }
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
-    if (order?.id) {
-      console.log("✏️ Editing Order:", data);
-      // post(route("admin.orders.update", order.id));
-    } else {
-      console.log("➕ Adding Order:", data);
-      // post(route("admin.orders.store"));
+    const subtotal: number = data.items.reduce(
+      (sum, item) => sum + item.sale_price * item.qty,
+      0
+    );
+    const total: number =
+      subtotal + Number(data.shipping_charge || 0) - Number(data.discount || 0);
 
-      
+    data['total_amount'] = total;
+
+    setIsSubmitting(true);
+
+    try {
+      let response;
+
+      if (order?.id) {
+        console.log("✏️ Editing Order:", data);
+        response = await axios.post(`/dashboard/orders/update/${order.id}`, data);
+        console.log("Order updated:", response.data);
+      } else {
+        console.log("➕ Adding Order:", data);
+        response = await axios.post(`/dashboard/orders/store`, data);
+        console.log("Order created:", response.data);
+      }
+
+      // ✅ Redirect after successful submission
+   Inertia.visit("/dashboard/orders");
+  
+  } catch (error: any) {
+      console.error("Error submitting order:", error.response?.data || error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="">
@@ -390,7 +458,7 @@ export default function OrderForm({
                 <tbody>
                   {data.items.map((item, index) => (
                     <tr
-                      key={item.id}
+                      key={item.product_id}
                       className="text-center border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                     >
                       <td className="p-2 ">{index + 1}</td>
@@ -399,7 +467,7 @@ export default function OrderForm({
                         <select
                           className="border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 w-full p-1 rounded-md text-xs md:text-sm"
                           value={item.size_id}
-                          onChange={(e) => handleChangeSize(item.id, e.target.value)}
+                          onChange={(e) => handleChangeSize(item.product_id, e.target.value)}
                         >
                           <option value="">-- Select Size --</option>
                           {item.sizes?.map((size) => (
@@ -413,7 +481,7 @@ export default function OrderForm({
                         <select
                           className="border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 w-full p-1 rounded-md text-xs md:text-sm"
                           value={item.color_id}
-                          onChange={(e) => handleChangeColor(item.id, e.target.value)}
+                          onChange={(e) => handleChangeColor(item.product_id, e.target.value)}
                         >
                           <option value="">-- Select Color --</option>
                           {item.colors?.map((color) => (
@@ -429,7 +497,7 @@ export default function OrderForm({
                           type="number"
                           min="1"
                           value={item.qty}
-                          onChange={(e) => handleChangeQty(item.id, e.target.value)}
+                          onChange={(e) => handleChangeQty(item.product_id, e.target.value)}
                           className="text-xs md:text-sm"
                         />
                       </td>
@@ -437,7 +505,7 @@ export default function OrderForm({
                       <td className="p-2">
                         <span
                           className="bg-rose-500 px-2 md:px-4 py-1 md:py-2 rounded-md cursor-pointer text-white text-xs md:text-sm"
-                          onClick={() => handleRemoveItem(item.id)}
+                          onClick={() => handleRemoveItem(item.product_id)}
                         >
                           Remove
                         </span>
@@ -468,9 +536,9 @@ export default function OrderForm({
               value={data.shipping.email}
               onChange={(e) => setData("shipping.email", e.target.value)}
             />
-            {localErrors.email && (
+            {/* {localErrors.email && (
               <p className="text-red-600 text-sm">{localErrors.email}</p>
-            )}
+            )} */}
 
             <Input
               placeholder="Phone number e.g., 017XXXXXXXX"
@@ -486,9 +554,9 @@ export default function OrderForm({
               value={data.shipping.address}
               onChange={(e) => setData("shipping.address", e.target.value)}
             />
-            {localErrors.address && (
+            {/* {localErrors.address && (
               <p className="text-red-600 text-sm">{localErrors.address}</p>
-            )}
+            )} */}
 
             <select
               className="border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 w-full p-2 rounded-md text-sm"

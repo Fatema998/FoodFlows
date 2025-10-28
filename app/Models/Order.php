@@ -15,6 +15,17 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
+      protected $fillable = [
+        'customer_id',
+        'invoice_id',
+        'total_amount',
+        'discount',
+        'shipping_charge',
+        'coupon_code',
+        'coupon_discount',
+        'order_status_id',
+    ];
+
     public function orderdetails()
     {
         return $this->hasMany(OrderDetails::class, 'order_id');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use App\Models\ShippingCharge;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -63,10 +65,53 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+        public function store(Request $request)
     {
-        //
+        // 1️⃣ Validate request
+        $validator = Validator::make($request->all(), [
+            'shipping.name' => 'required|string|max:255',
+            'shipping.phone' => 'required|string|max:20',
+            'shipping.email' => 'nullable|email|max:255',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.product_name' => 'required|string',
+            'items.*.product_code' => 'required|string',
+            'items.*.purchase_price' => 'required|numeric|min:0',
+            'items.*.sale_price' => 'required|numeric|min:0',
+            'items.*.qty' => 'required|integer|min:1',
+            'payment_method' => 'nullable|string|in:bkash,nagad,cash,cash_on_delivery',
+            'total_amount' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0',
+            'shipping_charge' => 'nullable|numeric|min:0',
+            'coupon_code' => 'nullable|string|max:50',
+            'coupon_discount' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            // 2️⃣ Create order
+            $order = $this->orderService->createOrder($request->all());
+
+            return response()->json([
+                'message' => 'Order created successfully',
+                'data' => $order
+            ], 201);
+
+            // return redirect()->route('admin.order.index');
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -98,6 +143,14 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        // dd($request->all());
+         $this->orderService->updateOrder($id,$request);
+
+        return response(
+            $request['items']
+        );
+        return Inertia::render('AdminDashboard/Order/Index');
+            
     }
 
     /**

@@ -18,11 +18,9 @@ return new class extends Migration
             $table->string('name')->length('255');  
             $table->string('email')->length('255');                
             $table->string('phone')->length('255');    
-            $table->string('address')->length('255');
-                     //  Shipping area relationship 
+            $table->string('address')->length('255')->nullable();
             $table->unsignedBigInteger('shipping_charge_id')->nullable();
             $table->foreign('shipping_charge_id') ->references('id') ->on('shipping_charges') ->onDelete('set null');
-                   
             $table->timestamps();
         });
     }

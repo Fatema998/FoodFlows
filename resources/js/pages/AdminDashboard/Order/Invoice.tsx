@@ -21,7 +21,7 @@ export default function Invoice({ order }) {
         0,
     );
     const grandTotal =
-        order?.amount + order?.shipping_charge - order?.discount || 0;
+        order?.total_amount + order?.shipping_charge - order?.discount || 0;
 
     return (
         <AppLayout>

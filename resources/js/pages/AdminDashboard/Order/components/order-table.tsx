@@ -88,21 +88,21 @@ const OrderTable = ({ orders }) => {
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-gray-700 dark:text-gray-300">
-                                {order.shipping.name || '-'}
+                                {order.shipping?.name || '-'}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                {order.shipping.email || '-'}
+                                {order.shipping?.email || '-'}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                {order.shipping.phone || '-'}
+                                {order.shipping?.phone || '-'}
                             </TableCell>
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                {order.amount || '-'}$
+                                {order.total_amount || '-'}$
                             </TableCell>
                             <TableCell className="px-3 py-2 text-center">
-                                {order.status.name || '-'}
+                                {order.status?.name || '-'}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center whitespace-nowrap text-gray-700 dark:text-gray-300">

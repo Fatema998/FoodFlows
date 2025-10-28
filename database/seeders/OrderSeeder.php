@@ -25,7 +25,7 @@ class OrderSeeder extends Seeder
         // === Insert into orders ===
         $orderId = DB::table('orders')->insertGetId([
             'invoice_id' => strtoupper(Str::random(8)),
-            'amount' => 2500,
+            'total_amount' => 2500,
             'discount' => 200,
          
             'coupon_code' => 'SAVE10',
@@ -83,7 +83,7 @@ class OrderSeeder extends Seeder
         DB::table('payments')->insert([
             'order_id' => $orderId,
             'customer_id' => $customerId,
-            'amount' => 2500,
+            'total_amount' => 2500,
             'trx_id' => 'TX' . strtoupper(Str::random(6)),
             'sender_number' => '017XXXXXXXX',
             'payment_method' => 'bKash',

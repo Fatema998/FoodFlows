@@ -28,7 +28,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             // Payment details
-            $table->integer('amount')->default(0);
+            $table->integer('total_amount')->default(0);
             $table->string('trx_id', 55)->nullable();          // Transaction ID
             $table->string('sender_number', 55)->nullable();   // Mobile/bank account number
             $table->string('payment_method', 55)->nullable();  // e.g., bKash, Nagad, Cash
