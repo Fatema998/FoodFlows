@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -73,5 +74,15 @@ Route::prefix('dashboard')->group(function(){
         });
     });
 
+    Route::controller(OrderController::class)->group(function(){
+        Route::prefix('orders')->group(function(){
+            Route::get('/','index')->name('admin.order.index');
+            Route::get('/create','create')->name('admin.order.create');
+            Route::post('/store','store')->name('admin.order.store');
+            Route::get('/edit/{id}','edit')->name('admin.order.edit');
+            Route::post('/update/{id}','update')->name('admin.order.update');
+            Route::get('/delete/{id}','destroy')->name('admin.order.destroy');
+            Route::get('/invoice/{invoice_id}','invoice')->name('admin.order.invoice');
+        });
+    });
 });
-

@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react'; // optional spinner
-import { useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface DeleteButtonProps {
     id: number | string;
@@ -14,6 +14,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
     destroyRoute,
 }) => {
     const [showConfirm, setShowConfirm] = useState(false);
+    const [visible, setVisible] = useState(false); // for animation
     const [loading, setLoading] = useState(false);
 
     const handleDelete = () => {
@@ -35,9 +36,18 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
         );
     };
 
+    // Animate in/out
+    useEffect(() => {
+        if (showConfirm) {
+            setVisible(true);
+        } else {
+            const timer = setTimeout(() => setVisible(false), 1000); // match transition duration
+            return () => clearTimeout(timer);
+        }
+    }, [showConfirm]);
+
     return (
         <div>
-            {/* Trigger Button */}
             <button
                 onClick={() => setShowConfirm(true)}
                 className="inline-block rounded-md bg-red-100 px-3 py-1 text-xs font-medium text-red-600 transition hover:bg-red-200"
@@ -45,29 +55,45 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
                 Delete
             </button>
 
-            {/* Confirmation Modal */}
-            {showConfirm && (
+            {(showConfirm || visible) && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                    onClick={() => setShowConfirm(false)} // overlay click closes modal
+                    className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 transition-opacity duration-300 ${showConfirm ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                        }`}
+                    onClick={() => setShowConfirm(false)}
                 >
                     <div
-                        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
-                        onClick={(e) => e.stopPropagation()} // stop click from bubbling to overlay
+                        className={`relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl transform transition-transform duration-300 ${showConfirm ? 'scale-100' : 'scale-90'
+                            }`}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 className="mb-3 text-xl font-semibold text-gray-800">
-                            Confirm Deletion
+                        <h2 className="mb-3 flex items-center justify-center text-xl font-semibold text-gray-800">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="96"
+                                height="96"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="lucide lucide-circle-alert text-orange-300"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                         </h2>
-                        <p className="mb-5 text-gray-600">
-                            Are you sure you want to delete{' '}
-                            <span className="font-medium text-gray-900">
-                                {name}
+                        <h4 className="mb-5 space-y-2 text-gray-600">
+                            <p className="text-xl font-semibold">
+                                Are you sure you want to delete <span className="text-gray-900">{name}</span>?
+                            </p>
+                            <span className="text-sm">
+                                If you delete this, it will be gone forever.
                             </span>
-                            ? This action cannot be undone.
-                        </p>
+                        </h4>
 
                         <div className="flex justify-end gap-3">
-                            {/* Cancel Button */}
                             <button
                                 onClick={() => setShowConfirm(false)}
                                 className="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-300"
@@ -76,20 +102,16 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
                                 Cancel
                             </button>
 
-                            {/* Delete Button */}
                             <button
                                 onClick={handleDelete}
                                 className="flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm text-white transition hover:bg-red-700 disabled:opacity-60"
                                 disabled={loading}
                             >
-                                {loading && (
-                                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                                )}
+                                {loading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                                 {loading ? 'Deleting...' : 'Yes, Delete'}
                             </button>
                         </div>
 
-                        {/* Optional Close Icon */}
                         <button
                             onClick={() => setShowConfirm(false)}
                             className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"

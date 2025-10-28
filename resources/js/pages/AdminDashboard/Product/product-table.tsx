@@ -152,7 +152,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                ${product.sold_price}
+                                ${product.sale_price}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
@@ -250,7 +250,7 @@ export default ProductTable;
 //     'category',
 //     'subcategory',
 //     'quantity',
-//     'sold_price',
+//     'sale_price',
 //     'discount',
 //     'is_flash_deal',
 //     'is_active',
@@ -264,7 +264,7 @@ export default ProductTable;
 //     category: 'Category',
 //     subcategory: 'Sub Category',
 //     quantity: 'Quantity',
-//     sold_price: 'Price',
+//     sale_price: 'Price',
 //     discount: 'Discount',
 //     is_flash_deal: 'Flash Deal',
 //     is_active: 'Status',
@@ -350,8 +350,8 @@ export default ProductTable;
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.subcategory?.name || '-'}</TableCell>;
 //                                         case 'quantity':
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.quantity}</TableCell>;
-//                                         case 'sold_price':
-//                                             return <TableCell key={field} className="px-3 py-2 text-center">${product.sold_price}</TableCell>;
+//                                         case 'sale_price':
+//                                             return <TableCell key={field} className="px-3 py-2 text-center">${product.sale_price}</TableCell>;
 //                                         case 'discount':
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.discount > 0 ? `${product.discount}%` : '-'}</TableCell>;
 //                                         case 'is_flash_deal':

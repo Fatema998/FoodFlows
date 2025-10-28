@@ -28,7 +28,7 @@ export interface Product {
   main_thumbnail:string;
   price: number;
   discount: number;
-  sold_price: number;
+  sale_price: number;
   quantity: number;
   is_trending: boolean;
   is_limited: boolean;

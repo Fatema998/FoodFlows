@@ -17,13 +17,13 @@ interface PaginationMeta {
 
 interface Props {
   links: PaginationLinks;
-  meta: PaginationMeta;
+  meta?: PaginationMeta;
   pageTitle: string;
 }
 
 const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
   const handlePageChange = (page: number) => {
-    if (page !== meta.current_page) router.visit(`?page=${page}`);
+    if (page !== meta?.current_page) router.visit(`?page=${page}`);
   };
 
   const handleDirectLink = (url: string | null) => {
@@ -32,8 +32,8 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
 
   // Generate compact pagination with ellipsis (for large sets)
   const getPageNumbers = (): (number | string)[] => {
-    const total = meta.last_page;
-    const current = meta.current_page;
+    const total = meta?.last_page;
+    const current = meta?.current_page;
     const delta = 2; // number of pages to show around the current page
     const range: (number | string)[] = [];
     const rangeWithDots: (number | string)[] = [];
@@ -66,9 +66,9 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
     <div className="p-3 border-t border-gray-200 flex flex-col items-center justify-between gap-4 sm:flex-row">
       {/* Info */}
       <div className="text-sm text-gray-600 dark:text-gray-400">
-        Page <span className="font-semibold">{meta.current_page}</span> of{" "}
-        <span className="font-semibold">{meta.last_page}</span> — Total:{" "}
-        <span className="font-semibold">{meta.total}</span> {pageTitle}
+        Page <span className="font-semibold">{meta?.current_page}</span> of{" "}
+        <span className="font-semibold">{meta?.last_page}</span> — Total:{" "}
+        <span className="font-semibold">{meta?.total}</span> {pageTitle}
       </div>
 
       {/* Pagination Controls */}
@@ -77,11 +77,10 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
         <button
           onClick={() => handleDirectLink(links.prev)}
           disabled={!links.prev}
-          className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${
-            links.prev
-              ? "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              : "cursor-not-allowed opacity-50 text-gray-400 border-gray-200"
-          }`}
+          className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${links.prev
+            ? "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            : "cursor-not-allowed opacity-50 text-gray-400 border-gray-200"
+            }`}
         >
           ← Prev
         </button>
@@ -96,11 +95,10 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
             <button
               key={index}
               onClick={() => handlePageChange(page as number)}
-              className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${
-                page === meta.current_page
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 border-gray-300"
-              }`}
+              className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${page === meta.current_page
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 border-gray-300"
+                }`}
             >
               {page}
             </button>
@@ -111,11 +109,10 @@ const Pagination: React.FC<Props> = ({ links, meta, pageTitle }) => {
         <button
           onClick={() => handleDirectLink(links.next)}
           disabled={!links.next}
-          className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${
-            links.next
-              ? "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              : "cursor-not-allowed opacity-50 text-gray-400 border-gray-200"
-          }`}
+          className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${links.next
+            ? "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            : "cursor-not-allowed opacity-50 text-gray-400 border-gray-200"
+            }`}
         >
           Next →
         </button>

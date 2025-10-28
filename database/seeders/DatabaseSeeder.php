@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\SizeSeeder;
 use Database\Seeders\BrandSeeder;
 use Database\Seeders\ColorSeeder;
+use Database\Seeders\OrderSeeder;
 use Database\Seeders\SliderSeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\CategorySeeder;
@@ -55,7 +56,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             OrderStatusSeeder::class,
             PaymentGatewaySeeder::class,
-            ShippingChargeSeeder::class
+            ShippingChargeSeeder::class,
+            OrderSeeder::class
         ]);
     }
 }

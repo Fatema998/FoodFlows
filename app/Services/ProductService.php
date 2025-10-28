@@ -127,8 +127,8 @@ class ProductService
         // Calculate sold price
         $soldPrice = $price - ($price * $discount / 100);
 
-        // Add sold_price to $data
-        $data['sold_price'] = number_format($soldPrice, 2, '.', '');
+        // Add sale_price to $data
+        $data['sale_price'] = number_format($soldPrice, 2, '.', '');
 
         // Logic to create a new Product
         return $this->productRepository->createProduct($data);
@@ -142,10 +142,10 @@ class ProductService
         $discount = (float) ($data['discount'] ?? 0);
 
         // Calculate sold price
-        $soldPrice = $price - ($price * $discount / 100);
+        $salePrice = $price - ($price * $discount / 100);
 
-        // Add sold_price to $data
-        $data['sold_price'] = number_format($soldPrice, 2, '.', '');
+        // Add sale_price to $data
+        $data['sale_price'] = number_format($salePrice, 2, '.', '');
 
         // Optional: check the output
         // dd($data);

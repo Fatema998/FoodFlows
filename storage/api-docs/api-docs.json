@@ -1278,7 +1278,7 @@
                         "format": "float",
                         "example": 100
                     },
-                    "sold_price": {
+                    "sale_price": {
                         "type": "number",
                         "format": "float",
                         "example": 1100.5
@@ -1400,7 +1400,7 @@
                         "format": "float",
                         "example": 200
                     },
-                    "sold_price": {
+                    "sale_price": {
                         "type": "number",
                         "format": "float",
                         "example": 1000

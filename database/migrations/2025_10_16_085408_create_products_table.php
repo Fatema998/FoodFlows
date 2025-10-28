@@ -22,10 +22,10 @@ return new class extends Migration
             
             $table->decimal('price', 10, 2);
             $table->integer('discount')->default(0);
-            $table->decimal('sold_price', 10, 2)->nullable();
+            $table->decimal('sale_price', 10, 2)->nullable();
 
             $table->string('product_code')->unique();
-            $table->unsignedBigInteger('sold_count')->default(0);
+            $table->unsignedBigInteger('sale_count')->default(0);
             $table->unsignedInteger('quantity')->default(1);
             
             $table->string('main_thumbnail')->nullable();

@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ShippingCharge;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Shipping extends Model
 {
     /** @use HasFactory<\Database\Factories\ShippingFactory> */
     use HasFactory;
+
+    public function shippingCharge()
+    {
+        return $this->belongsTo(ShippingCharge::class,'shipping_charge_id');
+    }
 }

@@ -23,7 +23,7 @@ class SingleProductResource extends JsonResource
             'slug' => $this->slug,
             'price' => $this->price,
             'discount' => $this->discount,
-            'sold_price' => $this->sold_price,
+            'sale_price' => $this->sale_price,
             'product_code' => $this->product_code,
             'sell_count' => $this->sell_count,
             'quantity' => $this->quantity,

@@ -36,6 +36,9 @@ return new class extends Migration
                 ->on('order_statuses')
                 ->onDelete('set null');
 
+
+   
+
             $table->timestamps();
 
             // Indexes for performance

@@ -11,42 +11,49 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('order_details', function (Blueprint $table) {
-                $table->id(); // BIGINT UNSIGNED
+        Schema::create('order_details', function (Blueprint $table) {
+            $table->id();
 
-                // Foreign keys
-                $table->unsignedBigInteger('order_id');
-                $table->foreign('order_id')
-                    ->references('id')
-                    ->on('orders')
-                    ->onDelete('cascade');
+            // Foreign keys
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('cascade');
 
-                $table->unsignedBigInteger('product_id');
-                $table->foreign('product_id')
-                    ->references('id')
-                    ->on('products')
-                    ->onDelete('cascade');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->onDelete('cascade');
 
-                // Product snapshot info
-                $table->string('product_name');
-                $table->string('product_code')->nullable();
+            // Variant foreign keys
+            $table->unsignedBigInteger('color_id')->nullable();
+            $table->foreign('color_id')
+                ->references('id')
+                ->on('colors')
+                ->onDelete('set null');
 
-                // Variant details
-                $table->string('color', 55)->nullable();
-                $table->string('size', 55)->nullable();
+            $table->unsignedBigInteger('size_id')->nullable();
+            $table->foreign('size_id')
+                ->references('id')
+                ->on('sizes')
+                ->onDelete('set null');
 
-                // Pricing & quantity
-                $table->integer('purchase_price')->default(0);
-                $table->integer('sale_price')->default(0);
-                $table->integer('qty')->default(1);
+            // Product snapshot info
+            $table->string('product_name');
+            $table->string('product_code')->nullable();
 
-                $table->timestamps();
+            // Pricing & quantity
+            $table->integer('purchase_price')->default(0);
+            $table->integer('sale_price')->default(0);
+            $table->integer('qty')->default(1);
 
-                $table->index(['order_id', 'product_id']);
-            });
+            $table->timestamps();
+
+            $table->index(['order_id', 'product_id']);
+        });
     }
-
-
 
     /**
      * Reverse the migrations.

@@ -31,7 +31,7 @@ class UpdateProduct extends FormRequest
 
             'price' => ['required', 'numeric', 'min:0'],
             'discount' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'sold_price' => ['nullable', 'numeric', 'min:0'],
+            'sale_price' => ['nullable', 'numeric', 'min:0'],
 
             'product_code' => [
                 'required',
@@ -87,7 +87,7 @@ class UpdateProduct extends FormRequest
             'price.numeric' => 'Price must be a valid number.',
             'discount.integer' => 'Discount must be a valid integer.',
             'discount.max' => 'Discount cannot be more than 100%.',
-            'sold_price.numeric' => 'Sold price must be a valid number.',
+            'sale_price.numeric' => 'Sold price must be a valid number.',
 
             'product_code.required' => 'Product code is required.',
             'product_code.unique' => 'This product code is already used.',
