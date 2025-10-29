@@ -3,10 +3,11 @@ import AppLayout from '@/layouts/AppLayout'
 import { Head } from '@inertiajs/react'
 import React from 'react'
 import OrderForm from './components/order-form'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
 const CreateOrderPage = ({ products, shippingCharge }) => {
-    console.log(products)
-    console.log(shippingCharge)
+    useToastMessage();
+
     return (
         <AppLayout>
             <Head title='Create Order'/>

@@ -90,9 +90,9 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$value->product_name}} <br> @if($value->product_size) <small>Size: {{$value->product_size}}</small> @endif   @if($value->product_color) <small>Color: {{$value->product_color}}</small> @endif </td>
-                                <td>৳{{$value->sale_price}}</td>
+                                <td>৳{{$value->sell_price}}</td>
                                 <td>{{$value->qty}}</td>
-                                <td>৳{{$value->sale_price*$value->qty}}</td>
+                                <td>৳{{$value->sell_price*$value->qty}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -103,7 +103,7 @@
                             <tbody style="background:#f1f9f8">
                                 <tr>
                                     <td><strong>SubTotal</strong></td>
-                                    <td><strong>৳{{$order->orderdetails->sum('sale_price')}}</strong></td>
+                                    <td><strong>৳{{$order->orderdetails->sum('sell_price')}}</strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Shipping(+)</strong></td>

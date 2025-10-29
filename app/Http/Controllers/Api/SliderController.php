@@ -45,7 +45,7 @@ class SliderController extends Controller
  *                 @OA\Items(
  *                     type="object",
  *                     @OA\Property(property="id", type="integer", example=1),
- *                     @OA\Property(property="title", type="string", example="Big Sale"),
+ *                     @OA\Property(property="title", type="string", example="Big sell"),
  *                     @OA\Property(property="subtitle", type="string", example="Up to 50% off"),
  *                     @OA\Property(property="image", type="string", example="https://example.com/slider1.jpg"),
  *                     @OA\Property(property="button_text", type="string", example="Shop Now"),

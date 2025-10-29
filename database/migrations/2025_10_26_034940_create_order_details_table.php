@@ -46,7 +46,7 @@ return new class extends Migration
 
             // Pricing & quantity
             $table->integer('purchase_price')->default(0);
-            $table->integer('sale_price')->default(0);
+            $table->integer('sell_price')->default(0);
             $table->integer('qty')->default(1);
 
             $table->timestamps();

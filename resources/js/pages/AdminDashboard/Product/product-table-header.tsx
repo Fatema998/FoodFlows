@@ -6,7 +6,7 @@ const ProductTableHeader = () => {
                     Products List
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Track your store's progress to boost your sales.
+                    Track your store's progress to boost your sells.
                 </p>
             </div>
             <div className="flex gap-3">

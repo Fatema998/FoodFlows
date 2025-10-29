@@ -4,12 +4,13 @@ namespace App\Services;
 
 use Log;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Services\UserService;
 use App\Services\PaymentService;
 use App\Services\ShippingService;
-use Illuminate\Support\Facades\DB;
 use App\Repository\OrderRepository;
-use Illuminate\Support\Facades\Auth;
+use App\Repository\ProductRepository;
 use App\Http\Resources\Order\OrderListResource;
 use App\Http\Resources\Order\SingleOrderResource;
 
@@ -19,69 +20,76 @@ class OrderService
     protected $userService;
     protected $shippingService;
     protected $paymentService;
+    protected $productRepository;
 
-    public function __construct(OrderRepository $orderRepository, UserService $userService, ShippingService $shippingService, PaymentService $paymentService)
-    {
+    public function __construct(
+        OrderRepository $orderRepository,
+        UserService $userService,
+        ShippingService $shippingService,
+        PaymentService $paymentService,
+        ProductRepository $productRepository
+    ) {
         $this->orderRepository = $orderRepository;
         $this->userService = $userService;
         $this->shippingService = $shippingService;
         $this->paymentService = $paymentService;
-
+        $this->productRepository = $productRepository;
     }
 
-    /**
-     * Get all orders (optionally paginated) and transform to resource.
-     */
+    // =========================
+    // Helper: Resolve User
+    // =========================
+    protected function resolveUser(array $shipping)
+    {
+        $authUser = Auth::user();
+        if ($authUser && $authUser->role !== 'admin') {
+            return $authUser;
+        }
+
+        $user = $this->userService->getUserByPhone($shipping['phone'] ?? null)
+              ?? $this->userService->getUserByEmail($shipping['email'] ?? null);
+
+        if (!$user) {
+            $userData = [
+                'name' => $shipping['name'] ?? 'Guest User',
+                'email' => $shipping['email'] ?? null,
+                'phone' => $shipping['phone'] ?? null,
+            ];
+            $user = $this->userService->createUser($userData);
+        }
+
+        return $user;
+    }
+
+    // =========================
+    // Get All Orders
+    // =========================
     public function getAllOrders($limit = null)
     {
         return OrderListResource::collection($this->orderRepository->all($limit));
     }
 
-    /**
-     * Get single order by ID and transform to resource.
-     */
+    // =========================
+    // Get Single Order
+    // =========================
     public function getOrderById($id)
     {
         return new SingleOrderResource($this->orderRepository->findById($id));
     }
 
-    /**
-     * Create a new order.
-     */
-
-
+    // =========================
+    // Create Order
+    // =========================
     public function createOrder(array $data)
     {
         $shipping = $data['shipping'] ?? [];
         $orderItems = $data['items'] ?? [];
 
         DB::beginTransaction();
-
         try {
-            // 1️⃣ Determine user (authenticated or guest)
-            $authUser = Auth::user();
-            if ($authUser && $authUser->role !== 'admin') {
-                $user = $authUser;
-            } else {
-                $findUserByPhone = $this->userService->getUserByPhone($shipping['phone'] ?? null);
-                $findUserByEmail = $this->userService->getUserByEmail($shipping['email'] ?? null);
+            $user = $this->resolveUser($shipping);
+            $invoiceId = 'INV-' . date('Ymd-His');
 
-                if (!$findUserByPhone && !$findUserByEmail) {
-                    $userData = [
-                        'name' => $shipping['name'] ?? 'Guest User',
-                        'email' => $shipping['email'] ?? null,
-                        'phone' => $shipping['phone'] ?? null,
-                    ];
-                    $user = $this->userService->createUser($userData);
-                } else {
-                    $user = $findUserByPhone ?? $findUserByEmail;
-                }
-            }
-
-            // 2️⃣ Generate unique invoice ID
-            $invoiceId = 'INV-' . date('Ymd-His') . '-' . mt_rand(100000, 999999);
-
-            // 3️⃣ Prepare order data
             $orderData = [
                 'customer_id' => $user->id,
                 'invoice_id' => $invoiceId,
@@ -90,27 +98,34 @@ class OrderService
                 'shipping_charge' => $data['shipping_charge'] ?? 0,
                 'coupon_code'=> $data['coupon_code'] ?? "",
                 'coupon_discount'=> $data['coupon_discount'] ?? 0,
-                'order_status_id' => 1, // Pending
+                'order_status' => $data['order_status'] ?? 'pending',
             ];
 
-            // 4️⃣ Create order
             $order = $this->orderRepository->create($orderData);
 
-            // 5️⃣ Create order details
+            // Reserve stock and create order details
             foreach ($orderItems as $item) {
+                $product = $this->productRepository->getProductById($item['product_id']);
+                if (!$product || ($product->total_stock - $product->reserved_stock) < $item['qty']) {
+                    throw new Exception("Insufficient stock for {$item['product_name']}");
+                }
+
+                $product->reserved_stock += $item['qty'];
+                $product->save();
+
                 $order->orderdetails()->create([
                     'product_id' => $item['product_id'],
                     'product_name' => $item['product_name'],
                     'product_code' => $item['product_code'],
                     'purchase_price' => $item['purchase_price'],
-                    'sale_price' => $item['sale_price'],
+                    'sell_price' => $item['sell_price'],
                     'qty' => $item['qty'],
                     'color_id' => $item['color_id'] ?? null,
                     'size_id' => $item['size_id'] ?? null,
                 ]);
             }
 
-            // 6️⃣ Create shipping record
+            // Create shipping
             if (!empty($shipping)) {
                 $shipping['customer_id'] = $user->id;
                 $shipping['order_id'] = $order->id;
@@ -118,60 +133,198 @@ class OrderService
                 $this->shippingService->createShipping($shipping);
             }
 
-            // 7️⃣ Handle payment
+            // Handle payment
             $paymentMethod = strtolower($data['payment_method'] ?? 'cash');
-            
             $paymentData = [
                 'order_id' => $order->id,
                 'customer_id' => $user->id,
                 'total_amount' => $data['total_amount'] ?? 0,
                 'payment_method' => $paymentMethod,
-                'payment_status' => 'pending',
+                'payment_status' => $data['payment_status'] ?? 'pending',
             ];
 
-            switch ($paymentMethod) {
-                case 'bkash':
-                    $this->paymentService->payWithBkash($paymentData);
-                    break;
-                case 'nagad':
-                    $this->paymentService->payWithNagad($paymentData);
-                    break;
-                case 'cash':
-                default:
-                    $this->paymentService->createPayment($paymentData);
+            if ($paymentMethod === 'bkash') {
+                $this->paymentService->payWithBkash($paymentData);
+            } elseif ($paymentMethod === 'nagad') {
+                $this->paymentService->payWithNagad($paymentData);
+            } else {
+                $this->paymentService->createPayment($paymentData);
             }
-
-            // ✅ Commit transaction
+            
             DB::commit();
-
-            // 8️⃣ Return order with relationships
             return $order->load(['orderdetails', 'customer', 'shipping', 'payment']);
-
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Order creation failed: ' . $e->getMessage());
-            throw new Exception('Failed to create order. Please try again.');
+            throw new Exception('Failed to create order: ' . $e->getMessage());
         }
     }
 
-
-
-
-
-
-    /**
-     * Update an existing order.
-     */
+    // =========================et rerum sequi
+    // Update Order
+    // =========================
     public function updateOrder($id, array $data)
     {
-        return $this->orderRepository->update($id, $data);
+        $shipping = $data['shipping'] ?? [];
+        $orderItems = $data['items'] ?? [];
+
+        DB::beginTransaction();
+
+        try {
+            // 1️⃣ Find existing order
+            $order = $this->orderRepository->findById($id);
+            if (!$order) throw new Exception("Order not found.");
+
+            // 2️⃣ Resolve user
+            $user = $this->resolveUser($shipping);
+
+            // 3️⃣ Update order main data
+            $orderData = [
+                'customer_id' => $user->id,
+                'total_amount' => $data['total_amount'] ?? 0,
+                'discount' => $data['discount'] ?? 0,
+                'shipping_charge' => $data['shipping_charge'] ?? 0,
+                'coupon_code' => $data['coupon_code'] ?? "",
+                'coupon_discount' => $data['coupon_discount'] ?? 0,
+                'order_status' => $data['order_status'] ?? $order->order_status,
+            ];
+            $this->orderRepository->update($id, $orderData);
+
+            // 4️⃣ Handle order items with delta stock
+            $existingItems = $order->orderdetails->keyBy('product_id'); // for easy lookup
+
+            // Update or create items
+            foreach ($orderItems as $item) {
+                $product = $this->productRepository->getProductById($item['product_id']);
+                $oldItem = $existingItems->get($item['product_id']);
+                $oldQty = $oldItem->qty ?? 0;
+                $delta = $item['qty'] - $oldQty; // positive: increase reserved, negative: decrease reserved
+
+                // Check stock availability if increasing
+                if ($delta > 0 && ($product->total_stock - $product->reserved_stock) < $delta) {
+                    throw new Exception("Insufficient stock for {$item['product_name']}");
+                }
+
+                // Update reserved stock safely
+                $product->reserved_stock = max($product->reserved_stock + $delta, 0);
+                $product->save();
+
+                // Update existing or create new order detail
+                if ($oldItem) {
+                    $oldItem->update([
+                        'product_name' => $item['product_name'],
+                        'product_code' => $item['product_code'],
+                        'purchase_price' => $item['purchase_price'],
+                        'sell_price' => $item['sell_price'],
+                        'qty' => $item['qty'],
+                        'color_id' => $item['color_id'] ?? null,
+                        'size_id' => $item['size_id'] ?? null,
+                    ]);
+                } else {
+                    $order->orderdetails()->create([
+                        'product_id' => $item['product_id'],
+                        'product_name' => $item['product_name'],
+                        'product_code' => $item['product_code'],
+                        'purchase_price' => $item['purchase_price'],
+                        'sell_price' => $item['sell_price'],
+                        'qty' => $item['qty'],
+                        'color_id' => $item['color_id'] ?? null,
+                        'size_id' => $item['size_id'] ?? null,
+                    ]);
+                }
+            }
+
+            // Delete removed items and release reserved stock
+            $newProductIds = collect($orderItems)->pluck('product_id')->all();
+            $removedItems = $order->orderdetails->whereNotIn('product_id', $newProductIds);
+
+            foreach ($removedItems as $removedItem) {
+                $product = $this->productRepository->getProductById($removedItem->product_id);
+                $product->reserved_stock = max($product->reserved_stock - $removedItem->qty, 0);
+                $product->save();
+                $removedItem->delete();
+            }
+
+            // 5️⃣ Update shipping
+            if (!empty($shipping)) {
+                $shipping['customer_id'] = $user->id;
+                $shipping['order_id'] = $order->id;
+                $shipping['email'] = $user->email;
+
+                if ($order->shipping) $order->shipping()->update($shipping);
+                else $this->shippingService->createShipping($shipping);
+            }
+
+            // 6️⃣ Update payment
+            $paymentMethod = strtolower($data['payment_method'] ?? 'cash');
+            $paymentData = [
+                'order_id' => $order->id,
+                'customer_id' => $user->id,
+                'total_amount' => $data['total_amount'] ?? 0,
+                'payment_method' => $paymentMethod,
+                'payment_status' => $data['payment_status'] ?? 'pending',
+            ];
+
+            if ($order->payment) $order->payment()->update($paymentData);
+            else $this->paymentService->createPayment($paymentData);
+
+            DB::commit();
+
+            return $order->load(['orderdetails', 'customer', 'shipping', 'payment']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Order update failed: ' . $e->getMessage());
+            throw new Exception('Failed to update order: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Delete an order.
-     */
-    public function deleteOrder($id)
+    // =========================
+    // Confirm Payment & Update Stock
+    // =========================
+    public function confirmOrderPayment($order)
     {
-        return $this->orderRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            foreach ($order->orderdetails as $item) {
+                $product = $this->productRepository->getProductById($item->product_id);
+                $product->total_stock = max($product->total_stock - $item->qty, 0);
+                $product->reserved_stock = max($product->reserved_stock - $item->qty, 0);
+                $product->sell_count += $item->qty;
+                $product->save();
+            }
+
+            $order->order_status = 'success';
+            $order->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Payment confirmation failed: ' . $e->getMessage());
+            throw new Exception('Failed to confirm payment.');
+        }
+    }
+
+    // =========================
+    // Cancel Order & Release Stock
+    // =========================
+    public function cancelOrder($order)
+    {
+        DB::beginTransaction();
+        try {
+            foreach ($order->orderdetails as $item) {
+                $product = $this->productRepository->getProductById($item->product_id);
+                $product->reserved_stock = max($product->reserved_stock - $item->qty, 0);
+                $product->save();
+            }
+
+            $order->order_status = 'cancelled';
+            $order->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Order cancellation failed: ' . $e->getMessage());
+            throw new Exception('Failed to cancel order.');
+        }
     }
 }

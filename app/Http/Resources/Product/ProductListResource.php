@@ -5,28 +5,23 @@ namespace App\Http\Resources\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-
-
 class ProductListResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-
     public function toArray(Request $request): array
     {
-         return [
+        return [
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
             'main_thumbnail'=> $this->main_thumbnail,
-            'product_code'=>$this->product_code,
+            'product_code'=> $this->product_code,
+            'purchase_price' => $this->purchase_price, // cost price
             'price' => $this->price,
             'discount' => $this->discount,
-            'sale_price' => $this->sale_price,
-            'quantity' => $this->quantity,
+            'sell_price' => $this->sell_price,
+            'total_stock' => $this->total_stock,
+            'reserved_stock' => $this->reserved_stock,
+            'available_stock' => $this->total_stock - $this->reserved_stock,
             'is_trending' => $this->is_trending,
             'is_limited' => $this->is_limited,
             'is_active' => $this->is_active,
@@ -36,38 +31,34 @@ class ProductListResource extends JsonResource
             'is_flash_deal' => $this->is_flash_deal,
             'flash_deal_start' => $this->flash_deal_start,
             'flash_deal_end' => $this->flash_deal_end,
-            'brand'=>$this->brand ? [
+            'brand'=> $this->brand ? [
                 'id' => $this->brand->id,
                 'name' => $this->brand->name,
                 'slug' => $this->brand->slug,
             ] : null,
-            'category'=>$this->category ? [
+            'category'=> $this->category ? [
                 'id' => $this->category->id,
                 'name' => $this->category->name,
                 'slug' => $this->category->slug,
             ] : null,
-            'subcategory'=>$this->subcategory ? [
+            'subcategory'=> $this->subcategory ? [
                 'id' => $this->subcategory->id,
                 'name' => $this->subcategory->name,
                 'slug' => $this->subcategory->slug,
             ] : null,
-            'sizes' => $this->sizes->map(function ($size) {
-                return [
-                    'id' => $size->id,
-                    'name' => $size->name,
-                ];
-            }),
-            'variants' => $this->variants->map(function ($variant) {
-                return [
-                    'id' => $variant->id,
-                    'color' => [
-                        'id' => $variant->color->id,
-                        'name' => $variant->color->name,
-                        'code' => $variant->color->code,
-                    ],
-                    'image' => $variant->image,
-                ];
-            }),
+            'sizes' => $this->sizes->map(fn($size) => [
+                'id' => $size->id,
+                'name' => $size->name,
+            ]),
+            'variants' => $this->variants->map(fn($variant) => [
+                'id' => $variant->id,
+                'color' => [
+                    'id' => $variant->color->id,
+                    'name' => $variant->color->name,
+                    'code' => $variant->color->code,
+                ],
+                'image' => $variant->image,
+            ]),
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

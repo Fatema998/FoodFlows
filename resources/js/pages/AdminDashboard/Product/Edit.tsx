@@ -12,8 +12,8 @@ const EditProductPage = ({
     colors,
     sizeGuides,
 }) => {
-    console.log(product,brands, categories, productTypes, sizes, colors);
-console.log(sizeGuides,'sizeGuides')
+    // console.log(product,brands, categories, productTypes, sizes, colors);
+console.log(product,'product')
 
 
     const brandOptions =

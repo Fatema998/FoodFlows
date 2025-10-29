@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('products', function (Blueprint $table) {
+       Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('title')->index();
             $table->string('slug')->unique();
@@ -19,15 +19,20 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->index();
             $table->unsignedBigInteger('subcategory_id')->nullable()->index();
             $table->unsignedBigInteger('product_type_id')->index();
-            
-            $table->decimal('price', 10, 2);
-            $table->integer('discount')->default(0);
-            $table->decimal('sale_price', 10, 2)->nullable();
+
+            // Price management
+            $table->decimal('purchase_price', 10, 2)->default(0); // মূল ক্রয়মূল্য
+            $table->decimal('price', 10, 2);                       // বিক্রয়মূল্য
+            $table->integer('discount')->default(0);               // discount %
+            $table->decimal('sell_price', 10, 2)->nullable();      // price after discount
 
             $table->string('product_code')->unique();
-            $table->unsignedBigInteger('sale_count')->default(0);
-            $table->unsignedInteger('quantity')->default(1);
-            
+            $table->unsignedBigInteger('sell_count')->default(0);
+
+            // Stock management
+            $table->unsignedInteger('total_stock')->default(0);
+            $table->unsignedInteger('reserved_stock')->default(0);
+
             $table->string('main_thumbnail')->nullable();
             $table->text('short_description')->nullable();
             $table->longText('long_descriptions')->nullable();
@@ -48,24 +53,20 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
 
-        
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('set null');
-            // $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('set null');
 
-
-            $table->boolean('has_size')->default(false); // true for apparel/shoes, false for electronics/accessories
+            $table->boolean('has_size')->default(false);
             $table->foreignId('size_guide_id')->nullable()->constrained()->nullOnDelete();
-            
-            // Composite indexes for faster common queries
-            $table->index(['is_active', 'quantity']);
+
+            // Composite indexes
+            $table->index(['is_active', 'total_stock']);
             $table->index(['is_flash_deal', 'flash_deal_start']);
 
-
             $table->timestamps();
-
         });
+
 
         // Pivot table for sizes
         Schema::create('product_sizes', function (Blueprint $table) {
@@ -77,7 +78,7 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');
 
-            $table->unique(['product_id', 'size_id']); // prevent duplicate size for same product
+            $table->unique(['product_id', 'size_id']);
         });
     }
 
@@ -86,7 +87,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('product_sizes');   // drop pivot second
-         Schema::dropIfExists('products');   
+        Schema::dropIfExists('product_sizes');
+        Schema::dropIfExists('products');
     }
 };

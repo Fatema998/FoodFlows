@@ -2,9 +2,11 @@ import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import AppLayout from '@/layouts/AppLayout'
 import { Head } from '@inertiajs/react'
 import OrderForm from './components/order-form'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
 const EditOrderPage = ({ products, shippingCharge,order }) => {
-    console.log(order,'order')
+        useToastMessage();
+    
     return (
         <AppLayout>
             <Head title='Edit Order' />

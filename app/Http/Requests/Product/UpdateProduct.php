@@ -29,9 +29,10 @@ class UpdateProduct extends FormRequest
             'subcategory_id' => ['nullable', Rule::exists('categories', 'id')],
             'product_type_id' => ['nullable', Rule::exists('product_types', 'id')],
 
+            'purchase_price' => ['required', 'numeric', 'min:0'], // cost price
             'price' => ['required', 'numeric', 'min:0'],
             'discount' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'sale_price' => ['nullable', 'numeric', 'min:0'],
+            'sell_price' => ['nullable', 'numeric', 'min:0'],
 
             'product_code' => [
                 'required',
@@ -39,9 +40,11 @@ class UpdateProduct extends FormRequest
                 'max:255',
                 Rule::unique('products', 'product_code')->ignore($productId),
             ],
-            'quantity' => ['required', 'integer', 'min:0'],
 
-            'main_thumbnail' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
+            'total_stock' => ['required', 'integer', 'min:0'],
+            'reserved_stock' => ['nullable', 'integer', 'min:0'],
+
+            'main_thumbnail' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
 
             'short_description' => ['nullable', 'string'],
             'long_descriptions' => ['nullable', 'string'],
@@ -66,7 +69,6 @@ class UpdateProduct extends FormRequest
             'size_guide_id' => ['nullable', Rule::exists('size_guides', 'id')],
             'sizes' => ['nullable', 'array'],
             'sizes.*' => [Rule::exists('sizes', 'id')],
-
         ];
     }
 
@@ -83,16 +85,20 @@ class UpdateProduct extends FormRequest
             'subcategory_id.exists' => 'The selected subcategory is invalid.',
             'product_type_id.exists' => 'The selected product type is invalid.',
 
+            'purchase_price.required' => 'Please enter the purchase price.',
             'price.required' => 'Please enter the product price.',
             'price.numeric' => 'Price must be a valid number.',
             'discount.integer' => 'Discount must be a valid integer.',
             'discount.max' => 'Discount cannot be more than 100%.',
-            'sale_price.numeric' => 'Sold price must be a valid number.',
+            'sell_price.numeric' => 'sell price must be a valid number.',
 
             'product_code.required' => 'Product code is required.',
             'product_code.unique' => 'This product code is already used.',
-            'quantity.required' => 'Please specify the available quantity.',
-            'quantity.integer' => 'Quantity must be a whole number.',
+
+            'total_stock.required' => 'Please specify the total stock.',
+            'reserved_stock.min' => 'Reserved stock cannot be negative.',
+
+            'main_thumbnail.image' => 'The thumbnail must be an image file.',
 
             'flash_deal_end.after' => 'Flash deal end date must be after the start date.',
 
@@ -100,9 +106,18 @@ class UpdateProduct extends FormRequest
             'sizes.*.exists' => 'One or more selected sizes are invalid.',
 
             'meta_title.max' => 'Meta title must not exceed 255 characters.',
-
-
-
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $totalStock = (int) $this->input('total_stock', 0);
+            $reservedStock = (int) $this->input('reserved_stock', 0);
+
+            if ($reservedStock > $totalStock) {
+                $validator->errors()->add('reserved_stock', 'Reserved stock cannot exceed total stock.');
+            }
+        });
     }
 }

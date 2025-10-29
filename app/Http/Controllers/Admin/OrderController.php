@@ -40,7 +40,7 @@ class OrderController extends Controller
             
         } catch (Exception $e) {
             // Handle any exception gracefully
-            return redirect()->back()->with('error', 'Failed to load orders: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to load orders: '  . $e->getMessage());
         }
 
     }
@@ -59,13 +59,10 @@ class OrderController extends Controller
          ]);
     }
 
-
-
-    
     /**
      * Store a newly created resource in storage.
      */
-        public function store(Request $request)
+    public function store(Request $request)
     {
         // 1️⃣ Validate request
         $validator = Validator::make($request->all(), [
@@ -77,7 +74,7 @@ class OrderController extends Controller
             'items.*.product_name' => 'required|string',
             'items.*.product_code' => 'required|string',
             'items.*.purchase_price' => 'required|numeric|min:0',
-            'items.*.sale_price' => 'required|numeric|min:0',
+            'items.*.sell_price' => 'required|numeric|min:0',
             'items.*.qty' => 'required|integer|min:1',
             'payment_method' => 'nullable|string|in:bkash,nagad,cash,cash_on_delivery',
             'total_amount' => 'required|numeric|min:0',
@@ -88,27 +85,21 @@ class OrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
+            // return response()->json([
+            //     'message' => 'Validation failed',
+            //     'errors' => $validator->errors()
+            // ], 422);
+            return redirect()->back()->with('error', 'Validation failed: ');
         }
 
         try {
             // 2️⃣ Create order
             $order = $this->orderService->createOrder($request->all());
 
-            return response()->json([
-                'message' => 'Order created successfully',
-                'data' => $order
-            ], 201);
-
-            // return redirect()->route('admin.order.index');
-
+            return redirect()->route('admin.order.index')->with('success', 'Order  created successfully.');
+            
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            return redirect()->back()->with('error', 'Failed to create order.  '  . $e->getMessage());
         }
     }
 
@@ -143,14 +134,15 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        // dd($request->all());
-         $this->orderService->updateOrder($id,$request);
+        try {
+            // 2️⃣ Create order
+            $order =  $this->orderService->updateOrder($id,$request->all());
 
-        return response(
-            $request['items']
-        );
-        return Inertia::render('AdminDashboard/Order/Index');
+        return redirect()->route('admin.order.index')->with('success', 'Order updated successfully.');
             
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update order.  '  . $e->getMessage());
+        }
     }
 
     /**

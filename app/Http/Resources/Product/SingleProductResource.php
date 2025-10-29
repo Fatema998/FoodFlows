@@ -7,14 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SingleProductResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-
-    
-
     public function toArray(Request $request): array
     {
         return [
@@ -22,11 +14,14 @@ class SingleProductResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'price' => $this->price,
+            'purchase_price' => $this->purchase_price, // cost price
             'discount' => $this->discount,
-            'sale_price' => $this->sale_price,
+            'sell_price' => $this->sell_price,
             'product_code' => $this->product_code,
             'sell_count' => $this->sell_count,
-            'quantity' => $this->quantity,
+            'total_stock' => $this->total_stock,
+            'reserved_stock' => $this->reserved_stock,
+            'available_stock' => $this->total_stock - $this->reserved_stock,
             'main_thumbnail' => $this->main_thumbnail,
 
             'long_descriptions' => $this->long_descriptions,
@@ -42,38 +37,39 @@ class SingleProductResource extends JsonResource
             'is_flash_deal' => $this->is_flash_deal,
             'flash_deal_start' => $this->flash_deal_start,
             'flash_deal_end' => $this->flash_deal_end,
-            'brand'=>$this->brand ? [
+
+            'brand' => $this->brand ? [
                 'id' => $this->brand->id,
                 'name' => $this->brand->name,
                 'slug' => $this->brand->slug,
             ] : null,
-            'category'=>$this->category ? [
+
+            'category' => $this->category ? [
                 'id' => $this->category->id,
                 'name' => $this->category->name,
                 'slug' => $this->category->slug,
             ] : null,
-            'subcategory'=>$this->subcategory ? [
+
+            'subcategory' => $this->subcategory ? [
                 'id' => $this->subcategory->id,
                 'name' => $this->subcategory->name,
                 'slug' => $this->subcategory->slug,
             ] : null,
-            'sizes' => $this->sizes->map(function ($size) {
-                return [
-                    'id' => $size->id,
-                    'name' => $size->name,
-                ];
-            }),
-            'variants' => $this->variants->map(function ($variant) {
-                return [
-                    'id' => $variant->id,
-                    'color' => [
-                        'id' => $variant->color->id,
-                        'name' => $variant->color->name,
-                        'code' => $variant->color->code,
-                    ],
-                    'image' => $variant->image,
-                ];
-            }),
+
+            'sizes' => $this->sizes->map(fn($size) => [
+                'id' => $size->id,
+                'name' => $size->name,
+            ]),
+
+            'variants' => $this->variants->map(fn($variant) => [
+                'id' => $variant->id,
+                'color' => [
+                    'id' => $variant->color->id,
+                    'name' => $variant->color->name,
+                    'code' => $variant->color->code,
+                ],
+                'image' => $variant->image,
+            ]),
 
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,

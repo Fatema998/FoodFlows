@@ -70,7 +70,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     );
     const [subcategories, setSubcategories] = useState<Category[]>([]);
 
-    const [variants, setVariants] = useState<any[]>(product?.variants ?? [{ color_id: '', image: null}]);
+    const [variants, setVariants] = useState<any[]>(product?.variants ?? [{ color_id: '', image: null }]);
 
     console.log(variants, 'variants');
     // ====== FORM SETUP ======
@@ -378,7 +378,17 @@ const ProductForm: React.FC<ProductFormProps> = ({
                             {/* Price & Discount */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Label>Price</Label>
+                                    <Label>Purchase Price</Label>
+                                    <Input
+                                        type="number"
+                                        name="purchase_price"
+                                        defaultValue={product?.purchase_price ?? 0}
+                                    />
+                                    <InputError message={errors?.purchase_price} />
+                                </div>
+
+                                <div>
+                                    <Label>sell Price</Label>
                                     <Input
                                         type="number"
                                         name="price"
@@ -386,6 +396,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                     />
                                     <InputError message={errors?.price} />
                                 </div>
+
                                 <div>
                                     <Label htmlFor="discount">
                                         Discount (%)
@@ -399,16 +410,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                     <InputError message={errors?.discount} />
                                 </div>
                             </div>
-                            {/* Quantity & Product Code */}
+                            {/* total_stock & Product Code */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Label>Quantity</Label>
+                                    <Label>Total Stock</Label>
                                     <Input
                                         type="number"
-                                        name="quantity"
-                                        defaultValue={product?.quantity ?? 1}
+                                        name="total_stock"
+                                        defaultValue={product?.total_stock ?? 1}
                                     />
-                                    <InputError message={errors?.quantity} />
+                                    <InputError message={errors?.total_stock} />
                                 </div>
                                 <div>
                                     <Label>Product Code</Label>
@@ -519,7 +530,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                                         index,
                                                         'image',
                                                         e.target.files?.[0] ??
-                                                            null,
+                                                        null,
                                                     )
                                                 }
                                                 className="w-full"
@@ -530,10 +541,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                                 <img
                                                     src={
                                                         variant.image instanceof
-                                                        File
+                                                            File
                                                             ? URL.createObjectURL(
-                                                                  variant.image,
-                                                              )
+                                                                variant.image,
+                                                            )
                                                             : variant.image
                                                     }
                                                     alt="Preview"

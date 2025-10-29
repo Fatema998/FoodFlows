@@ -17,7 +17,7 @@ export default function Invoice({ order }) {
     };
 
     const subTotal = order.orderdetails?.reduce(
-        (sum: number, item: any) => sum + item.sale_price * item.qty,
+        (sum: number, item: any) => sum + item.sell_price * item.qty,
         0,
     );
     const grandTotal =
@@ -132,13 +132,13 @@ export default function Invoice({ order }) {
                                         )}
                                     </td>
                                     <td className="border px-3 py-2">
-                                        ৳{item.sale_price}
+                                        ৳{item.sell_price}
                                     </td>
                                     <td className="border px-3 py-2">
                                         {item.qty}
                                     </td>
                                     <td className="border px-3 py-2">
-                                        ৳{item.sale_price * item.qty}
+                                        ৳{item.sell_price * item.qty}
                                     </td>
                                 </tr>
                             ))}
@@ -178,7 +178,7 @@ export default function Invoice({ order }) {
                                         Final Total
                                     </td>
                                     <td className="border px-3 py-2 font-bold">
-                                        ৳{grandTotal}
+                                        ৳{order.total_amount}
                                     </td>
                                 </tr>
                             </tbody>

@@ -29,7 +29,7 @@ class UserService
         // if user is not login but he ordered basic information then create to the user account set random email but phone number valid 
         if (empty($data['email'])) {
             do {
-                $randomEmail = Str::random(10) . '@example.com';
+                $randomEmail = strtolower(Str::random(10) . '@example.com');
             } while ($this->userRepository->findByEmail($randomEmail));
 
             $data['email'] = $randomEmail;

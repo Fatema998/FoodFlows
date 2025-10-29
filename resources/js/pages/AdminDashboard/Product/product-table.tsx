@@ -35,7 +35,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                     >
                         Product
                     </TableCell>
-                     <TableCell
+                    <TableCell
                         isHeader
                         className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase dark:text-gray-400"
                     >
@@ -64,13 +64,19 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                         isHeader
                         className="px-3 py-3 text-center text-xs font-semibold text-gray-600 uppercase dark:text-gray-400"
                     >
-                        Quantity
+                        Total Stock
                     </TableCell>
                     <TableCell
                         isHeader
                         className="px-3 py-3 text-center text-xs font-semibold text-gray-600 uppercase dark:text-gray-400"
                     >
-                        Price
+                        Purchase Price
+                    </TableCell>
+                    <TableCell
+                        isHeader
+                        className="px-3 py-3 text-center text-xs font-semibold text-gray-600 uppercase dark:text-gray-400"
+                    >
+                        sell Price
                     </TableCell>
                     <TableCell
                         isHeader
@@ -131,10 +137,10 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                                     <p>{product.title.slice(0, 20)}...</p>
                                 </div>
                             </TableCell>
-                              
+
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
                                 {product?.product_code || '-'}
-                            </TableCell>          
+                            </TableCell>
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
                                 {product.brand?.name || '-'}
                             </TableCell>
@@ -148,11 +154,15 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                {product.quantity}
+                                {product.total_stock}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
-                                ${product.sale_price}
+                                ${product.purchase_price}
+                            </TableCell>
+
+                            <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
+                                ${product.sell_price}
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-center text-gray-700 dark:text-gray-300">
@@ -164,7 +174,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             <TableCell className="px-3 py-2 text-center">
                                 {product.is_flash_deal ? (
                                     new Date(product.flash_deal_end || '') >
-                                    new Date() ? (
+                                        new Date() ? (
                                         <Badge size="sm" color="warning">
                                             Active
                                         </Badge>
@@ -250,7 +260,7 @@ export default ProductTable;
 //     'category',
 //     'subcategory',
 //     'quantity',
-//     'sale_price',
+//     'sell_price',
 //     'discount',
 //     'is_flash_deal',
 //     'is_active',
@@ -264,7 +274,7 @@ export default ProductTable;
 //     category: 'Category',
 //     subcategory: 'Sub Category',
 //     quantity: 'Quantity',
-//     sale_price: 'Price',
+//     sell_price: 'Price',
 //     discount: 'Discount',
 //     is_flash_deal: 'Flash Deal',
 //     is_active: 'Status',
@@ -350,8 +360,8 @@ export default ProductTable;
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.subcategory?.name || '-'}</TableCell>;
 //                                         case 'quantity':
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.quantity}</TableCell>;
-//                                         case 'sale_price':
-//                                             return <TableCell key={field} className="px-3 py-2 text-center">${product.sale_price}</TableCell>;
+//                                         case 'sell_price':
+//                                             return <TableCell key={field} className="px-3 py-2 text-center">${product.sell_price}</TableCell>;
 //                                         case 'discount':
 //                                             return <TableCell key={field} className="px-3 py-2 text-center">{product.discount > 0 ? `${product.discount}%` : '-'}</TableCell>;
 //                                         case 'is_flash_deal':

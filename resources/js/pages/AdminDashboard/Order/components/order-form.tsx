@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router, useForm } from "@inertiajs/react";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
-import { X, Search } from "lucide-react";
+import { X, Search, LoaderCircle, Plus } from "lucide-react";
 import { index } from "@/routes/admin/order";
 import axios from "axios";
+import { Inertia } from "@inertiajs/inertia";
+
+
 // 🧾 Type Definitions
 interface VariantColor {
   id: number;
@@ -25,8 +28,9 @@ interface Product {
   id: number;
   title: string;
   product_code: string;
+  purchase_price: number;
   price: number;
-  sale_price: number;
+  sell_price: number;
   sizes?: Size[];
   variants?: Variant[];
 }
@@ -42,7 +46,7 @@ interface OrderItem {
   product_name: string;
   product_code: string;
   purchase_price: number;
-  sale_price: number;
+  sell_price: number;
   qty: number;
   size_id: string | number;
   sizes?: Size[];
@@ -51,6 +55,7 @@ interface OrderItem {
 }
 
 interface ShippingData {
+  id: string | number;
   name: string;
   email: string;
   phone: string;
@@ -65,6 +70,8 @@ interface OrderFormData {
   total_amount?: number;
   shipping_charge: number;
   payment_method: string;
+  order_status: string;
+  payment_status: string;
 }
 
 interface OrderFormProps {
@@ -79,17 +86,22 @@ interface OrderFormProps {
   };
 }
 
+
+
 export default function OrderForm({
   products,
   shippingCharge,
   order,
 }: OrderFormProps) {
 
+  console.log(order, 'order')
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const { data, setData, post, processing } = useForm<OrderFormData>({
+  const { data, setData, post, reset, processing } = useForm<OrderFormData>({
     shipping: {
+      id: order?.shipping?.id || "",
       name: order?.shipping?.name || "",
       email: order?.shipping?.email || "",
       phone: order?.shipping?.phone || "",
@@ -104,7 +116,7 @@ export default function OrderForm({
         product_name: orderDetail.product_name,
         product_code: orderDetail.product_code,
         purchase_price: orderDetail.purchase_price,
-        sale_price: orderDetail.sale_price,
+        sell_price: orderDetail.sell_price,
         qty: orderDetail.qty,
         sizes:
           products.find((product) => product.id === orderDetail.product_id)
@@ -121,7 +133,9 @@ export default function OrderForm({
       })) || [],
     discount: order?.discount || 0,
     shipping_charge: order?.shipping_charge || 0,
-    payment_method: 'cash_on_delivery'
+    payment_method: order?.payment.payment_method || 'cash',
+    order_status: order?.order_status || "success",
+    payment_status: order?.payment.payment_status || 'paid',
   });
 
   const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
@@ -157,8 +171,8 @@ export default function OrderForm({
         product_id: product.id,
         product_name: product.title,
         product_code: product.product_code,
-        purchase_price: product.price,
-        sale_price: product.sale_price,
+        purchase_price: product.purchase_price,
+        sell_price: product.sell_price,
         qty: quantity,
         sizes: product.sizes || [],
         size_id: "",
@@ -222,7 +236,7 @@ export default function OrderForm({
   }
 
   const subtotal: number = data.items.reduce(
-    (sum, item) => sum + item.sale_price * item.qty,
+    (sum, item) => sum + item.sell_price * item.qty,
     0
   );
   const total: number =
@@ -245,7 +259,7 @@ export default function OrderForm({
   //   if (!validateForm()) return;
 
   //   const subtotal: number = data.items.reduce(
-  //     (sum, item) => sum + item.sale_price * item.qty,
+  //     (sum, item) => sum + item.sell_price * item.qty,
   //     0
   //   );
   //   const total: number =
@@ -275,42 +289,114 @@ export default function OrderForm({
   //   }
   // };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   const subtotal: number = data.items.reduce(
+  //     (sum, item) => sum + item.sell_price * item.qty,
+  //     0
+  //   );
+  //   const total: number =
+  //     subtotal + Number(data.shipping_charge || 0) - Number(data.discount || 0);
+
+  //   data['total_amount'] = total;
+
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     let response;
+
+  //     if (order?.id) {
+  //       console.log("✏️ Editing Order:", data);
+  //       response = await axios.post(`/dashboard/orders/update/${order.id}`, data);
+  //       console.log("Order updated:", response.data);
+  //     } else {
+  //       console.log("➕ Adding Order:", data);
+  //       response = await axios.post(`/dashboard/orders/store`, data);
+  //       console.log("Order created:", response.data);
+  //     }
+
+  //     // ✅ Redirect after successful submission
+  //     Inertia.visit("/dashboard/orders");
+
+  //   } catch (error: any) {
+  //     console.error("Error submitting order:", error.response?.data || error.message);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   const subtotal: number = data.items.reduce(
+  //     (sum, item) => sum + item.sell_price * item.qty,
+  //     0
+  //   );
+
+  //   const total: number =
+  //     subtotal + Number(data.shipping_charge || 0) - Number(data.discount || 0);
+
+  //   data['total_amount'] = total;
+
+  //   setIsSubmitting(true);
+
+  //   router(post())
+  //   Inertia.post('/dashboard/orders/store', data, {
+  //     onFinish: () => setIsSubmitting(false), // always reset loading
+  //   });
+  // };
+
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
+    // Calculate total
     const subtotal: number = data.items.reduce(
-      (sum, item) => sum + item.sale_price * item.qty,
+      (sum, item) => sum + item.sell_price * item.qty,
       0
     );
     const total: number =
       subtotal + Number(data.shipping_charge || 0) - Number(data.discount || 0);
 
-    data['total_amount'] = total;
+    data.total_amount = total;
 
     setIsSubmitting(true);
 
-    try {
-      let response;
-
-      if (order?.id) {
-        console.log("✏️ Editing Order:", data);
-        response = await axios.post(`/dashboard/orders/update/${order.id}`, data);
-        console.log("Order updated:", response.data);
-      } else {
-        console.log("➕ Adding Order:", data);
-        response = await axios.post(`/dashboard/orders/store`, data);
-        console.log("Order created:", response.data);
-      }
-
-      // ✅ Redirect after successful submission
-   Inertia.visit("/dashboard/orders");
-  
-  } catch (error: any) {
-      console.error("Error submitting order:", error.response?.data || error.message);
-    } finally {
-      setIsSubmitting(false);
+    if (order?.id) {
+      // ✅ Use router for POST request
+      router.post(`/dashboard/orders/update/${order.id}`, data, {
+        onSuccess: () => {
+          // Redirect to orders page after success
+          // router.get('/dashboard/orders');
+          // reset()
+        },
+        onError: (errors) => {
+          console.error('Validation errors:', errors);
+        },
+        onFinish: () => setIsSubmitting(false),
+      });
+    } else {
+      // ✅ Use router for POST request
+      router.post('/dashboard/orders/store', data, {
+        onSuccess: () => {
+          // Redirect to orders page after success
+          // router.get('/dashboard/orders');
+          // reset()
+        },
+        onError: (errors) => {
+          console.error('Validation errors:', errors);
+        },
+        onFinish: () => setIsSubmitting(false),
+      });
     }
   };
 
@@ -337,7 +423,7 @@ export default function OrderForm({
             🛒 Add Products
           </h2>
 
-          <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-end w-full">
+          <div className="flex flex-col md:flex-row  gap-3 md:gap-4 items-end w-full">
             {/* Product Selector */}
             <div className="flex-1 min-w-0 relative w-full md:w-auto">
               <Label>Select Product</Label>
@@ -373,14 +459,13 @@ export default function OrderForm({
             </div>
 
             {/* Add Button */}
-            <div className="w-full md:w-auto flex-shrink-0">
-              <Button
-                size="sm"
-                className="w-full md:w-auto mt-2 md:mt-0"
+            <div className="flex items-center justify-center gap-2 w-full md:w-auto ">
+              <span
+                className="w-full flex justify-center items-center gap-1 px-5 py-2.5 md:w-auto mt-2 md:mt-0 bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 rounded-md cursor-pointer"
                 onClick={handleAddItem}
               >
-                + Add
-              </Button>
+                <Plus className="w-4 h-4" /> Add
+              </span>
             </div>
           </div>
 
@@ -421,7 +506,7 @@ export default function OrderForm({
                       >
                         <div className="font-medium text-sm md:text-base">{p.title}</div>
                         <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
-                          Code: {p.product_code} — ৳{p.sale_price}
+                          Code: {p.product_code} — ৳{p.sell_price}
                         </div>
                       </div>
                     ))
@@ -491,7 +576,7 @@ export default function OrderForm({
                           ))}
                         </select>
                       </td>
-                      <td className="p-2">৳{item.sale_price}</td>
+                      <td className="p-2">৳{item.sell_price}</td>
                       <td className="p-2 w-28">
                         <Input
                           type="number"
@@ -501,7 +586,7 @@ export default function OrderForm({
                           className="text-xs md:text-sm"
                         />
                       </td>
-                      <td className="p-2">৳{(item.sale_price * item.qty).toFixed(0)}</td>
+                      <td className="p-2">৳{(item.sell_price * item.qty).toFixed(0)}</td>
                       <td className="p-2">
                         <span
                           className="bg-rose-500 px-2 md:px-4 py-1 md:py-2 rounded-md cursor-pointer text-white text-xs md:text-sm"
@@ -603,7 +688,8 @@ export default function OrderForm({
               <span>Total:</span>
               <span>৳{(total).toFixed(0)}</span>
             </div>
-            <Button disabled={processing} className="mt-3 w-full font-semibold">
+            <Button disabled={processing} className="mt-3 w-full font-semibold text-lg">
+              {isSubmitting && (<LoaderCircle />)}
               {order?.id ? "Update Order" : "Place Order"}
             </Button>
           </div>

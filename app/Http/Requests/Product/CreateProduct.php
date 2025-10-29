@@ -10,37 +10,33 @@ class CreateProduct extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-     public function authorize(): bool
+    public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Validation rules for creating a product
+     */
     public function rules(): array
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('products', 'slug'),
-            ],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
             'brand_id' => ['required', Rule::exists('brands', 'id')],
             'category_id' => ['required', Rule::exists('categories', 'id')],
-            'subcategory_id' => ['nullable'],
+            'subcategory_id' => ['nullable', Rule::exists('categories', 'id')],
             'product_type_id' => ['nullable', Rule::exists('product_types', 'id')],
 
+            'purchase_price' => ['required', 'numeric', 'min:0'], // Cost price
             'price' => ['required', 'numeric', 'min:0'],
             'discount' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'sale_price' => ['nullable', 'numeric', 'min:0'],
+            'sell_price' => ['nullable', 'numeric', 'min:0'],
 
-            'product_code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('products', 'product_code'),
-            ],
-            'quantity' => ['required', 'integer', 'min:0'],
+            'product_code' => ['required', 'string', 'max:255', Rule::unique('products', 'product_code')],
+
+            'total_stock' => ['required', 'integer', 'min:0'],
+            'reserved_stock' => ['nullable', 'integer', 'min:0'],
 
             'main_thumbnail' => ['required', 'image', 'mimes:jpg,jpeg,png,webp'],
 
@@ -70,6 +66,9 @@ class CreateProduct extends FormRequest
         ];
     }
 
+    /**
+     * Custom validation messages
+     */
     public function messages(): array
     {
         return [
@@ -83,16 +82,18 @@ class CreateProduct extends FormRequest
             'subcategory_id.exists' => 'The selected subcategory is invalid.',
             'product_type_id.exists' => 'The selected product type is invalid.',
 
+            'purchase_price.required' => 'Please enter the purchase price.',
             'price.required' => 'Please enter the product price.',
             'price.numeric' => 'Price must be a valid number.',
             'discount.integer' => 'Discount must be a valid integer.',
             'discount.max' => 'Discount cannot be more than 100%.',
-            'sale_price.numeric' => 'Sold price must be a valid number.',
+            'sell_price.numeric' => 'sell price must be a valid number.',
 
             'product_code.required' => 'Product code is required.',
             'product_code.unique' => 'This product code is already used.',
-            'quantity.required' => 'Please specify the available quantity.',
-            'quantity.integer' => 'Quantity must be a whole number.',
+
+            'total_stock.required' => 'Please specify the total stock.',
+            'reserved_stock.min' => 'Reserved stock cannot be negative.',
 
             'main_thumbnail.required' => 'Main product image is required.',
             'main_thumbnail.image' => 'The thumbnail must be an image file.',
@@ -104,5 +105,20 @@ class CreateProduct extends FormRequest
 
             'meta_title.max' => 'Meta title must not exceed 255 characters.',
         ];
+    }
+
+    /**
+     * Additional stock validation
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $totalStock = (int) $this->input('total_stock', 0);
+            $reservedStock = (int) $this->input('reserved_stock', 0);
+
+            if ($reservedStock > $totalStock) {
+                $validator->errors()->add('reserved_stock', 'Reserved stock cannot exceed total stock.');
+            }
+        });
     }
 }

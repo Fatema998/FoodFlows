@@ -9,13 +9,11 @@ import TableHeader from '../components/table-header';
 import OrderTable from './components/order-table';
 import Pagination from '../components/Pagination';
 
-interface Props {
-    colors: Color[];
-}
 
-const ColorPage: React.FC<Props> = ({ orders }) => {
+
+const OrdersPage = ({ orders }) => {
     useToastMessage();
-    console.log(orders);
+ 
     return (
         <AppLayout>
             <Head title="All Orders" />
@@ -41,4 +39,4 @@ const ColorPage: React.FC<Props> = ({ orders }) => {
     );
 };
 
-export default ColorPage;
+export default OrdersPage;

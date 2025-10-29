@@ -20,15 +20,18 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $price = $this->faker->numberBetween(50, 1000); // main price
+        $price = $this->faker->numberBetween(50, 1000); // selling price
+        $purchasePrice = $this->faker->numberBetween(30, $price - 10); // cost price
         $discount = $this->faker->numberBetween(0, 30); // percentage discount
-        $soldPrice = $price - ($price * $discount / 100);
+        $sellPrice = $price - ($price * $discount / 100);
 
         $brandIds = Brand::pluck('id')->toArray();
         $categoryIds = Category::pluck('id')->toArray();
         $subcategoryId = $this->faker->optional()->randomElement($categoryIds);
-
         $productTypeIds = ProductType::pluck('id')->toArray();
+
+        $totalStock = $this->faker->numberBetween(10, 100);
+        $reservedStock = $this->faker->numberBetween(0, 5);
 
         return [
             'title' => $title = $this->faker->words(3, true),
@@ -37,16 +40,23 @@ class ProductFactory extends Factory
             'category_id' => $this->faker->randomElement($categoryIds),
             'subcategory_id' => $subcategoryId,
             'product_type_id' => $this->faker->randomElement($productTypeIds),
+            
+            'purchase_price' => $purchasePrice,
             'price' => $price,
             'discount' => $discount,
-            'sale_price' => $soldPrice,
+            'sell_price' => $sellPrice,
+
             'product_code' => strtoupper(Str::random(8)),
-            'sale_count' => $this->faker->numberBetween(0, 100),
-            'quantity' => $this->faker->numberBetween(1, 50),
+            'sell_count' => $this->faker->numberBetween(0, 100),
+
+            'total_stock' => $totalStock,
+            'reserved_stock' => $reservedStock,
+
             'main_thumbnail' => '/assets/products/thumbnail/product-4.jpg',
             'short_description' => $this->faker->sentence(),
             'long_descriptions' => $this->faker->paragraphs(3, true),
             'materials' => $this->faker->paragraph(),
+
             'is_todays_pick'=> $this->faker->boolean(25),
             'is_new_arrival' => $this->faker->boolean(30),
             'is_trending' => $this->faker->boolean(20),
@@ -56,9 +66,11 @@ class ProductFactory extends Factory
             'is_flash_deal' => $this->faker->boolean(5),
             'flash_deal_start' => $this->faker->optional()->dateTimeBetween('now', '+7 days'),
             'flash_deal_end' => $this->faker->optional()->dateTimeBetween('+8 days', '+15 days'),
+
             'meta_title' => $this->faker->sentence(),
             'meta_description' => $this->faker->paragraph(),
             'meta_keywords' => implode(', ', $this->faker->words(5)),
+
             'created_at' => now(),
             'updated_at' => now(),
         ];

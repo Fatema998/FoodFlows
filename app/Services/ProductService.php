@@ -118,39 +118,55 @@ class ProductService
         return $product;
     }
 
-    public function createProduct($data)
+   public function createProduct(array $data)
     {
-         // Price and discount from the request
+        // Ensure required fields exist
         $price = (float) $data['price'];
         $discount = (float) ($data['discount'] ?? 0);
+        $purchasePrice = (float) ($data['purchase_price'] ?? 0);
+        $totalStock = (int) ($data['total_stock'] ?? 0);
+        $reservedStock = (int) ($data['reserved_stock'] ?? 0);
 
-        // Calculate sold price
-        $soldPrice = $price - ($price * $discount / 100);
+        // Calculate sell price
+        $data['sell_price'] = round($price - ($price * $discount / 100), 2);
 
-        // Add sale_price to $data
-        $data['sale_price'] = number_format($soldPrice, 2, '.', '');
+        // Assign stock and purchase price if provided
+        $data['purchase_price'] = $purchasePrice;
+        $data['total_stock'] = $totalStock;
+        $data['reserved_stock'] = $reservedStock;
 
-        // Logic to create a new Product
+        // Create product via repository
         return $this->productRepository->createProduct($data);
     }
 
-    public function updateProduct($data, $id)
+    public function updateProduct(array $data, int $id)
     {
-        // Logic to update a Product by ID
-         // Price and discount from the request
-        $price = (float) $data['price'];
-        $discount = (float) ($data['discount'] ?? 0);
+        // Fetch existing product
+        $product = $this->productRepository->getProductById($id);
 
-        // Calculate sold price
-        $salePrice = $price - ($price * $discount / 100);
+        if (!$product) {
+            throw new \Exception("Product not found with ID {$id}");
+        }
 
-        // Add sale_price to $data
-        $data['sale_price'] = number_format($salePrice, 2, '.', '');
+        // Update price, discount, sell_price
+        if (isset($data['price'])) {
+            $price = (float) $data['price'];
+            $discount = (float) ($data['discount'] ?? $product->discount);
+            $data['sell_price'] = round($price - ($price * $discount / 100), 2);
+        }
 
-        // Optional: check the output
-        // dd($data);
+        // Update stock fields if provided
+        if (isset($data['total_stock'])) {
+            $data['total_stock'] = (int) $data['total_stock'];
+        }
+        if (isset($data['reserved_stock'])) {
+            $data['reserved_stock'] = (int) $data['reserved_stock'];
+        }
+        if (isset($data['purchase_price'])) {
+            $data['purchase_price'] = (float) $data['purchase_price'];
+        }
 
-        // Update product via repository
+        // Update via repository
         return $this->productRepository->updateProduct($data, $id);
     }
 

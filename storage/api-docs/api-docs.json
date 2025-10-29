@@ -1099,7 +1099,7 @@
                                                     },
                                                     "title": {
                                                         "type": "string",
-                                                        "example": "Big Sale"
+                                                        "example": "Big sell"
                                                     },
                                                     "subtitle": {
                                                         "type": "string",
@@ -1278,7 +1278,7 @@
                         "format": "float",
                         "example": 100
                     },
-                    "sale_price": {
+                    "sell_price": {
                         "type": "number",
                         "format": "float",
                         "example": 1100.5
@@ -1400,7 +1400,7 @@
                         "format": "float",
                         "example": 200
                     },
-                    "sale_price": {
+                    "sell_price": {
                         "type": "number",
                         "format": "float",
                         "example": 1000

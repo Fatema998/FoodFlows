@@ -15,6 +15,15 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
+
+
+    const STATUS_PENDING    = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_SUCCESS    = 'success';
+    const STATUS_CANCELLED  = 'cancelled';
+    const STATUS_SHIPPED = 'shipped';
+    
+
       protected $fillable = [
         'customer_id',
         'invoice_id',
@@ -23,7 +32,7 @@ class Order extends Model
         'shipping_charge',
         'coupon_code',
         'coupon_discount',
-        'order_status_id',
+        'order_status',
     ];
 
     public function orderdetails()
@@ -34,10 +43,12 @@ class Order extends Model
     {
         return $this->belongsTo(OrderDetails::class, 'id', 'order_id')->select('id','order_id','product_id');
     }
+
     public function status()
     {
-        return $this->belongsTo(OrderStatus::class, 'order_status_id');
+        return $this->belongsTo(OrderStatus::class, 'order_status', 'slug');
     }
+
     public function shipping()
     {
         return $this->belongsTo(Shipping::class, 'id', 'order_id');
@@ -50,6 +61,5 @@ class Order extends Model
     {
         return $this->belongsTo(User::class,'customer_id');
     }
-
-
+   
 }
