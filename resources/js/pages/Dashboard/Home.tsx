@@ -1,10 +1,11 @@
 import EcommerceMetrics from "../../components/ecommerce/EcommerceMetrics";
-import MonthlysellsChart from "../../components/ecommerce/MonthlysellsChart";
+
 import StatisticsChart from "../../components/ecommerce/StatisticsChart";
 import MonthlyTarget from "../../components/ecommerce/MonthlyTarget";
 import RecentOrders from "../../components/ecommerce/RecentOrders";
 import DemographicCard from "../../components/ecommerce/DemographicCard";
 import AppLayout from "@/layouts/AppLayout";
+import MonthlysellsChart from "@/components/ecommerce/MonthlySalesChart";
 
 
 export default function Home() {

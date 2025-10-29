@@ -67,12 +67,13 @@ export default function Invoice({ order }) {
                                     Invoice
                                 </p>
                             </div>
-                            <div className="mt-2 inline-block w-3/4 skew-x-[36deg] transform bg-white px-8 py-3 text-right">
-                                <p className="-skew-x-[36deg] transform font-bold text-gray-800">
+                            <div className="mt-2 inline-block w-3/4 skew-x-[36deg] transform bg-white  py-3 text-right">
+                                <p className="-skew-x-[36deg] transform  font-bold text-gray-800 ">
                                     Invoice ID:{' '}
-                                    <strong>#{order.invoice_id}</strong>
+                                    <strong>{order.invoice_id}</strong>
                                 </p>
-                                <p className="-skew-x-[36deg] transform font-bold text-gray-800">
+
+                                <p className="-skew-x-[36deg] transform font-bold text-gray-800 ">
                                     Invoice Date:{' '}
                                     <strong>
                                         {new Date(

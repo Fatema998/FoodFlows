@@ -50,7 +50,6 @@ class AuthService
         ];
 
         return $userData;
-
     }
 
     public function userProfile(){
