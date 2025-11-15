@@ -1177,6 +1177,182 @@
                     }
                 }
             }
+        },
+        "/api/user/orders": {
+            "get": {
+                "tags": [
+                    "User_Profile"
+                ],
+                "summary": "Get authenticated user's orders",
+                "description": "Returns a list of orders belonging to the logged-in user.",
+                "operationId": "ba3d4807258f5629c2b982f171bb89f6",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of orders per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User orders fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orders retrieved"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "invoice_no": {
+                                                                "type": "string",
+                                                                "example": "INV-2024-0012"
+                                                            },
+                                                            "total_amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1500.75
+                                                            },
+                                                            "payment_method": {
+                                                                "type": "string",
+                                                                "example": "Online"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "Delivered"
+                                                            },
+                                                            "shipping": {
+                                                                "properties": {
+                                                                    "address": {
+                                                                        "type": "string",
+                                                                        "example": "Dhaka, Bangladesh"
+                                                                    },
+                                                                    "shipping_charge": {
+                                                                        "type": "number",
+                                                                        "example": 60
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "orderdetails": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "product_name": {
+                                                                            "type": "string",
+                                                                            "example": "T-Shirt"
+                                                                        },
+                                                                        "quantity": {
+                                                                            "type": "integer",
+                                                                            "example": 2
+                                                                        },
+                                                                        "price": {
+                                                                            "type": "number",
+                                                                            "example": 750
+                                                                        },
+                                                                        "color": {
+                                                                            "type": "string",
+                                                                            "example": "Black"
+                                                                        },
+                                                                        "size": {
+                                                                            "type": "string",
+                                                                            "example": "M"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to fetch user orders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to fetch orders"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error while fetching orders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Exception occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1622,6 +1798,10 @@
         {
             "name": "Sliders",
             "description": "Sliders"
+        },
+        {
+            "name": "User_Profile",
+            "description": "User_Profile"
         }
     ]
 }

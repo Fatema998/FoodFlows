@@ -66,8 +66,26 @@ class OrderService
     // =========================
     public function getAllOrders($limit = null)
     {
-        return OrderListResource::collection($this->orderRepository->all($limit));
+        return OrderListResource::collection(
+            $this->orderRepository->getOrders($limit)
+        );
     }
+   public function getOrdersByUser($limit = null)
+    {
+        $authUser = Auth::user();
+
+        return OrderListResource::collection(
+            $this->orderRepository->getOrders($limit, $authUser,[
+            'shipping.shippingCharge',
+            'status',
+            'payment',
+            'customer',
+            'orderdetails.color',
+            'orderdetails.size',
+        ])
+        );
+    }
+ 
 
     // =========================
     // Get Single Order

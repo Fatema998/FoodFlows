@@ -8,10 +8,11 @@ use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\UserOrdersController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 
 Route::controller(AuthController::class)->group(function(){
@@ -22,6 +23,14 @@ Route::controller(AuthController::class)->group(function(){
         Route::middleware(['auth:sanctum'])->group(function(){
             Route::get('profile','userProfile');
             Route::get('logout','userLogout');
+        });
+    });
+});
+
+Route::controller(UserOrdersController::class)->group(function(){
+    Route::prefix('user')->group(function(){
+        Route::middleware(['auth:sanctum'])->group(function(){
+            Route::get('orders','orders');
         });
     });
 });

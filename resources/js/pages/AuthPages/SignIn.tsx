@@ -1,8 +1,12 @@
 
-import AuthLayout from "./AuthPageLayout";
+import AuthLayout from "@/layouts/AuthLayout";
 import SignInForm from "../../components/auth/SignInForm";
+import { useToastMessage } from "@/hooks/useToastMessage";
 
 export default function SignIn() {
+
+  useToastMessage();
+
   return (
     <>
       {/* <PageMeta

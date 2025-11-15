@@ -14,10 +14,16 @@ class OrderRepository
     /**
      * Get all orders, optionally paginated.
      */
-    public function all($limit = null)
+  public function getOrders($limit = null, $authUser = null, array $relations = ['shipping', 'status'])
     {
-        $query = Order::with(['shipping', 'status'])->latest();
+        $query = Order::with($relations)->latest();
 
+        // If auth user exists → filter orders
+        if (!empty($authUser)) {
+            $query->where('customer_id', $authUser->id);
+        }
+
+        // If pagination required
         if (!empty($limit) && is_numeric($limit)) {
             return $query->paginate($limit);
         }

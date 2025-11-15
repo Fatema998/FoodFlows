@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 
-Route::prefix('dashboard')->group(function(){
+Route::middleware(['admin'])->prefix('dashboard')->group(function(){
 
     Route::get('/', function () {
         return Inertia::render('Dashboard/Home');
