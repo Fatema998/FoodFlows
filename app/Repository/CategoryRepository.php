@@ -44,6 +44,7 @@ class CategoryRepository
     {
         return Category::where('is_active', true)
             ->withCount('products')
+            ->whereNull('parent_id')
             ->with(['children' => function($query) {
                 $query->where('is_active', true)->withCount('products');
             }])

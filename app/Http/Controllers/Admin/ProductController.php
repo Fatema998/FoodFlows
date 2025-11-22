@@ -43,7 +43,6 @@ class ProductController extends Controller
     {
         //
         try {
-
             $limit = (int) $request->query('limit', 10);
             $products = $this->productService->getAllProducts($request,$limit);
             $brands = $this->brandService->getAllBrands();

@@ -94,10 +94,8 @@ export default function OrderForm({
   order,
 }: OrderFormProps) {
 
-  console.log(order, 'order')
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
 
   const { data, setData, post, reset, processing } = useForm<OrderFormData>({
     shipping: {
@@ -233,6 +231,10 @@ export default function OrderForm({
 
   const handleDiscount = (value: string) => {
     setData("discount", Number(value));
+  }
+
+  const handleShipping=(value: string)=>{
+      setData("shipping_charge", Number(value));
   }
 
   const subtotal: number = data.items.reduce(
@@ -668,7 +670,16 @@ export default function OrderForm({
             </div>
             <div className="flex justify-between text-sm md:text-base">
               <span>Shipping:</span>
-              <span>৳{data.shipping_charge}</span>
+              {/* <span>৳{data.shipping_charge}</span> */}
+              <div className="w-24">
+                <Input
+                  type="number"
+                  min="1"
+                  value={data.shipping_charge}
+                  onChange={(e) => handleShipping(e.target.value)}
+                  className="text-xs md:text-sm py-2"
+                />
+              </div>
             </div>
             <div className="flex justify-between text-sm md:text-base">
               <span>Discount:</span>
@@ -693,7 +704,6 @@ export default function OrderForm({
               {order?.id ? "Update Order" : "Place Order"}
             </Button>
           </div>
-
         </div>
       </form>
     </div>

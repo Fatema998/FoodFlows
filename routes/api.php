@@ -29,9 +29,13 @@ Route::controller(AuthController::class)->group(function(){
 
 Route::controller(UserOrdersController::class)->group(function(){
     Route::prefix('user')->group(function(){
+
+        Route::get('orders/create','createCustomerOrder');
+
         Route::middleware(['auth:sanctum'])->group(function(){
             Route::get('orders','orders');
         });
+        
     });
 });
 

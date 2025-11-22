@@ -11,6 +11,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // S, M, L, XL, 7, 8, 9
             $table->string('type')->nullable(); // apparel, shoes, kids_apparel
+            $table->string('label')->nullable();  //  small, meidum, large, xtra large, xtfr
             $table->timestamps();
         });
     }

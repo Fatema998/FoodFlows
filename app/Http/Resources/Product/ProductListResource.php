@@ -49,6 +49,7 @@ class ProductListResource extends JsonResource
             'sizes' => $this->sizes->map(fn($size) => [
                 'id' => $size->id,
                 'name' => $size->name,
+                'label' => $size->label,
             ]),
             'variants' => $this->variants->map(fn($variant) => [
                 'id' => $variant->id,

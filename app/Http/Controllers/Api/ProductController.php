@@ -168,20 +168,31 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function getAllProducts()
+    public function getAllProducts(Request $request)
     {
         try {
-
-            $products = $this->productService->getActiveProducts();
+            
+            $limit = (int) $request->query('limit', 12);
+            $products = $this->productService->getActiveProducts($request,$limit);
 
             if ($products) {
                 return ApiResponse::success(
-                            status: self::SUCCESS_STATUS,
-                            message: self::SUCCESS_MESSAGE,
-                            data: $products,
-                        );
-                }
-
+                                status: self::SUCCESS_STATUS,
+                                message: self::SUCCESS_MESSAGE,
+                                data: [
+                                    'products'   => $products->items(),
+                                    'pagination' => [
+                                        'current_page'  => $products->currentPage(),
+                                        'last_page'     => $products->lastPage(),
+                                        'per_page'      => $products->perPage(),
+                                        'total'         => $products->total(),
+                                        'next_page_url' => $products->nextPageUrl(),
+                                        'prev_page_url' => $products->previousPageUrl(),
+                                        'has_more_pages' => $products->hasMorePages(),
+                                    ],
+                                ]
+                            );
+                    }
                 return ApiResponse::error(
                         status:self::ERROR_STATUS,
                         message: "Product ". self::FAILED_MESSAGE,

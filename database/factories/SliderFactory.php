@@ -17,8 +17,9 @@ class SliderFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
-            'subtitle' => $this->faker->sentence,
+            'title' => $this->faker->word. " ".$this->faker->word." ".$this->faker->word,
+            'subtitle' => $this->faker->word. " ".$this->faker->word,
+            'description'=> $this->faker->sentence,
             'image' => '/assets/sliders/slider-01.jpg',
             'button_text' => $this->faker->word,
             'link' => $this->faker->url,

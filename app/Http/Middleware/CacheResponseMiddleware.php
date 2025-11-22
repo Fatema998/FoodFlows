@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Carbon;
 
 class CacheResponseMiddleware
 {
@@ -14,7 +15,7 @@ class CacheResponseMiddleware
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
 
-        // শুধু JSON response এর জন্য কাজ করবে
+        // Only process JSON responses
         if (
             $response->isSuccessful() &&
             str_contains($response->headers->get('Content-Type', ''), 'application/json')
@@ -22,48 +23,66 @@ class CacheResponseMiddleware
             $data = $response->getOriginalContent();
             $lastUpdated = null;
 
-            // Pagination হলে
+            // If paginated
             if ($data instanceof AbstractPaginator) {
                 $items = $data->items();
                 $lastUpdated = collect($items)
-                    ->filter(fn($item) => isset($item->updated_at))
-                    ->max(fn($item) => $item->updated_at);
+                    ->map(fn($item) => $this->getUpdatedAt($item))
+                    ->filter()
+                    ->max();
             }
-            // Model হলে
-            elseif (is_object($data) && isset($data->updated_at)) {
-                $lastUpdated = $data->updated_at;
+            // If single model
+            elseif (is_object($data)) {
+                $lastUpdated = $this->getUpdatedAt($data);
             }
-            // Resource / array response হলে
+            // If array/resource
             elseif (is_array($data) && isset($data['data'])) {
                 $lastUpdated = collect($data['data'])
-                    ->filter(fn($item) => isset($item['updated_at']))
-                    ->max(fn($item) => $item['updated_at']);
+                    ->map(fn($item) => $this->getUpdatedAt($item))
+                    ->filter()
+                    ->max();
             }
 
-            // ETag generate
+            // Generate ETag
             $etag = md5($response->getContent());
-
             $response->headers->set('ETag', $etag);
             $response->headers->set('Cache-Control', 'public, max-age=3600');
 
             if ($lastUpdated) {
+                // Ensure $lastUpdated is Carbon instance
+                $lastUpdated = $lastUpdated instanceof Carbon ? $lastUpdated : Carbon::parse($lastUpdated);
                 $response->headers->set(
                     'Last-Modified',
-                    gmdate('D, d M Y H:i:s', strtotime($lastUpdated)) . ' GMT'
+                    gmdate('D, d M Y H:i:s', $lastUpdated->timestamp) . ' GMT'
                 );
             }
 
-            // Client cached হলে 304 Not Modified পাঠানো
+            // Check client cache
+            $clientEtags = $request->getETags() ?: [];
+            $ifModifiedSince = $request->header('If-Modified-Since');
+
             if (
-                ($request->getETags() && in_array($etag, $request->getETags())) ||
-                ($request->headers->has('If-Modified-Since')
-                    && $lastUpdated
-                    && strtotime($request->header('If-Modified-Since')) >= strtotime($lastUpdated))
+                in_array($etag, $clientEtags) ||
+                ($ifModifiedSince && $lastUpdated && strtotime($ifModifiedSince) >= $lastUpdated->timestamp)
             ) {
                 return response()->noContent(304)->withHeaders($response->headers->all());
             }
         }
 
         return $response;
+    }
+
+    /**
+     * Safely get updated_at from object or array
+     */
+    private function getUpdatedAt($item)
+    {
+        if (is_array($item) && isset($item['updated_at'])) {
+            return $item['updated_at'];
+        } elseif (is_object($item) && isset($item->updated_at)) {
+            return $item->updated_at;
+        }
+
+        return null;
     }
 }

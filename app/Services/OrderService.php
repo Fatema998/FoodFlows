@@ -70,6 +70,7 @@ class OrderService
             $this->orderRepository->getOrders($limit)
         );
     }
+    
    public function getOrdersByUser($limit = null)
     {
         $authUser = Auth::user();
@@ -79,7 +80,7 @@ class OrderService
             'shipping.shippingCharge',
             'status',
             'payment',
-            'customer',
+            // 'customer',
             'orderdetails.color',
             'orderdetails.size',
         ])

@@ -29,13 +29,13 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
-            // CacheResponseMiddleware::class // Uncomment if caching needed for web
+            CacheResponseMiddleware::class // Uncomment if caching needed for web
         ]);
 
         // API middleware group
-        $middleware->api(append: [
-            CacheResponseMiddleware::class
-        ]);
+        // $middleware->api(append: [
+        //     // CacheResponseMiddleware::class
+        // ]);
 
         // Route middleware aliases
         $middleware->alias([

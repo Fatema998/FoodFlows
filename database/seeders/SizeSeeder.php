@@ -16,27 +16,53 @@ class SizeSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Adult apparel sizes
-        $apparelSizes = ['XS','S','M','L','XL'];
-        foreach ($apparelSizes as $size) {
-            Size::create(['name' => $size, 'type' => 'apparel']);
+        $apparelSizes = [
+            'XS' => 'Extra Small',
+            'S'  => 'Small',
+            'M'  => 'Medium',
+            'L'  => 'Large',
+            'XL' => 'Extra Large',
+            'XXL'=> 'Double Extra Large',
+        ];
+        foreach ($apparelSizes as $name => $label) {
+            Size::create(['name' => $name, 'type' => 'apparel', 'label' => $label]);
         }
 
         // Adult shoe sizes
-        $shoeSizes = ['6','7','8','9','10'];
-        foreach ($shoeSizes as $size) {
-            Size::create(['name' => $size, 'type' => 'shoes']);
+        $shoeSizes = [
+            '6'  => '6',
+            '7'  => '7',
+            '8'  => '8',
+            '9'  => '9',
+            '10' => '10',
+        ];
+        foreach ($shoeSizes as $name => $label) {
+            Size::create(['name' => $name, 'type' => 'shoes', 'label' => $label]);
         }
 
         // Kids apparel sizes
-        $kidsApparelSizes = ['1-2Y','2-3Y','3-4Y','4-5Y','5-6Y'];
-        foreach ($kidsApparelSizes as $size) {
-            Size::create(['name' => $size, 'type' => 'kids_apparel']);
+        $kidsApparelSizes = [
+            '1-2Y' => '1-2 Years',
+            '2-3Y' => '2-3 Years',
+            '3-4Y' => '3-4 Years',
+            '4-5Y' => '4-5 Years',
+            '5-6Y' => '5-6 Years',
+        ];
+        foreach ($kidsApparelSizes as $name => $label) {
+            Size::create(['name' => $name, 'type' => 'kids_apparel', 'label' => $label]);
         }
 
         // Kids shoe sizes
-        $kidsShoeSizes = ['1','2','3','4','5','6'];
-        foreach ($kidsShoeSizes as $size) {
-            Size::create(['name' => $size, 'type' => 'kids_shoes']);
+        $kidsShoeSizes = [
+            '1' => '1',
+            '2' => '2',
+            '3' => '3',
+            '4' => '4',
+            '5' => '5',
+            '6' => '6',
+        ];
+        foreach ($kidsShoeSizes as $name => $label) {
+            Size::create(['name' => $name, 'type' => 'kids_shoes', 'label' => $label]);
         }
     }
 }

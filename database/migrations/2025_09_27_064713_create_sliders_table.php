@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title'); // index for faster search
             $table->string('subtitle')->nullable();
+            $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->string('button_text')->nullable();
             $table->string('link')->nullable();

@@ -30,8 +30,9 @@ class ProductService
     }
 
     // Get all active products
-    public function getActiveProducts(){
-       return   ProductListResource::collection($this->productRepository->getActiveProducts());
+    public function getActiveProducts(Request $request,$limit){
+        $products = $this->productRepository->getActiveProducts($request, $limit);
+       return   ProductListResource::collection($products);
     }
 
     // Get product by ID

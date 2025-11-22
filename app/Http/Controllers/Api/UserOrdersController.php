@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -134,5 +135,53 @@ class UserOrdersController extends Controller
         }
     }
 
+    public function createCustomerOrder(Request $request){
+         // 1️⃣ Validate request
+        $validator = Validator::make($request->all(), [
+            'shipping.name' => 'required|string|max:255',
+            'shipping.phone' => 'required|string|max:20',
+            'shipping.email' => 'nullable|email|max:255',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.product_name' => 'required|string',
+            'items.*.product_code' => 'required|string',
+            'items.*.purchase_price' => 'required|numeric|min:0',
+            'items.*.sell_price' => 'required|numeric|min:0',
+            'items.*.qty' => 'required|integer|min:1',
+            'payment_method' => 'nullable|string|in:bkash,nagad,cash,cash_on_delivery',
+            'total_amount' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0',
+            'shipping_charge' => 'nullable|numeric|min:0',
+            'coupon_code' => 'nullable|string|max:50',
+            'coupon_discount' => 'nullable|numeric|min:0',
+        ]);
 
+        if ($validator->fails()) {
+            return ApiResponse::error(
+                status: self::ERROR_STATUS,
+                message: self::VALIDATION_ERROR_MESSAGE,
+                statusCode: self::VALIDATION_ERROR
+             );
+        }
+
+        try {
+            // 2️⃣ Create order
+            $order = $this->orderService->createOrder($request->all());
+
+             return ApiResponse::success(
+                    status: self::SUCCESS_STATUS,
+                    message: self::SUCCESS_MESSAGE,
+                    data: $order
+                );
+
+        } catch (Exception $e) {
+             Log::error('Unable to fetch profile: ' . $e->getMessage() . ' - Line no. ' . $e->getLine());
+            return ApiResponse::error(
+                status: self::ERROR_STATUS,
+                message: self::EXCEPTION_MESSAGE . $e->getMessage(),
+                statusCode: 500
+            );
+            return redirect()->back()->with('error', 'Failed to create order.  '  . $e->getMessage());
+        }
+    }
 }

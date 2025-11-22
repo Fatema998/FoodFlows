@@ -21,10 +21,10 @@ return new class extends Migration
             $table->unsignedBigInteger('product_type_id')->index();
 
             // Price management
-            $table->decimal('purchase_price', 10, 2)->default(0); // মূল ক্রয়মূল্য
-            $table->decimal('price', 10, 2);                       // বিক্রয়মূল্য
+            $table->integer('purchase_price')->default(0); // মূল ক্রয়মূল্য
+            $table->integer('price');                       // বিক্রয়মূল্য
             $table->integer('discount')->default(0);               // discount %
-            $table->decimal('sell_price', 10, 2)->nullable();      // price after discount
+            $table->integer('sell_price')->nullable();      // price after discount
 
             $table->string('product_code')->unique();
             $table->unsignedBigInteger('sell_count')->default(0);

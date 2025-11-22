@@ -11,12 +11,32 @@ class SizeFactory extends Factory
 
     public function definition()
     {
-        $sizes = ['XS','S','M','L','XL','6','7','8','9','10'];
-        $types = ['apparel','shoes'];
+        // Define available sizes and their corresponding labels
+        $sizeMap = [
+            'XS'  => 'Extra Small',
+            'S'   => 'Small',
+            'M'   => 'Medium',
+            'L'   => 'Large',
+            'XL'  => 'Extra Large',
+            'XXL' => 'Double Extra Large',  // <-- Added XXL
+            '6'   => '6',
+            '7'   => '7',
+            '8'   => '8',
+            '9'   => '9',
+            '10'  => '10',
+        ];
+
+        $types = ['apparel', 'shoes'];
+
+        $name = $this->faker->randomElement(array_keys($sizeMap));
 
         return [
-            'name' => $this->faker->randomElement($sizes),
-            'type' => $this->faker->randomElement($types),
+            'name'  => $name,
+            'type'  => $this->faker->randomElement($types),
+            'label' => $sizeMap[$name],
+
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

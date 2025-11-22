@@ -41,10 +41,16 @@ class ProductFactory extends Factory
             'subcategory_id' => $subcategoryId,
             'product_type_id' => $this->faker->randomElement($productTypeIds),
             
-            'purchase_price' => $purchasePrice,
-            'price' => $price,
-            'discount' => $discount,
-            'sell_price' => $sellPrice,
+            // 'purchase_price' => $purchasePrice,
+            // 'price' => $price,
+            // 'discount' => $discount,
+            // 'sell_price' => $sellPrice,
+
+            'purchase_price' => (int) $purchasePrice,
+            'price' => (int) $price,
+            'discount' => (int) $discount,
+            'sell_price' => (int) $sellPrice,
+
 
             'product_code' => strtoupper(Str::random(8)),
             'sell_count' => $this->faker->numberBetween(0, 100),
