@@ -28,14 +28,11 @@ Route::controller(AuthController::class)->group(function(){
 });
 
 Route::controller(UserOrdersController::class)->group(function(){
-    Route::prefix('user')->group(function(){
-
-        Route::get('orders/create','createCustomerOrder');
-
+    Route::prefix('orders')->group(function(){
         Route::middleware(['auth:sanctum'])->group(function(){
-            Route::get('orders','orders');
+            Route::get('user','orders');
         });
-        
+        Route::post('/','createCustomerOrder');
     });
 });
 

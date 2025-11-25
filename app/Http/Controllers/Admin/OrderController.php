@@ -48,10 +48,10 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         //
-        $products = $this->productService->getActiveProducts();
+        $products = $this->productService->getActiveProducts($request);
 
         return Inertia::render('AdminDashboard/Order/Create',[
             'products'=>$products,
@@ -115,10 +115,10 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request,string $id)
     {
         //
-         $products = $this->productService->getActiveProducts();
+         $products = $this->productService->getActiveProducts($request);
          $order = $this->orderService->getOrderById($id);
          
          return Inertia::render('AdminDashboard/Order/Edit',[

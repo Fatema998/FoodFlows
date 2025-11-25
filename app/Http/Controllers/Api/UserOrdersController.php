@@ -24,10 +24,10 @@ class UserOrdersController extends Controller
     
     /**
      * @OA\Get(
-     *     path="/api/user/orders",
+     *     path="/api/orders/user",
      *     summary="Get authenticated user's orders",
      *     description="Returns a list of orders belonging to the logged-in user.",
-     *     tags={"User_Profile"},
+     *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
@@ -134,6 +134,93 @@ class UserOrdersController extends Controller
             );
         }
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/orders",
+     *     summary="Create a new customer order",
+     *     description="Creates a customer order with shipping details, product items, variations (colors & sizes), discounts, coupons, and payment information.",
+     *     tags={"Orders"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"shipping","items","total_amount"},
+     *
+     *             @OA\Property(
+     *                 property="shipping",
+     *                 type="object",
+     *                 required={"name","phone","address"},
+     *                 @OA\Property(property="name", type="string", example="Rafiul Islam"),
+     *                 @OA\Property(property="email", type="string", nullable=true, example="rafi@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="01700000000"),
+     *                 @OA\Property(property="address", type="string", example="Dhaka, Bangladesh"),
+     *                 @OA\Property(property="shipping_charge_id", type="integer", example=1)
+     *             ),
+     *
+     *             @OA\Property(
+     *                 property="items",
+     *                 type="array",
+     *                 minItems=1,
+     *                 @OA\Items(
+     *                     type="object",
+     *                     required={"product_id","product_name","product_code","purchase_price","sell_price","qty"},
+     *
+     *                     @OA\Property(property="product_id", type="integer", example=1),
+     *                     @OA\Property(property="product_name", type="string", example="Premium T-Shirt"),
+     *                     @OA\Property(property="product_code", type="string", example="TSH-2025"),
+     *                     @OA\Property(property="purchase_price", type="number", example=500),
+     *                     @OA\Property(property="sell_price", type="number", example=750),
+     *                     @OA\Property(property="qty", type="integer", example=2),
+     *
+     *
+     *                     @OA\Property(property="size_id", type="integer", example=1),
+     *                     @OA\Property(property="color_id", type="integer", example=1)
+     *                 )
+     *             ),
+     *
+     *             @OA\Property(property="discount", type="number", nullable=true, example=100),
+     *             @OA\Property(property="shipping_charge", type="number", nullable=true, example=60),
+     *             @OA\Property(property="coupon_code", type="string", nullable=true, example="NEWYEAR25"),
+     *             @OA\Property(property="coupon_discount", type="number", nullable=true, example=25),
+     *             @OA\Property(property="payment_method", type="string", nullable=true, enum={"bkash","nagad","cash","cash_on_delivery"}, example="cash"),
+     *             @OA\Property(property="total_amount", type="number", example=1500)
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Order created successfully"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation failed"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Server internal error")
+     *         )
+     *     )
+     * )
+     */
 
     public function createCustomerOrder(Request $request){
          // 1️⃣ Validate request

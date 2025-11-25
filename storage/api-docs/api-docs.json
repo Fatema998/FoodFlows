@@ -27,22 +27,22 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "John Doe"
+                                        "example": "Rafiul Islam"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "rafi@example.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "123456"
+                                        "example": "12345678"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "123456"
+                                        "example": "12345678"
                                     }
                                 },
                                 "type": "object"
@@ -153,12 +153,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "rafi@example.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "123456"
+                                        "example": "12345678"
                                     }
                                 },
                                 "type": "object"
@@ -1178,14 +1178,14 @@
                 }
             }
         },
-        "/api/user/orders": {
+        "/api/orders/user": {
             "get": {
                 "tags": [
-                    "User_Profile"
+                    "Orders"
                 ],
                 "summary": "Get authenticated user's orders",
                 "description": "Returns a list of orders belonging to the logged-in user.",
-                "operationId": "ba3d4807258f5629c2b982f171bb89f6",
+                "operationId": "c1f0d29279545612feb0620dd777e1f0",
                 "parameters": [
                     {
                         "name": "limit",
@@ -1352,6 +1352,216 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/orders": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a new customer order",
+                "description": "Creates a customer order with shipping details, product items, variations (colors & sizes), discounts, coupons, and payment information.",
+                "operationId": "a1d0ef3f54b29020a92cce2ecc770822",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "shipping",
+                                    "items",
+                                    "total_amount"
+                                ],
+                                "properties": {
+                                    "shipping": {
+                                        "required": [
+                                            "name",
+                                            "phone",
+                                            "address"
+                                        ],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Rafiul Islam"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "rafi@example.com",
+                                                "nullable": true
+                                            },
+                                            "phone": {
+                                                "type": "string",
+                                                "example": "01700000000"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "example": "Dhaka, Bangladesh"
+                                            },
+                                            "shipping_charge_id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "product_id",
+                                                "product_name",
+                                                "product_code",
+                                                "purchase_price",
+                                                "sell_price",
+                                                "qty"
+                                            ],
+                                            "properties": {
+                                                "product_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "product_name": {
+                                                    "type": "string",
+                                                    "example": "Premium T-Shirt"
+                                                },
+                                                "product_code": {
+                                                    "type": "string",
+                                                    "example": "TSH-2025"
+                                                },
+                                                "purchase_price": {
+                                                    "type": "number",
+                                                    "example": 500
+                                                },
+                                                "sell_price": {
+                                                    "type": "number",
+                                                    "example": 750
+                                                },
+                                                "qty": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "size_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "color_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "minItems": 1
+                                    },
+                                    "discount": {
+                                        "type": "number",
+                                        "example": 100,
+                                        "nullable": true
+                                    },
+                                    "shipping_charge": {
+                                        "type": "number",
+                                        "example": 60,
+                                        "nullable": true
+                                    },
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "example": "NEWYEAR25",
+                                        "nullable": true
+                                    },
+                                    "coupon_discount": {
+                                        "type": "number",
+                                        "example": 25,
+                                        "nullable": true
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "bkash",
+                                            "nagad",
+                                            "cash",
+                                            "cash_on_delivery"
+                                        ],
+                                        "example": "cash",
+                                        "nullable": true
+                                    },
+                                    "total_amount": {
+                                        "type": "number",
+                                        "example": 1500
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order created successfully"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Server internal error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -1800,8 +2010,8 @@
             "description": "Sliders"
         },
         {
-            "name": "User_Profile",
-            "description": "User_Profile"
+            "name": "Orders",
+            "description": "Orders"
         }
     ]
 }

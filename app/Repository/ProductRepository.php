@@ -200,8 +200,7 @@ class ProductRepository
         return $query;
     }
 
-
-
+    
     public function getAllProducts(Request $request, $limit = 10)
     {
         $query = Product::with(['brand', 'category', 'subcategory'])
@@ -214,7 +213,7 @@ class ProductRepository
     }
 
     // Get all active products
-    public function getActiveProducts(Request $request, $limit = 10)
+    public function getActiveProducts(Request $request, $limit = null)
     {
         $query = Product::with(['sizes', 'variants'])
                     ->where('products.is_active', true)   // FIXED
