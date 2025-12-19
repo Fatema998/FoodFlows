@@ -21,7 +21,9 @@ class PaymentGatewaySeeder extends Seeder
 
         DB::table('payment_gateways')->insert([
             [
+                'name' => 'Bkash',
                 'type' => 'bkash',
+                "link" => "",
                 'app_key' => 'your_bkash_app_key',
                 'app_secret' => 'your_bkash_secret',
                 'username' => 'bkash_user',
@@ -30,12 +32,15 @@ class PaymentGatewaySeeder extends Seeder
                 'success_url' => 'https://yourapp.com/payment/success',
                 'return_url' => 'https://yourapp.com/payment/return',
                 'prefix' => 'BK',
-                 'status' => true,
+                'status' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+               
+                'name' => 'Nagad',
                 'type' => 'nagad',
+                "link" => "",
                 'app_key' => 'your_nagad_app_key',
                 'app_secret' => 'your_nagad_secret',
                 'username' => 'nagad_user',
@@ -49,7 +54,9 @@ class PaymentGatewaySeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'SSLCOMMERZ',
                 'type' => 'sslcommerz',
+                "link" => "",
                 'app_key' => 'your_ssl_store_id',
                 'app_secret' => 'your_ssl_password',
                 'username' => 'ssl_user',

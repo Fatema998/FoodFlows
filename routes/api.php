@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\UserOrdersController;
+use App\Http\Controllers\Api\PaymentGatewayController;
+use App\Http\Controllers\Api\ShippingChargeController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -72,5 +74,16 @@ Route::controller(CategoryController::class)->group(function(){
     // Route::get('/id/{id}', 'getCategoryProductsById');
     Route::get('/{identifier}/products', 'getCategoryProducts');
     });
+});
 
+Route::controller(PaymentGatewayController::class)->group(function(){
+    Route::prefix('payment-gateways')->group(function(){
+        Route::get('/','index');
+    });
+});
+
+Route::controller(ShippingChargeController::class)->group(function(){
+    Route::prefix('shipping-charges')->group(function(){
+        Route::get('/','index');
+    });
 });

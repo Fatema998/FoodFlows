@@ -705,6 +705,84 @@
                 }
             }
         },
+        "/api/payment-gateways": {
+            "get": {
+                "tags": [
+                    "Payment Gateways"
+                ],
+                "summary": "Get active payment gateways",
+                "operationId": "8fd1aa4a3b6d1628485cef760b09af96",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Request processed successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Bkash"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "bkash"
+                                                    },
+                                                    "link": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Payment gateway not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "PaymentGateway fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -1051,6 +1129,80 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/shipping-charges": {
+            "get": {
+                "tags": [
+                    "Shipping Charges"
+                ],
+                "summary": "Get active shipping charges",
+                "operationId": "b47c571a50b8eae6deefea61cfce9498",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Request processed successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Inside City"
+                                                    },
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "example": 60
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Shipping charges not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Shipping charges fetch failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
                     }
                 }
             }
@@ -2002,8 +2154,16 @@
             "description": "Colors"
         },
         {
+            "name": "Payment Gateways",
+            "description": "Payment Gateways"
+        },
+        {
             "name": "Products",
             "description": "Products"
+        },
+        {
+            "name": "Shipping Charges",
+            "description": "Shipping Charges"
         },
         {
             "name": "Sliders",

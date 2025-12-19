@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('payment_gateways', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->length(55)->nullable();
             $table->string('type')->length(55)->nullable();
+            $table->string('link')->length(255)->nullable();
             $table->string('app_key')->length(155)->nullable();
             $table->string('app_secret')->length(155)->nullable();
             $table->string('username')->length(55)->nullable();
