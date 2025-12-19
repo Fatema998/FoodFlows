@@ -21,6 +21,22 @@ class PaymentGatewaySeeder extends Seeder
 
         DB::table('payment_gateways')->insert([
             [
+                'name' => 'Cash on Devlivery',
+                'type' => 'cod',
+                "link" => "",
+                'app_key' => '',
+                'app_secret' => '',
+                'username' => '',
+                'password' => '',
+                'base_url' => '',
+                'success_url' => '',
+                'return_url' => '',
+                'prefix' => 'BK',
+                'status' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'Bkash',
                 'type' => 'bkash',
                 "link" => "",

@@ -12,9 +12,9 @@ use App\Http\Controllers\Api\UserOrdersController;
 use App\Http\Controllers\Api\PaymentGatewayController;
 use App\Http\Controllers\Api\ShippingChargeController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::options('{any}', function () {
+    return response()->json([], 204);
+})->where('any', '.*');
 
 
 Route::controller(AuthController::class)->group(function(){
@@ -87,3 +87,6 @@ Route::controller(ShippingChargeController::class)->group(function(){
         Route::get('/','index');
     });
 });
+
+
+// php artisan l5-swagger:generate
