@@ -22,7 +22,7 @@ class PaymentGatewaySeeder extends Seeder
         DB::table('payment_gateways')->insert([
             [
                 'name' => 'Cash on Devlivery',
-                'type' => 'cod',
+                'type' => 'cash',
                 "link" => "",
                 'app_key' => '',
                 'app_secret' => '',
@@ -53,7 +53,6 @@ class PaymentGatewaySeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-               
                 'name' => 'Nagad',
                 'type' => 'nagad',
                 "link" => "",

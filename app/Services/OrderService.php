@@ -103,7 +103,7 @@ class OrderService
     {
         $shipping = $data['shipping'] ?? [];
         $orderItems = $data['items'] ?? [];
-
+        
         DB::beginTransaction();
         try {
             $user = $this->resolveUser($shipping);
@@ -154,6 +154,7 @@ class OrderService
 
             // Handle payment
             $paymentMethod = strtolower($data['payment_method'] ?? 'cash');
+
             $paymentData = [
                 'order_id' => $order->id,
                 'customer_id' => $user->id,
@@ -162,16 +163,19 @@ class OrderService
                 'payment_status' => $data['payment_status'] ?? 'pending',
             ];
 
-            if ($paymentMethod === 'bkash') {
-                $this->paymentService->payWithBkash($paymentData);
-            } elseif ($paymentMethod === 'nagad') {
-                $this->paymentService->payWithNagad($paymentData);
-            } else {
-                $this->paymentService->createPayment($paymentData);
-            }
+             $this->paymentService->createPayment($paymentData);
+
+            // if ($paymentMethod === 'bkash') {
+            //     $this->paymentService->payWithBkash($paymentData);
+            // } elseif ($paymentMethod === 'nagad') {
+            //     $this->paymentService->payWithNagad($paymentData);
+            // } else {
+            //     $this->paymentService->createPayment($paymentData);
+            // }
             
             DB::commit();
             return $order->load(['orderdetails', 'customer', 'shipping', 'payment']);
+
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Order creation failed: ' . $e->getMessage());

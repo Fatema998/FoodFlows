@@ -22,7 +22,7 @@ class CreateCategory extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:categories,name'],
+            'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:categories,slug'],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
@@ -45,7 +45,6 @@ class CreateCategory extends FormRequest
     {
         return [
             'name.required' => 'The category name is required.',
-            'name.unique' => 'This category name already exists.',
             'slug.required' => 'A unique slug is required.',
             'slug.unique' => 'This slug is already in use.',
             'image.image' => 'Please upload a valid image file.',

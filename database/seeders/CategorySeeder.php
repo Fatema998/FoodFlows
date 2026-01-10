@@ -5,67 +5,51 @@ namespace Database\Seeders;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Disable foreign key checks to avoid FK errors
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Category::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // Define parent categories
-        $parentCategories = [
-            'Men',
-            'Women',
-            'Kids',
-            'Electronics',
-            'Accessories'
+        // Define parents with their specific images
+        $categories = [
+            'Men'         => '/assets/categories/men.jpg',
+            'Women'       => '/assets/categories/top.jpg',
+            'Kids'         => '/assets/categories/kid.jpg',
+            'Accessories'   => '/assets/categories/accessories.jpg',
         ];
 
-        foreach ($parentCategories as $parentName) {
+        foreach ($categories as $name => $image) {
             $parent = Category::create([
-                'name' => $parentName,
-                'slug' => strtolower(str_replace(' ', '-', $parentName)),
-                'image' => '/assets/categories/top.jpg',
+                'name'      => $name,
+                'slug'      => Str::slug($name),
+                'image'     => $image,
                 'is_active' => true,
-                'position' => 0,
+                'position'  => 0,
             ]);
 
-            // Add subcategories for each parent
-            switch ($parentName) {
-                case 'Men':
-                    $subCategories = ['T-Shirts', 'Pants', 'Shoes', 'Jumpsuits', 'Underwear'];
-                    break;
-                case 'Women':
-                    $subCategories = ['Tops', 'Pants', 'Shoes', 'Jumpsuits', 'Bra & Panties'];
-                    break;
-                case 'Kids':
-                    $subCategories = ['T-Shirts', 'Pants', 'Shoes', 'Jumpsuits', 'Accessories'];
-                    break;
-                case 'Electronics':
-                    $subCategories = ['Mobiles', 'Laptops', 'Headphones', 'Wearables'];
-                    break;
-                case 'Accessories':
-                    $subCategories = ['Bags', 'Belts', 'Hats', 'Sunglasses'];
-                    break;
-                default:
-                    $subCategories = [];
-            }
+            // Define subcategories based on parent name
+            $subCategories = match ($name) {
+                'Men'         => ['T-Shirts', 'Pants', 'Shoes', 'Jumpsuits', 'Underwear'],
+                'Women'       => ['Tops', 'Pants', 'Shoes', 'Jumpsuits', 'Bra & Panties'],
+                'Kids'         => ['T-Shirts', 'Pants', 'Shoes', 'Jumpsuits', 'Accessories'],
+                'Accessories'   => ['Bags', 'Belts', 'Hats', 'Sunglasses'],
+                default       => [],
+            };
 
             foreach ($subCategories as $subName) {
-                 $slug = strtolower(str_replace(' ', '-', $parent->name . '-' . $subName));
                 Category::create([
-                    'name' => $subName,
-                    'slug' => $slug,
+                    'name'      => $subName,
+                    // Slug includes parent for uniqueness: e.g., men-shoes
+                    'slug'      => Str::slug($parent->name . '-' . $subName),
                     'parent_id' => $parent->id,
-                    'image' => '/assets/categories/top.jpg',
+                    'image'     => $image, // Subcategories inherit parent image category
                     'is_active' => true,
-                    'position' => 0,
+                    'position'  => 0,
                 ]);
             }
         }

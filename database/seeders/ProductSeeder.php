@@ -17,17 +17,17 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         // Clear existing products
-     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-     DB::table('product_variants')->truncate();
-     DB::table('product_sizes')->truncate();
-     DB::table('products')->truncate();
+        DB::table('product_variants')->truncate();
+        DB::table('product_sizes')->truncate();
+        DB::table('products')->truncate();
 
-     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
 
         // Create 10 products
-        $products = Product::factory()->count(50)->create();
+        $products = Product::factory()->count(20)->create();
 
         // Attach random colors and sizes
         $colors = Color::pluck('id')->toArray();
@@ -35,12 +35,13 @@ class ProductSeeder extends Seeder
 
         foreach ($products as $product) {
             // Assign 1-3 random colors
-            $productColors = array_rand(array_flip($colors), rand(1, 3));
+            $productColors = array_rand(array_flip($colors), rand(3, 5));
             foreach ((array)$productColors as $colorId) {
                 DB::table('product_variants')->insert([
                     'product_id' => $product->id,
                     'color_id' => $colorId,
-                    'image' => '/assets/products/images/women-yellow-1.jpg',
+                    // 'image' => '/assets/products/images/' . $this->faker->numberBetween(1, 4) . '.jpg',
+                    'image' => '/assets/products/images/' . rand(1, 4) . '.jpg',
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);

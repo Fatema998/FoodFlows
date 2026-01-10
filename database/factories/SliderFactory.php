@@ -16,15 +16,15 @@ class SliderFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'title' => $this->faker->word. " ".$this->faker->word." ".$this->faker->word,
-            'subtitle' => $this->faker->word. " ".$this->faker->word,
+       return [
+            'title' => $this->faker->words(3, true), // Cleaner way to get 3 words
+            'subtitle' => $this->faker->words(2, true),
             'description'=> $this->faker->sentence,
-            'image' => '/assets/sliders/slider-01.jpg',
+            'image' => '/assets/sliders/slider-fashion-' . $this->faker->numberBetween(1, 3) . '.png',
             'button_text' => $this->faker->word,
             'link' => $this->faker->url,
             'position' => $this->faker->numberBetween(0, 10),
-            'is_active' => $this->faker->boolean(80), // 80% chance of being true
+            'is_active' => 1,
             'layout' => $this->faker->randomElement(['left', 'right']),
             'created_at' => now(),
             'updated_at' => now(),

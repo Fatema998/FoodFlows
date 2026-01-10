@@ -40,11 +40,6 @@ class ProductFactory extends Factory
             'category_id' => $this->faker->randomElement($categoryIds),
             'subcategory_id' => $subcategoryId,
             'product_type_id' => $this->faker->randomElement($productTypeIds),
-            
-            // 'purchase_price' => $purchasePrice,
-            // 'price' => $price,
-            // 'discount' => $discount,
-            // 'sell_price' => $sellPrice,
 
             'purchase_price' => (int) $purchasePrice,
             'price' => (int) $price,
@@ -58,11 +53,10 @@ class ProductFactory extends Factory
             'total_stock' => $totalStock,
             'reserved_stock' => $reservedStock,
 
-            'main_thumbnail' => '/assets/products/thumbnail/product-4.jpg',
+            'main_thumbnail' => '/assets/products/thumbnail/product-' . $this->faker->numberBetween(1, 16). '.jpg',
             'short_description' => $this->faker->sentence(),
             'long_descriptions' => $this->faker->paragraphs(3, true),
             'materials' => $this->faker->paragraph(),
-
             'is_todays_pick'=> $this->faker->boolean(25),
             'is_new_arrival' => $this->faker->boolean(30),
             'is_trending' => $this->faker->boolean(20),

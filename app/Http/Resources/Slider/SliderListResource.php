@@ -23,7 +23,9 @@ class SliderListResource extends JsonResource
             'image' => $this->image,
             'button_text' => $this->button_text,
             'link' => $this->link,
-             'created_at' => $this->created_at->format('d/m/Y'),
+            'layout' => $this->layout,
+            'position' => $this->position,
+            'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
     }

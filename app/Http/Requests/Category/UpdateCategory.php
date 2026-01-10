@@ -20,37 +20,44 @@ class UpdateCategory extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+  public function rules(): array
     {
-        $categoryId = $this->route('id'); // Assuming {id} is in route parameter
+        // 1. Get the ID correctly from the route. 
+        // If your route is /categories/{category}, use 'category'.
+        $categoryId = $this->route('id') ?? $this->route('category'); 
+        
+        // 2. Get the parent_id from the request input
+        $parentId = $this->input('parent_id');
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('categories', 'name')->ignore($categoryId),
-            ],
+            'name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('categories', 'slug')->ignore($categoryId),
+                // SCOPED UNIQUE RULE:
+                // Allows same slug ONLY if parent_id is different
+                Rule::unique('categories', 'slug')
+                    ->where(function ($query) use ($parentId) {
+                        return $query->where('parent_id', $parentId);
+                    })
+                    ->ignore($categoryId),
             ],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
-
             'is_active' => ['nullable', 'boolean'],
             'position' => ['nullable', 'integer', 'min:0'],
-
-            'parent_id' => ['nullable', 'exists:categories,id'],
-
+            'parent_id' => [
+                'nullable', 
+                'exists:categories,id',
+                // Prevent a category from being its own parent (causes infinite loops)
+                Rule::notIn([$categoryId]),
+            ],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
         ];
     }
-
     /**
      * Custom messages for validation errors.
      */
@@ -58,7 +65,6 @@ class UpdateCategory extends FormRequest
     {
         return [
             'name.required' => 'The category name is required.',
-            'name.unique' => 'This category name already exists.',
             'slug.required' => 'A slug is required for the category.',
             'slug.unique' => 'This slug is already in use.',
             'image.image' => 'Please upload a valid image file.',

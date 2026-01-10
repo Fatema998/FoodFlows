@@ -19,6 +19,7 @@ class ProductListResource extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount,
             'sell_price' => $this->sell_price,
+            'sell_count' => $this->sell_count,
             'total_stock' => $this->total_stock,
             'reserved_stock' => $this->reserved_stock,
             'available_stock' => $this->total_stock - $this->reserved_stock,

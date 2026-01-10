@@ -242,8 +242,9 @@ class UserOrdersController extends Controller
             'coupon_code' => 'nullable|string|max:50',
             'coupon_discount' => 'nullable|numeric|min:0',
         ]);
-
+      
         if ($validator->fails()) {
+            Log::error('Order Validation Failed:', $validator->errors()->toArray());
             return ApiResponse::error(
                 status: self::ERROR_STATUS,
                 message: self::VALIDATION_ERROR_MESSAGE,

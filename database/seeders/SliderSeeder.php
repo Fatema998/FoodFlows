@@ -16,6 +16,6 @@ class SliderSeeder extends Seeder
     {
      //
       DB::table('sliders')->delete(); // clear table before seeding
-      Slider::factory()->count(10)->create();
+      Slider::factory()->count(3)->create();
     }
 }

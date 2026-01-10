@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->index(); // index for faster search by name
+            $table->string('name'); 
             $table->string('slug')->unique(); // unique index (already creates index)
             $table->text('description')->nullable();
             $table->string('image')->nullable();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();  
             
+            $table->unique(['parent_id', 'slug']); // Allows same slug under different parents
             $table->timestamps();
         });
 
