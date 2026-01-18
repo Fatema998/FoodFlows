@@ -30,6 +30,7 @@ interface Props {
 
 const GetAllCategories: React.FC<Props> = ({ categories }) => {
     useToastMessage()
+    console.log(categories)
     
     return (
         <AppLayout>

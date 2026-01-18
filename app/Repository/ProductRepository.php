@@ -22,8 +22,6 @@ class ProductRepository
 
     protected function applyFilters($query, Request $request)
     {
-        // ⚡ Best performance: apply simple indexed filters first
-
         // Category id
     
         if ($category = $request->query('category')) {

@@ -16,7 +16,13 @@ class Category extends Model
         // One-to-many: Category has many products
         public function products()
         {
-            return $this->hasMany(Product::class);
+            return $this->hasMany(Product::class, 'category_id');
+        }
+
+        // Specific relationship for Subcategories (checks subcategory_id)
+        public function subcategoryProducts()
+        {
+            return $this->hasMany(Product::class, 'subcategory_id');
         }
 
         // Children categories

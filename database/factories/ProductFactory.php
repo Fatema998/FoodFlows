@@ -37,8 +37,10 @@ class ProductFactory extends Factory
             'title' => $title = $this->faker->words(3, true),
             'slug' => Str::slug($title) . '-' . Str::random(5),
             'brand_id' => $this->faker->randomElement($brandIds),
-            'category_id' => $this->faker->randomElement($categoryIds),
-            'subcategory_id' => $subcategoryId,
+            // 'category_id' => $this->faker->randomElement($categoryIds),
+            // 'subcategory_id' => $subcategoryId,
+            'category_id' => Category::whereNull('parent_id')->inRandomOrder()->first()->id ?? null,
+            'subcategory_id' => null,
             'product_type_id' => $this->faker->randomElement($productTypeIds),
 
             'purchase_price' => (int) $purchasePrice,

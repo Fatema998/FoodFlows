@@ -16,20 +16,19 @@ class CategoryRepository
     
     public function getAllCategories($limit = null)
     {
-        $query = Category::withCount('products')
-            ->whereNull('parent_id')
+        $query = Category::whereNull('parent_id')
+            ->withCount('products') // Uses category_id for parents
             ->with(['children' => function ($query) {
-                $query->withCount('products')
+                $query->withCount('subcategoryProducts as products_count') 
                     ->orderBy('position', 'asc');
             }])
             ->orderBy('position', 'asc');
 
-        // ✅ If limit exists and is numeric, use pagination
+        // ✅ Handle Pagination vs Get
         if (!empty($limit) && is_numeric($limit)) {
-            return $query->paginate($limit);
+            return $query->paginate((int)$limit);
         }
 
-        // ✅ Otherwise, return all results without pagination
         return $query->get();
     }
 
@@ -42,13 +41,17 @@ class CategoryRepository
 
    public function getActiveCategoriesWithChildren()
     {
-        return Category::where('is_active', true)
-            ->withCount('products')
+    return Category::where('is_active', true)
             ->whereNull('parent_id')
+            ->withCount('products') // Parents: checks category_id
             ->with(['children' => function($query) {
-                $query->where('is_active', true)->withCount('products');
+                $query->where('is_active', true)
+                    // Children: checks subcategory_id, aliased for the Resource
+                    ->withCount('subcategoryProducts as products_count') 
+                    ->orderBy('position', 'asc');
             }])
-            ->having('products_count', '>', 0)
+            // Note: 'having' only filters the Parent categories in this context
+            ->having('products_count', '>', 0) 
             ->orderBy('position', 'asc')
             ->get();
     }
