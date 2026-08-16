@@ -1,0 +1,76 @@
+CREATE DATABASE IF NOT EXISTS foodflow;
+USE foodflow;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  phone VARCHAR(50) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('CUSTOMER', 'RESTAURANT_OWNER', 'DELIVERY_RIDER') NOT NULL DEFAULT 'CUSTOMER',
+  is_onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_onboarding (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  role ENUM('CUSTOMER', 'RESTAURANT_OWNER', 'DELIVERY_RIDER') NOT NULL,
+  payload JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_user_role (user_id, role),
+  CONSTRAINT fk_onboarding_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS restaurants (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  owner_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  cuisine VARCHAR(255) NOT NULL,
+  description TEXT,
+  image VARCHAR(500),
+  delivery_fee DECIMAL(10,2) DEFAULT 0.00,
+  delivery_time VARCHAR(50) DEFAULT '20-30 min',
+  rating DECIMAL(3,2) DEFAULT 4.8,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_restaurant_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS menu_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  restaurant_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  category VARCHAR(100) DEFAULT 'General',
+  image VARCHAR(500),
+  is_available BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_menu_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  restaurant_id INT NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'PLACED',
+  total_price DECIMAL(10,2) NOT NULL,
+  delivery_fee DECIMAL(10,2) DEFAULT 0.00,
+  address TEXT NOT NULL,
+  payment_method VARCHAR(50) DEFAULT 'CARD',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_order_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_order_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  menu_item_id INT NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  unit_price DECIMAL(10,2) NOT NULL,
+  item_name VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_orderitem_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  CONSTRAINT fk_orderitem_menu FOREIGN KEY (menu_item_id) REFERENCES menu_items(id) ON DELETE RESTRICT
+);
